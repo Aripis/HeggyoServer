@@ -35,3 +35,6 @@ lerna-debug.log*
 
 # GCloud
 app.yaml
+
+# Enviroment variables
+.env
