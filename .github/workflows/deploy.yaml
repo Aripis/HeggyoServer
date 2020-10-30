@@ -15,7 +15,7 @@ jobs:
                   node-version: 12
             - run: npm install
             - run: npm run build
-            - name: env-compile
+            - name: Compile ENV
               uses: ikuanyshbekov/app-yaml-env-compiler@master
               env:
                   DB_NAME: ${{ secrets.DB_NAME }}
@@ -23,11 +23,11 @@ jobs:
                   DB_USERNAME: ${{ secrets.DB_USERNAME }}
                   DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
                   DB_SOCKET: ${{ secrets.DB_SOCKET }}
-            - name: deploy
+            - name: Deploy to GAE
               uses: GoogleCloudPlatform/github-actions/appengine-deploy@master
               with:
                   credentials: ${{ secrets.GCP_SA_KEY }}
                   project_id: heggyo
 
-            - name: finalize
+            - name: Finalize
               run: curl "${{ steps.deploy.outputs.url }}"
