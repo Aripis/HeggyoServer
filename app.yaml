@@ -6,5 +6,5 @@ env_variables:
     DB_PORT: ''
     DB_USERNAME: $DB_USERNAME
     DB_PASSWORD: $DB_PASSWORD
-    DB_DRIVER: 'mysql'
+    DB_DRIVER: $DB_DRIVER
     DB_SOCKET: $DB_SOCKET

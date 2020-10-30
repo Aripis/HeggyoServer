@@ -22,12 +22,10 @@ jobs:
                   DB_HOST: ${{ secrets.DB_HOST }}
                   DB_USERNAME: ${{ secrets.DB_USERNAME }}
                   DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+                  DB_DRIVER: ${{ secrets.DB_DRIVER }}
                   DB_SOCKET: ${{ secrets.DB_SOCKET }}
             - name: Deploy to GAE
               uses: GoogleCloudPlatform/github-actions/appengine-deploy@master
               with:
                   credentials: ${{ secrets.GCP_SA_KEY }}
                   project_id: heggyo
-
-            - name: Finalize
-              run: curl "${{ steps.deploy.outputs.url }}"
