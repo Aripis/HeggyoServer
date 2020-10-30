@@ -1,0 +1,33 @@
+name: Google App Engine Deployment
+
+on:
+    push:
+        branches: [main]
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Use Node.js
+              uses: actions/setup-node@master
+              with:
+                  node-version: 12
+            - run: npm install
+            - run: npm run build
+            - name: env-compile
+              uses: ikuanyshbekov/app-yaml-env-compiler@master
+              env:
+                  DB_NAME: ${{ secrets.DB_NAME }}
+                  DB_HOST: ${{ secrets.DB_HOST }}
+                  DB_USERNAME: ${{ secrets.DB_USERNAME }}
+                  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+                  DB_SOCKET: ${{ secrets.DB_SOCKET }}
+            - name: deploy
+              uses: GoogleCloudPlatform/github-actions/appengine-deploy@master
+              with:
+                  credentials: ${{ secrets.GCP_SA_KEY }}
+                  project_id: heggyo
+
+            - name: finalize
+              run: curl "${{ steps.deploy.outputs.url }}"
