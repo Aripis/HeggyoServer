@@ -1,4 +1,4 @@
-export default () => ({
+export const initDB = () => ({
     database: {
         type: process.env.DB_DRIVER,
         host: process.env.DB_HOST,
@@ -18,3 +18,5 @@ export default () => ({
         },
     },
 });
+
+export default initDB().database;
