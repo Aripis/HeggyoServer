@@ -7,7 +7,7 @@ const bootstrap = async () => {
     const app = await NestFactory.create(AppModule);
     app.use(compression());
     app.use(helmet());
-    app.enableCors();
+    app.enableCors({ origin: [/^https:\/\/heggyo-client.*\.vercel\.app$/] });
 
     await app.listen(8080);
 };
