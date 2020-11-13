@@ -1,0 +1,48 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  createdAt: Date!
+  updatedAt: Date!
+  id: ID!
+  firstName: String!
+  middleName: String!
+  lastName: String!
+  userName: String!
+  email: String!
+  password: String!
+  userRole: String!
+  status: Status!
+  institutionId: Float!
+}
+
+"""Date custom scalar type"""
+scalar Date
+
+enum Status {
+  ACTIVE
+  INACTIVE
+  BLOCKED
+  UNVERIFIED
+}
+
+type Query {
+  user(id: Float!): User!
+  users: [User!]!
+}
+
+type Mutation {
+  addUser(newUserData: UserInput!): User!
+  removeRecipe(id: Float!): Boolean!
+}
+
+input UserInput {
+  firstName: String!
+  middleName: String!
+  lastName: String!
+  userName: String!
+  email: String!
+  password: String!
+  institutionId: Float!
+}
