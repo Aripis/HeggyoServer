@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Field, InputType, ID } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 import { MaxLength } from 'class-validator';
-import { Status } from './user.entity';
 
 @InputType()
 export class UserInput {

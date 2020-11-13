@@ -38,7 +38,7 @@ export class User {
     @Field({ nullable: false })
     userRole: string;
 
-    @Field(type => Status)
+    @Field(type => Status, { nullable: false })
     status: Status;
 
     @Field({ nullable: false })
