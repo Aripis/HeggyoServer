@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserInput } from './user.input';
 import { User } from './user.model';
 import { UsersService } from './users.service';
@@ -9,13 +9,26 @@ export class UsersResolver {
     constructor(private readonly usersService: UsersService) {}
 
     @Query(returns => User)
-    async user(@Args('id') id: number): Promise<User> {
-        return this.usersService.findOne(id);
+    async userById(@Args('id', { type: () => Int }) id: number): Promise<User> {
+        const user = await this.usersService.findOne(id);
+        user.password = '';
+        return user;
+    }
+
+    @Query(returns => User)
+    async userByEmail(@Args('email') email: string): Promise<User> {
+        const user = await this.usersService.findOne(email);
+        user.password = '';
+        return user;
     }
 
     @Query(returns => [User])
-    users(): Promise<User[]> {
-        return this.usersService.findAll();
+    async users(): Promise<User[]> {
+        const users = await this.usersService.findAll();
+        return users.map(user => {
+            user.password = '';
+            return user;
+        });
     }
 
     @Mutation(returns => User)

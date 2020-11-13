@@ -42,7 +42,7 @@ export class User {
     @Column({ nullable: false })
     password: string;
 
-    @Column({ nullable: false })
+    @Column({ nullable: true })
     userRole: string;
 
     @Column({

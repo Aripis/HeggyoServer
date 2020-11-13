@@ -28,7 +28,8 @@ enum Status {
 }
 
 type Query {
-  user(id: Float!): User!
+  userById(id: Int!): User!
+  userByEmail(email: String!): User!
   users: [User!]!
 }
 

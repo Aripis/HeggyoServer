@@ -30,7 +30,7 @@ export class UsersService {
             if (error.code === 'ER_DUP_ENTRY') {
                 throw new ConflictException('The user already exists');
             }
-            throw new InternalServerErrorException();
+            throw new InternalServerErrorException(error);
         }
     }
 

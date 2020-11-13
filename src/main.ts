@@ -6,7 +6,12 @@ import * as helmet from 'helmet';
 const bootstrap = async () => {
     const app = await NestFactory.create(AppModule);
     app.use(compression());
-    app.use(helmet());
+    app.use(
+        helmet({
+            contentSecurityPolicy:
+                process.env.NODE_ENV === 'production' ? undefined : false,
+        }),
+    );
     app.enableCors({ origin: [/^https:\/\/heggyo-client.*\.vercel\.app$/] });
 
     await app.listen(8080);
