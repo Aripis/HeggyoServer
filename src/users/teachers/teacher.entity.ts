@@ -1,12 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-    Column,
-    Entity,
-    PrimaryGeneratedColumn,
-    OneToOne,
-    JoinColumn,
-} from 'typeorm';
-import { User } from './../user.entity';
+import { Column, Entity, OneToOne, JoinColumn } from 'typeorm';
+import { User } from '../user.entity';
 
 export enum ContractType {
     PART_TIME,
@@ -14,7 +8,7 @@ export enum ContractType {
 }
 
 @Entity()
-export class Teacher {
+export class Teacher extends User {
     @OneToOne(type => User)
     @JoinColumn()
     user: User;
