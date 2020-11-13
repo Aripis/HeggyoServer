@@ -14,7 +14,7 @@ export enum Status {
 }
 
 @Entity()
-export class Project {
+export class User {
     @CreateDateColumn()
     public createdAt: Date;
 
