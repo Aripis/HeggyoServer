@@ -27,15 +27,50 @@ enum Status {
   UNVERIFIED
 }
 
+type Institution {
+  createdAt: Date!
+  updatedAt: Date!
+  id: ID!
+  name: String!
+  email: String!
+  type: Type!
+  capacityPerClass: Float!
+  educationalStage: EducationStage!
+}
+
+enum Type {
+  TECHNOLOGICAL
+  MATHEMATICAL
+  NATURAL_MATHEMATICAL
+  HUMANITARIAN
+  ART
+  LINGUISTICAL
+  SU
+  OU
+}
+
+enum EducationStage {
+  ELEMENTARY
+  PRIMARY
+  UNITED
+  HIGH
+  SECONDARY
+}
+
 type Query {
   userById(id: Int!): User!
   userByEmail(email: String!): User!
   users: [User!]!
+  institutionById(id: Int!): Institution!
+  institutionByEmail(email: String!): Institution!
+  institutions: [Institution!]!
 }
 
 type Mutation {
   addUser(newUserData: UserInput!): User!
-  removeRecipe(id: Float!): Boolean!
+  removeUser(id: Float!): Boolean!
+  addInstitution(newInstitutionData: InstitutionInput!): Institution!
+  removeInstitution(id: Float!): Boolean!
 }
 
 input UserInput {
@@ -46,4 +81,12 @@ input UserInput {
   email: String!
   password: String!
   institutionId: Float!
+}
+
+input InstitutionInput {
+  name: String!
+  email: String!
+  type: Type!
+  capacityPerClass: Float!
+  educationalStage: EducationStage!
 }

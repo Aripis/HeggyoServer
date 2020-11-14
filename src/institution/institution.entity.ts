@@ -26,7 +26,7 @@ export enum EducationStage {
 }
 
 @Entity()
-export class Institution {
+export class InstitutionEntity {
     @CreateDateColumn()
     public createdAt: Date;
 

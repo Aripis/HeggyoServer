@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Field, InputType, registerEnumType } from '@nestjs/graphql';
-import { MaxLength } from 'class-validator';
+import {
+    Field,
+    InputType,
+    registerEnumType,
+    ObjectType,
+} from '@nestjs/graphql';
 import { Type, EducationStage } from './institution.entity';
 
 registerEnumType(Type, {
@@ -12,6 +16,7 @@ registerEnumType(EducationStage, {
 });
 
 @InputType()
+// @ObjectType()
 export class InstitutionInput {
     @Field({ nullable: false })
     name: string;

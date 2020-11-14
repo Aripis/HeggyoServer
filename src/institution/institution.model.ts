@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Field, InputType, registerEnumType, ID } from '@nestjs/graphql';
+import {
+    Field,
+    InputType,
+    registerEnumType,
+    ID,
+    ObjectType,
+} from '@nestjs/graphql';
 import { Type, EducationStage } from './institution.entity';
 
 registerEnumType(Type, {
@@ -10,8 +16,9 @@ registerEnumType(EducationStage, {
     name: 'EducationStage',
 });
 
-@InputType()
-export class InstitutionInput {
+// @InputType()
+@ObjectType()
+export class Institution {
     @Field()
     public createdAt: Date;
 

@@ -60,4 +60,17 @@ export class UsersService {
     async remove(id: number): Promise<void> {
         await this.usersRepository.delete(id);
     }
+
+    generateUserTokens() {
+        console.log(this.generateUniqueToken());
+    }
+
+    private generateUniqueToken(): string {
+        return (
+            '_' +
+            Math.random()
+                .toString(36)
+                .substr(2, 6)
+        );
+    }
 }
