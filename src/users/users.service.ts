@@ -9,10 +9,13 @@ import { Repository } from 'typeorm';
 import { UserInput } from './user.input';
 import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
+import { InstitutionsService } from 'src/institution/institutions.service';
 
 @Injectable()
 export class UsersService {
     constructor(
+        private readonly institutionsService: InstitutionsService,
+
         @InjectRepository(User)
         private readonly usersRepository: Repository<User>,
     ) {}
@@ -21,7 +24,9 @@ export class UsersService {
         const user = new User();
 
         Object.assign(user, userInput);
-
+        user.institutionId = (
+            await this.institutionsService.findOneByToken(user.registerToken)
+        ).id;
         try {
             user.password = await bcrypt.hash(user.password, 10);
             const result = await this.usersRepository.save(user);

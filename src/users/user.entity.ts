@@ -55,4 +55,7 @@ export class User {
 
     @Column({ nullable: false })
     institutionId: number;
+
+    @Column({ nullable: false })
+    registerToken: string;
 }

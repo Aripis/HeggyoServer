@@ -27,5 +27,5 @@ export class UserInput {
     password: string;
 
     @Field({ nullable: false })
-    institutionId: number;
+    registerToken: string;
 }

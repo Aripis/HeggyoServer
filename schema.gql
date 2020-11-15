@@ -15,6 +15,7 @@ type User {
   userRole: String!
   status: Status!
   institutionId: Float!
+  registerToken: String!
 }
 
 """Date custom scalar type"""
@@ -83,7 +84,7 @@ input UserInput {
   userName: String!
   email: String!
   password: String!
-  institutionId: Float!
+  registerToken: String!
 }
 
 input InstitutionInput {

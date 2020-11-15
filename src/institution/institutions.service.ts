@@ -54,11 +54,23 @@ export class InstitutionsService {
         return institution;
     }
 
+    async findOneByToken(token: string): Promise<Institution> {
+        let institution = null;
+        institution = await this.institutionsRepository.findOne({
+            where: { token: token },
+        });
+        if (!institution) {
+            throw new NotFoundException(token);
+        }
+        return institution;
+    }
+
     async remove(id: number): Promise<void> {
         await this.institutionsRepository.delete(id);
     }
 
     private generateUniqueToken(): string {
+        //FIXME: Make sure it's unique for all insatutions
         return (
             '_' +
             Math.random()

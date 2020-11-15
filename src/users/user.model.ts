@@ -43,4 +43,7 @@ export class User {
 
     @Field({ nullable: false })
     institutionId: number;
+
+    @Field({ nullable: false })
+    registerToken: string;
 }
