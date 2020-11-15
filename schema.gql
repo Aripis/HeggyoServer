@@ -36,6 +36,8 @@ type Institution {
   type: Type!
   capacityPerClass: Float!
   educationalStage: EducationStage!
+  token: String!
+  tokenStatus: Float!
 }
 
 enum Type {
@@ -63,12 +65,13 @@ type Query {
   users: [User!]!
   institutionById(id: Int!): Institution!
   institutionByEmail(email: String!): Institution!
+  institutionToken(id: Int!): String!
   institutions: [Institution!]!
 }
 
 type Mutation {
   addUser(newUserData: UserInput!): User!
-  removeUser(id: Float!): Boolean!
+  removeUser(id: Int!): Boolean!
   addInstitution(newInstitutionData: InstitutionInput!): Institution!
   removeInstitution(id: Float!): Boolean!
 }

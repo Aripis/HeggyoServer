@@ -7,22 +7,19 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { InstitutionInput } from './institution.input';
-import { InstitutionEntity } from './institution.entity';
+import { Institution } from './institution.entity';
 
 @Injectable()
 export class InstitutionsService {
     constructor(
-        @InjectRepository(InstitutionEntity)
-        private readonly institutionsRepository: Repository<InstitutionEntity>,
+        @InjectRepository(Institution)
+        private readonly institutionsRepository: Repository<Institution>,
     ) {}
 
-    async create(
-        institutionInput: InstitutionInput,
-    ): Promise<InstitutionEntity> {
-        const institution = new InstitutionEntity();
-
+    async create(institutionInput: InstitutionInput): Promise<Institution> {
+        const institution = new Institution();
         Object.assign(institution, institutionInput);
-
+        institution.token = this.generateUniqueToken();
         try {
             const result = await this.institutionsRepository.save(institution);
             return result;
@@ -34,15 +31,15 @@ export class InstitutionsService {
         }
     }
 
-    update(institution: InstitutionEntity) {
+    update(institution: Institution) {
         return this.institutionsRepository.save(institution);
     }
 
-    findAll(): Promise<InstitutionEntity[]> {
+    findAll(): Promise<Institution[]> {
         return this.institutionsRepository.find();
     }
 
-    async findOne(id: number | string): Promise<InstitutionEntity> {
+    async findOne(id: number | string): Promise<Institution> {
         let institution = null;
         if (typeof id === 'number') {
             institution = await this.institutionsRepository.findOne(id);
@@ -59,5 +56,14 @@ export class InstitutionsService {
 
     async remove(id: number): Promise<void> {
         await this.institutionsRepository.delete(id);
+    }
+
+    private generateUniqueToken(): string {
+        return (
+            '_' +
+            Math.random()
+                .toString(36)
+                .substr(2, 5)
+        );
     }
 }

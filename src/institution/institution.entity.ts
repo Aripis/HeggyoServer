@@ -6,6 +6,8 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 
+import { Length } from 'class-validator';
+
 export enum Type {
     TECHNOLOGICAL,
     MATHEMATICAL,
@@ -17,6 +19,11 @@ export enum Type {
     OU,
 }
 
+export enum Status {
+    ACTIVE,
+    INACTIVE,
+}
+
 export enum EducationStage {
     ELEMENTARY,
     PRIMARY,
@@ -26,7 +33,7 @@ export enum EducationStage {
 }
 
 @Entity()
-export class InstitutionEntity {
+export class Institution {
     @CreateDateColumn()
     public createdAt: Date;
 
@@ -58,4 +65,16 @@ export class InstitutionEntity {
         nullable: false,
     })
     educationalStage: EducationStage;
+
+    @Column({
+        type: 'enum',
+        enum: Status,
+        nullable: false,
+        default: Status.ACTIVE,
+    })
+    tokenStatus: Status;
+
+    @Column({ nullable: false })
+    @Length(5)
+    token: string;
 }

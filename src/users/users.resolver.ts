@@ -37,7 +37,7 @@ export class UsersResolver {
     }
 
     @Mutation(returns => Boolean)
-    async removeUser(@Args('id') id: number) {
+    async removeUser(@Args('id', { type: () => Int }) id: number) {
         return this.usersService.remove(id);
     }
 }

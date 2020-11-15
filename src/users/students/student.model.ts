@@ -2,7 +2,7 @@
 import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
 
 @ObjectType()
-export class User {
+export class Student {
     @Field({ nullable: false })
     education: string;
 

@@ -6,17 +6,20 @@ import {
     ID,
     ObjectType,
 } from '@nestjs/graphql';
-import { Type, EducationStage } from './institution.entity';
+import { Type, EducationStage, Status } from './institution.entity';
 
 registerEnumType(Type, {
     name: 'Type',
+});
+
+registerEnumType(Status, {
+    name: 'Status',
 });
 
 registerEnumType(EducationStage, {
     name: 'EducationStage',
 });
 
-// @InputType()
 @ObjectType()
 export class Institution {
     @Field()
@@ -42,4 +45,10 @@ export class Institution {
 
     @Field(type => EducationStage, { nullable: false })
     educationalStage: EducationStage;
+
+    @Field({ nullable: false })
+    token: string;
+
+    @Field({ nullable: false })
+    tokenStatus: Status;
 }

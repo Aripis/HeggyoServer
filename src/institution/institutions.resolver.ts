@@ -24,6 +24,14 @@ export class InstitutionsResolver {
         return institution;
     }
 
+    @Query(returns => String)
+    async institutionToken(
+        @Args('id', { type: () => Int }) id: number,
+    ): Promise<string> {
+        const institutionToken = await this.institutionsService.findOne(id);
+        return institutionToken.token;
+    }
+
     @Query(returns => [Institution])
     async institutions(): Promise<Institution[]> {
         const institutions = await this.institutionsService.findAll();

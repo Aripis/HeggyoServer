@@ -3,7 +3,7 @@ import { Column, Entity, OneToOne, JoinColumn } from 'typeorm';
 import { User } from '../user.entity';
 
 @Entity()
-export class Students extends User {
+export class Student extends User {
     @OneToOne(type => User)
     @JoinColumn()
     user: User;
