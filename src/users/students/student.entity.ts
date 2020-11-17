@@ -1,10 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Column, Entity, OneToOne, JoinColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    OneToOne,
+    JoinColumn,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
 import { User } from '../user.entity';
 
 @Entity()
-export class Student extends User {
-    @OneToOne(type => User)
+export class Student {
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
+
+    @OneToOne(() => User)
     @JoinColumn()
     user: User;
 

@@ -28,7 +28,7 @@ export class Institution {
     @Field()
     public updatedAt: Date;
 
-    @Field(type => ID)
+    @Field(() => ID)
     id: string;
 
     @Field({ nullable: false })
@@ -37,13 +37,13 @@ export class Institution {
     @Field({ nullable: false })
     email: string;
 
-    @Field(type => Type, { nullable: false })
+    @Field(() => Type, { nullable: false })
     type: Type;
 
     @Field({ nullable: false })
     capacityPerClass: number;
 
-    @Field(type => EducationStage, { nullable: false })
+    @Field(() => EducationStage, { nullable: false })
     educationalStage: EducationStage;
 
     @Field({ nullable: false })

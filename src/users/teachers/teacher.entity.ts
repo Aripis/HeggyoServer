@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Column, Entity, OneToOne, JoinColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    OneToOne,
+    JoinColumn,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
 import { User } from '../user.entity';
 
 export enum ContractType {
@@ -8,8 +14,11 @@ export enum ContractType {
 }
 
 @Entity()
-export class Teacher extends User {
-    @OneToOne(type => User)
+export class Teacher {
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
+
+    @OneToOne(() => User)
     @JoinColumn()
     user: User;
 

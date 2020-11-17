@@ -14,7 +14,7 @@ export class User {
     @Field()
     public updatedAt: Date;
 
-    @Field(type => ID)
+    @Field(() => ID)
     id: string;
 
     @Field({ nullable: false })
@@ -38,7 +38,7 @@ export class User {
     @Field({ nullable: false })
     userRole: string;
 
-    @Field(type => Status, { nullable: false })
+    @Field(() => Status, { nullable: false })
     status: Status;
 
     @Field({ nullable: false })
