@@ -6,6 +6,7 @@ import { initDB } from './ormconfig';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 import { InstitutionsModule } from './institution/institutions.module';
 
 @Module({
@@ -17,10 +18,12 @@ import { InstitutionsModule } from './institution/institutions.module';
                 configService.get('database'),
         }),
         UsersModule,
+        AuthModule,
         InstitutionsModule,
         GraphQLModule.forRoot({
             installSubscriptionHandlers: true,
             autoSchemaFile: 'schema.gql',
+            context: ({ req }) => ({ req }),
         }),
     ],
     controllers: [AppController],

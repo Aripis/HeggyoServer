@@ -28,6 +28,11 @@ enum Status {
   UNVERIFIED
 }
 
+type Token {
+  accessToken: String!
+  refreshToken: String!
+}
+
 type Institution {
   createdAt: Date!
   updatedAt: Date!
@@ -64,13 +69,21 @@ type Query {
   userById(id: Int!): User!
   userByEmail(email: String!): User!
   users: [User!]!
+  profile: User!
+  login(newLoginData: LoginInput!): Token!
   institutionById(id: Int!): Institution!
   institutionByEmail(email: String!): Institution!
   institutionToken(id: Int!): String!
   institutions: [Institution!]!
 }
 
+input LoginInput {
+  email: String!
+  password: String!
+}
+
 type Mutation {
+  register(newUserData: UserInput!): User!
   addUser(newUserData: UserInput!): User!
   removeUser(id: Int!): Boolean!
   addInstitution(newInstitutionData: InstitutionInput!): Institution!
