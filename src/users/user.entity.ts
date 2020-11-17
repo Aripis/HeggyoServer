@@ -21,8 +21,8 @@ export class User {
     @UpdateDateColumn()
     public updatedAt: Date;
 
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
     @Column({ nullable: false })
     firstName: string;
@@ -54,7 +54,7 @@ export class User {
     status: Status;
 
     @Column({ nullable: false })
-    institutionId: number;
+    institutionId: string;
 
     @Column({ nullable: false })
     registerToken: string;

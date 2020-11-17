@@ -14,7 +14,7 @@ type User {
   password: String!
   userRole: String!
   status: Status!
-  institutionId: Float!
+  institutionId: String!
   registerToken: String!
 }
 

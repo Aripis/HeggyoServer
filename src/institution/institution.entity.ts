@@ -40,8 +40,8 @@ export class Institution {
     @UpdateDateColumn()
     public updatedAt: Date;
 
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
     @Column({ nullable: false })
     name: string;

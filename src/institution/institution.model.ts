@@ -29,7 +29,7 @@ export class Institution {
     public updatedAt: Date;
 
     @Field(type => ID)
-    id: number;
+    id: string;
 
     @Field({ nullable: false })
     name: string;

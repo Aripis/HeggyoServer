@@ -15,7 +15,7 @@ export class User {
     public updatedAt: Date;
 
     @Field(type => ID)
-    id: number;
+    id: string;
 
     @Field({ nullable: false })
     firstName: string;
@@ -42,7 +42,7 @@ export class User {
     status: Status;
 
     @Field({ nullable: false })
-    institutionId: number;
+    institutionId: string;
 
     @Field({ nullable: false })
     registerToken: string;
