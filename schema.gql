@@ -2,32 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
-  createdAt: Date!
-  updatedAt: Date!
-  id: ID!
-  firstName: String!
-  middleName: String!
-  lastName: String!
-  userName: String!
-  email: String!
-  password: String!
-  userRole: String!
-  status: Status!
-  institutionId: String!
-  registerToken: String!
-}
-
-"""Date custom scalar type"""
-scalar Date
-
-enum Status {
-  ACTIVE
-  INACTIVE
-  BLOCKED
-  UNVERIFIED
-}
-
 type Institution {
   createdAt: Date!
   updatedAt: Date!
@@ -40,6 +14,9 @@ type Institution {
   token: String!
   tokenStatus: Float!
 }
+
+"""Date custom scalar type"""
+scalar Date
 
 enum InstitutionType {
   TECHNOLOGICAL
@@ -60,13 +37,49 @@ enum EducationStage {
   SECONDARY
 }
 
+type User {
+  createdAt: Date!
+  updatedAt: Date!
+  id: ID!
+  firstName: String!
+  middleName: String!
+  lastName: String!
+  userName: String!
+  email: String!
+  password: String!
+  userRole: String!
+  status: Status!
+  institution: Institution!
+  registerToken: String!
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+  BLOCKED
+  UNVERIFIED
+}
+
+type Teacher {
+  user: User!
+  id: ID!
+  education: String!
+  workExperience: Float!
+  contractType: ContractType!
+}
+
+enum ContractType {
+  PART_TIME
+  FULL_TIME
+}
+
 type Query {
   userById(id: Int!): User!
   userByEmail(email: String!): User!
   users: [User!]!
-  institutionById(id: Int!): Institution!
+  institutionById(id: String!): Institution!
   institutionByEmail(email: String!): Institution!
-  institutionToken(id: Int!): String!
+  institutionToken(id: String!): String!
   institutions: [Institution!]!
 }
 

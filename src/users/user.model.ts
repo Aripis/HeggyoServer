@@ -4,10 +4,11 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    ManyToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-// import { Status } from './user.entity';
+import { Institution } from 'src/institution/institution.model';
 
 export enum Status {
     ACTIVE,
@@ -72,9 +73,9 @@ export class User {
     })
     status: Status;
 
-    @Field({ nullable: false })
-    @Column({ nullable: false })
-    institutionId: string;
+    @Field(() => Institution, { nullable: false })
+    @ManyToOne(() => Institution)
+    institution: Institution;
 
     @Field({ nullable: false })
     @Column({ nullable: false })

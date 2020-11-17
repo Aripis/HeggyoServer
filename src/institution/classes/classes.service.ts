@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ClassInput } from './class.input';
-import { Class } from './class.entity';
+import { Class } from './class.model';
 
 @Injectable()
 export class InstitutionsService {

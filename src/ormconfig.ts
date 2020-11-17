@@ -10,8 +10,7 @@ export const initDB = () => ({
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
         entities: [__dirname + '/**/*.model{.ts,.js}'],
-        // FIXME:sync shouldnt be false
-        synchronize: false && process.env.NODE_ENV !== 'production',
+        synchronize: process.env.NODE_ENV !== 'production',
         migrationsRun: process.env.NODE_ENV === 'production',
         migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
         cli: {

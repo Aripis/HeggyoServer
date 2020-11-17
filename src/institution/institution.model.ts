@@ -14,7 +14,6 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-// import { Type, EducationStage, Status } from './institution.entity';
 
 export enum InstitutionType {
     TECHNOLOGICAL,
