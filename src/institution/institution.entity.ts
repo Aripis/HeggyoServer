@@ -7,22 +7,23 @@ import {
 } from 'typeorm';
 
 import { Length } from 'class-validator';
+import { InstitutionStatus, InstitutionType } from './institution.model';
 
-export enum Type {
-    TECHNOLOGICAL,
-    MATHEMATICAL,
-    NATURAL_MATHEMATICAL,
-    HUMANITARIAN,
-    ART,
-    LINGUISTICAL,
-    SU,
-    OU,
-}
+// export enum Type {
+//     TECHNOLOGICAL,
+//     MATHEMATICAL,
+//     NATURAL_MATHEMATICAL,
+//     HUMANITARIAN,
+//     ART,
+//     LINGUISTICAL,
+//     SU,
+//     OU,
+// }
 
-export enum Status {
-    ACTIVE,
-    INACTIVE,
-}
+// export enum InstitutionStatus {
+//     ACTIVE,
+//     INACTIVE,
+// }
 
 export enum EducationStage {
     ELEMENTARY,
@@ -51,10 +52,10 @@ export class Institution {
 
     @Column({
         type: 'enum',
-        enum: Type,
+        enum: InstitutionType,
         nullable: false,
     })
-    type: Type;
+    type: InstitutionType;
 
     @Column({ nullable: false })
     capacityPerClass: number;
@@ -66,15 +67,15 @@ export class Institution {
     })
     educationalStage: EducationStage;
 
-    @Column({
-        type: 'enum',
-        enum: Status,
-        nullable: false,
-        default: Status.ACTIVE,
-    })
-    tokenStatus: Status;
-
     @Column({ nullable: false })
     @Length(5)
     token: string;
+
+    @Column({
+        type: 'enum',
+        enum: InstitutionStatus,
+        nullable: false,
+        default: InstitutionStatus.ACTIVE,
+    })
+    tokenStatus: InstitutionStatus;
 }

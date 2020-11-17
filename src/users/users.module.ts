@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './user.entity';
+import { User } from './user.model';
 import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
 import { DateScalar } from '../common/scalars/date.scalar';

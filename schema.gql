@@ -34,14 +34,14 @@ type Institution {
   id: ID!
   name: String!
   email: String!
-  type: Type!
+  type: InstitutionType!
   capacityPerClass: Float!
   educationalStage: EducationStage!
   token: String!
   tokenStatus: Float!
 }
 
-enum Type {
+enum InstitutionType {
   TECHNOLOGICAL
   MATHEMATICAL
   NATURAL_MATHEMATICAL
@@ -90,7 +90,7 @@ input UserInput {
 input InstitutionInput {
   name: String!
   email: String!
-  type: Type!
+  type: InstitutionType!
   capacityPerClass: Float!
   educationalStage: EducationStage!
 }

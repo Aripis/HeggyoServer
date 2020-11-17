@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserInput } from './user.input';
-import { User } from './user.entity';
+import { User } from './user.model';
 import * as bcrypt from 'bcrypt';
 import { InstitutionsService } from 'src/institution/institutions.service';
 
