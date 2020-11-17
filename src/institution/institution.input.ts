@@ -16,7 +16,6 @@ registerEnumType(EducationStage, {
 });
 
 @InputType()
-// @ObjectType()
 export class InstitutionInput {
     @Field({ nullable: false })
     name: string;
