@@ -79,8 +79,7 @@ enum ContractType {
 }
 
 type Query {
-  userById(id: Int!): User!
-  userByEmail(email: String!): User!
+  user(id: String!): User!
   users: [User!]!
   profile: User!
   login(newLoginData: LoginInput!): Token!

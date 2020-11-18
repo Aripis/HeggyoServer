@@ -1,10 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { ConfigService } from '@nestjs/config';
 import * as compression from 'compression';
 import * as helmet from 'helmet';
+import * as CookieParser from 'cookie-parser';
 
 const bootstrap = async () => {
     const app = await NestFactory.create(AppModule);
+    const configService = app.get(ConfigService);
     app.use(compression());
     app.use(
         helmet({
@@ -12,6 +15,7 @@ const bootstrap = async () => {
                 process.env.NODE_ENV === 'production' ? undefined : false,
         }),
     );
+    app.use(CookieParser(configService.get('COOKIE_SECRET')));
     app.enableCors({ origin: [/^https:\/\/heggyo-client.*\.vercel\.app$/] });
 
     await app.listen(8080);

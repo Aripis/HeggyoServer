@@ -23,7 +23,7 @@ import { InstitutionsModule } from './institution/institutions.module';
         GraphQLModule.forRoot({
             installSubscriptionHandlers: true,
             autoSchemaFile: 'schema.gql',
-            context: ({ req }) => ({ req }),
+            context: ({ req, res }) => ({ req, res }),
         }),
     ],
     controllers: [AppController],
