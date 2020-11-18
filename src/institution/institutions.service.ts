@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { InstitutionInput } from './institution.input';
-import { Institution } from './institution.entity';
+import { Institution } from './institution.model';
 
 @Injectable()
 export class InstitutionsService {
@@ -39,17 +39,11 @@ export class InstitutionsService {
         return this.institutionsRepository.find();
     }
 
-    async findOne(id: number | string): Promise<Institution> {
+    async findOne(uuid: string): Promise<Institution> {
         let institution = null;
-        if (typeof id === 'number') {
-            institution = await this.institutionsRepository.findOne(id);
-        } else if (typeof id === 'string') {
-            institution = await this.institutionsRepository.findOne({
-                where: { email: id },
-            });
-        }
+        institution = await this.institutionsRepository.findOne(uuid);
         if (!institution) {
-            throw new NotFoundException(id);
+            throw new NotFoundException(uuid);
         }
         return institution;
     }

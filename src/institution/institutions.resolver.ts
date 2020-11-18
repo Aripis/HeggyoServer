@@ -9,10 +9,8 @@ export class InstitutionsResolver {
     constructor(private readonly institutionsService: InstitutionsService) {}
 
     @Query(returns => Institution)
-    async institutionById(
-        @Args('id', { type: () => Int }) id: number,
-    ): Promise<Institution> {
-        const institution = await this.institutionsService.findOne(id);
+    async institutionById(@Args('id') uuid: string): Promise<Institution> {
+        const institution = await this.institutionsService.findOne(uuid);
         return institution;
     }
 
@@ -25,10 +23,8 @@ export class InstitutionsResolver {
     }
 
     @Query(returns => String)
-    async institutionToken(
-        @Args('id', { type: () => Int }) id: number,
-    ): Promise<string> {
-        const institutionToken = await this.institutionsService.findOne(id);
+    async institutionToken(@Args('id') uuid: string): Promise<string> {
+        const institutionToken = await this.institutionsService.findOne(uuid);
         return institutionToken.token;
     }
 

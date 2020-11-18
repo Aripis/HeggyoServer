@@ -2,51 +2,23 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
-  createdAt: Date!
-  updatedAt: Date!
-  id: ID!
-  firstName: String!
-  middleName: String!
-  lastName: String!
-  userName: String!
-  email: String!
-  password: String!
-  userRole: String!
-  status: Status!
-  institutionId: Float!
-  registerToken: String!
-}
-
-"""Date custom scalar type"""
-scalar Date
-
-enum Status {
-  ACTIVE
-  INACTIVE
-  BLOCKED
-  UNVERIFIED
-}
-
-type Token {
-  accessToken: String!
-  refreshToken: String!
-}
-
 type Institution {
   createdAt: Date!
   updatedAt: Date!
   id: ID!
   name: String!
   email: String!
-  type: Type!
+  type: InstitutionType!
   capacityPerClass: Float!
   educationalStage: EducationStage!
   token: String!
   tokenStatus: Float!
 }
 
-enum Type {
+"""Date custom scalar type"""
+scalar Date
+
+enum InstitutionType {
   TECHNOLOGICAL
   MATHEMATICAL
   NATURAL_MATHEMATICAL
@@ -65,15 +37,56 @@ enum EducationStage {
   SECONDARY
 }
 
+type User {
+  createdAt: Date!
+  updatedAt: Date!
+  id: ID!
+  firstName: String!
+  middleName: String!
+  lastName: String!
+  userName: String!
+  email: String!
+  password: String!
+  userRole: String!
+  status: Status!
+  institution: Institution!
+  registerToken: String!
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+  BLOCKED
+  UNVERIFIED
+}
+
+type Token {
+  accessToken: String!
+  refreshToken: String!
+}
+
+type Teacher {
+  user: User!
+  id: ID!
+  education: String!
+  workExperience: Float!
+  contractType: ContractType!
+}
+
+enum ContractType {
+  PART_TIME
+  FULL_TIME
+}
+
 type Query {
   userById(id: Int!): User!
   userByEmail(email: String!): User!
   users: [User!]!
   profile: User!
   login(newLoginData: LoginInput!): Token!
-  institutionById(id: Int!): Institution!
+  institutionById(id: String!): Institution!
   institutionByEmail(email: String!): Institution!
-  institutionToken(id: Int!): String!
+  institutionToken(id: String!): String!
   institutions: [Institution!]!
 }
 
@@ -103,7 +116,7 @@ input UserInput {
 input InstitutionInput {
   name: String!
   email: String!
-  type: Type!
+  type: InstitutionType!
   capacityPerClass: Float!
   educationalStage: EducationStage!
 }

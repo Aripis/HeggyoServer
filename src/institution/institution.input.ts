@@ -5,10 +5,10 @@ import {
     registerEnumType,
     ObjectType,
 } from '@nestjs/graphql';
-import { Type, EducationStage } from './institution.entity';
+import { InstitutionType, EducationStage } from './institution.model';
 
-registerEnumType(Type, {
-    name: 'Type',
+registerEnumType(InstitutionType, {
+    name: 'InstitutionType',
 });
 
 registerEnumType(EducationStage, {
@@ -16,7 +16,6 @@ registerEnumType(EducationStage, {
 });
 
 @InputType()
-// @ObjectType()
 export class InstitutionInput {
     @Field({ nullable: false })
     name: string;
@@ -24,8 +23,8 @@ export class InstitutionInput {
     @Field({ nullable: false })
     email: string;
 
-    @Field(type => Type, { nullable: false })
-    type: Type;
+    @Field(type => InstitutionType, { nullable: false })
+    type: InstitutionType;
 
     @Field({ nullable: false })
     capacityPerClass: number;
