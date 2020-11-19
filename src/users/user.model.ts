@@ -4,21 +4,34 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinColumn,
     ManyToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
 import { Institution } from 'src/institution/institution.model';
 
-export enum Status {
+export enum UserStatus {
     ACTIVE,
     INACTIVE,
     BLOCKED,
     UNVERIFIED,
 }
 
-registerEnumType(Status, {
-    name: 'Status',
+export enum UserRoles {
+    ADMIN,
+    PARENT,
+    STUDENT,
+    TEACHER,
+    VIEWER,
+}
+
+registerEnumType(UserStatus, {
+    name: 'UserStatus',
+});
+
+registerEnumType(UserRoles, {
+    name: 'UserRoles',
 });
 
 @ObjectType()
@@ -36,48 +49,52 @@ export class User {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Field({ nullable: false })
-    @Column({ nullable: false })
+    @Field()
+    @Column('varchar', { length: 50 })
     firstName: string;
 
-    @Field({ nullable: false })
-    @Column({ nullable: false })
+    @Field()
+    @Column('varchar', { length: 50 })
     middleName: string;
 
-    @Field({ nullable: false })
-    @Column({ nullable: false })
+    @Field()
+    @Column('varchar', { length: 50 })
     lastName: string;
 
-    @Field({ nullable: false })
-    @Column({ nullable: false })
-    userName: string;
-
-    @Field({ nullable: false })
-    @Column({ nullable: false })
+    @Field()
+    @Column({
+        type: 'varchar',
+        unique: true,
+        length: 70,
+    })
     email: string;
 
-    @Field({ nullable: false })
-    @Column({ nullable: false })
+    @Field()
+    @Column('text')
     password: string;
 
-    @Field({ nullable: false })
-    @Column({ nullable: true })
-    userRole: string;
-
-    @Field(() => Status, { nullable: false })
+    @Field(() => UserRoles)
     @Column({
         type: 'enum',
-        enum: Status,
-        nullable: false,
-        default: Status.UNVERIFIED,
+        enum: UserRoles,
+        default: UserRoles.VIEWER,
     })
-    status: Status;
+    userRole: string;
 
-    @Field(() => Institution, { nullable: false })
-    @ManyToOne(() => Institution)
-    institution: Institution;
+    @Field({ nullable: true })
+    @Column('text', { nullable: true })
+    registerToken?: string;
 
-    @Field({ nullable: false })
-    @Column({ nullable: false })
-    registerToken: string;
+    @Field(() => UserStatus)
+    @Column({
+        type: 'enum',
+        enum: UserStatus,
+        default: UserStatus.UNVERIFIED,
+    })
+    status: UserStatus;
+
+    @Field(() => Institution, { nullable: true })
+    @ManyToOne(() => Institution, { nullable: true })
+    @JoinColumn({ name: 'institution' })
+    institution?: Institution;
 }

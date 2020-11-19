@@ -19,7 +19,7 @@ export class InstitutionsService {
     async create(institutionInput: InstitutionInput): Promise<Institution> {
         const institution = new Institution();
         Object.assign(institution, institutionInput);
-        institution.token = this.generateUniqueToken();
+        institution.registerToken = this.generateUniqueToken();
         try {
             const result = await this.institutionsRepository.save(institution);
             return result;
@@ -48,19 +48,19 @@ export class InstitutionsService {
         return institution;
     }
 
-    async findOneByToken(token: string): Promise<Institution> {
+    async findOneByToken(registerToken: string): Promise<Institution> {
         let institution = null;
         institution = await this.institutionsRepository.findOne({
-            where: { token: token },
+            where: { registerToken: registerToken },
         });
         if (!institution) {
-            throw new NotFoundException(token);
+            throw new NotFoundException(registerToken);
         }
         return institution;
     }
 
-    async remove(id: number): Promise<void> {
-        await this.institutionsRepository.delete(id);
+    async remove(uuid: string): Promise<void> {
+        await this.institutionsRepository.delete(uuid);
     }
 
     private generateUniqueToken(): string {

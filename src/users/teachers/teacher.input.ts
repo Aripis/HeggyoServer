@@ -1,15 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Field, InputType, ID } from '@nestjs/graphql';
+import { Field, InputType, Int, registerEnumType } from '@nestjs/graphql';
 import { ContractType } from './teacher.model';
+
+registerEnumType(ContractType, {
+    name: 'ContractType',
+});
 
 @InputType()
 export class UserInput {
-    @Field({ nullable: false })
-    education: string;
+    @Field({ nullable: true })
+    education?: string;
 
-    @Field({ nullable: false })
-    workExperience: number;
+    @Field(() => Int, { nullable: true })
+    yearsExperience?: number;
 
-    @Field({ nullable: false })
-    contractType: ContractType;
+    @Field(() => ContractType, { nullable: true })
+    contractType?: ContractType;
 }

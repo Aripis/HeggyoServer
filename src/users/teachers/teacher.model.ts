@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Field, ID, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
 import {
     Column,
     Entity,
@@ -22,27 +21,29 @@ registerEnumType(ContractType, {
 @ObjectType()
 @Entity()
 export class Teacher {
-    @Field(() => User)
-    @PrimaryGeneratedColumn('uuid')
-    user: User;
-
     @Field(() => ID)
-    @OneToOne(() => User)
-    @JoinColumn()
+    @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Field({ nullable: false })
-    @Column({ nullable: false })
-    education: string;
+    @Field(() => User)
+    @OneToOne(() => User)
+    @JoinColumn({ name: 'user' })
+    user: User;
 
-    @Field({ nullable: false })
-    @Column({ nullable: false })
-    workExperience: number;
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    education?: string;
 
-    @Field(() => ContractType)
+    // TODO: should be able to auto-increment every year
+    @Field(() => Int)
+    @Column('tinyint', { nullable: true })
+    yearsExperience?: number;
+
+    @Field(() => ContractType, { nullable: true })
     @Column({
         type: 'enum',
         enum: ContractType,
+        nullable: true,
     })
-    contractType: ContractType;
+    contractType?: ContractType;
 }

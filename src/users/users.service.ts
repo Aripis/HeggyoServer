@@ -24,9 +24,11 @@ export class UsersService {
         const user = new User();
 
         Object.assign(user, userInput);
-        user.institution = await this.institutionsService.findOneByToken(
-            user.registerToken,
-        );
+        if (user && user.registerToken) {
+            user.institution = await this.institutionsService.findOneByToken(
+                user.registerToken,
+            );
+        }
         try {
             user.password = await bcrypt.hash(user.password, 10);
             const result = await this.usersRepository.save(user);

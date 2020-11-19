@@ -9,10 +9,10 @@ type Institution {
   name: String!
   email: String!
   type: InstitutionType!
-  capacityPerClass: Float!
+  capacityPerClass: Int
   educationalStage: EducationStage!
-  token: String!
-  tokenStatus: Float!
+  registerToken: String!
+  registerTokenStatus: Float!
 }
 
 """Date custom scalar type"""
@@ -44,16 +44,23 @@ type User {
   firstName: String!
   middleName: String!
   lastName: String!
-  userName: String!
   email: String!
   password: String!
-  userRole: String!
-  status: Status!
-  institution: Institution!
-  registerToken: String!
+  userRole: UserRoles!
+  registerToken: String
+  status: UserStatus!
+  institution: Institution
 }
 
-enum Status {
+enum UserRoles {
+  ADMIN
+  PARENT
+  STUDENT
+  TEACHER
+  VIEWER
+}
+
+enum UserStatus {
   ACTIVE
   INACTIVE
   BLOCKED
@@ -66,16 +73,32 @@ type Token {
 }
 
 type Teacher {
-  user: User!
   id: ID!
-  education: String!
-  workExperience: Float!
-  contractType: ContractType!
+  user: User!
+  education: String
+  yearsExperience: Int!
+  contractType: ContractType
 }
 
 enum ContractType {
   PART_TIME
   FULL_TIME
+}
+
+type Class {
+  id: ID!
+  forYear: Int!
+  totalStudentCount: Int!
+  classTeacher: Teacher!
+  classLetter: String!
+  classNumber: Int!
+  registerToken: String!
+  registerTokenStatus: TokenStatus!
+}
+
+enum TokenStatus {
+  ACTIVE
+  INACTIVE
 }
 
 type Query {
@@ -100,23 +123,22 @@ type Mutation {
   addUser(newUserData: UserInput!): User!
   removeUser(id: Int!): Boolean!
   addInstitution(newInstitutionData: InstitutionInput!): Institution!
-  removeInstitution(id: Float!): Boolean!
+  removeInstitution(id: String!): Boolean!
 }
 
 input UserInput {
   firstName: String!
   middleName: String!
   lastName: String!
-  userName: String!
   email: String!
   password: String!
-  registerToken: String!
+  registerToken: String
 }
 
 input InstitutionInput {
   name: String!
   email: String!
   type: InstitutionType!
-  capacityPerClass: Float!
+  capacityPerClass: Int
   educationalStage: EducationStage!
 }

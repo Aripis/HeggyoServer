@@ -1,20 +1,19 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
 export class ClassInput {
-    @Field({ nullable: false })
+    @Field()
     classLetter: string;
 
-    @Field({ nullable: false })
+    @Field(() => Int)
     forYear: number;
 
-    @Field({ nullable: false })
+    @Field(() => Int)
     totalStudentCount: number;
 
-    @Field({ nullable: false })
+    @Field(() => Int)
     classNumber: number;
 
-    @Field({ nullable: false })
+    @Field(() => Int)
     classTeacherId: number;
 }

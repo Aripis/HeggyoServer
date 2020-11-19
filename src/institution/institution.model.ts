@@ -1,11 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-    Field,
-    InputType,
-    registerEnumType,
-    ID,
-    ObjectType,
-} from '@nestjs/graphql';
+import { Field, registerEnumType, ID, ObjectType, Int } from '@nestjs/graphql';
 import { Length } from 'class-validator';
 import {
     Column,
@@ -26,7 +19,7 @@ export enum InstitutionType {
     OU,
 }
 
-export enum InstitutionStatus {
+export enum TokenStatus {
     ACTIVE,
     INACTIVE,
 }
@@ -43,8 +36,8 @@ registerEnumType(InstitutionType, {
     name: 'InstitutionType',
 });
 
-registerEnumType(InstitutionStatus, {
-    name: 'InstitutionStatus',
+registerEnumType(TokenStatus, {
+    name: 'TokenStatus',
 });
 
 registerEnumType(EducationStage, {
@@ -66,15 +59,15 @@ export class Institution {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Field({ nullable: false })
-    @Column({ nullable: false })
+    @Field()
+    @Column()
     name: string;
 
-    @Field({ nullable: false })
-    @Column({ nullable: false })
+    @Field()
+    @Column()
     email: string;
 
-    @Field(() => InstitutionType, { nullable: false })
+    @Field(() => InstitutionType)
     @Column({
         type: 'enum',
         enum: InstitutionType,
@@ -82,11 +75,11 @@ export class Institution {
     })
     type: InstitutionType;
 
-    @Field({ nullable: false })
-    @Column({ nullable: false })
-    capacityPerClass: number;
+    @Field(() => Int, { nullable: true })
+    @Column('tinyint', { nullable: true })
+    capacityPerClass?: number;
 
-    @Field(() => EducationStage, { nullable: false })
+    @Field(() => EducationStage)
     @Column({
         type: 'enum',
         enum: EducationStage,
@@ -94,17 +87,17 @@ export class Institution {
     })
     educationalStage: EducationStage;
 
-    @Field({ nullable: false })
-    @Column({ nullable: false })
+    @Field()
+    @Column()
     @Length(5)
-    token: string;
+    registerToken: string;
 
-    @Field({ nullable: false })
+    @Field()
     @Column({
         type: 'enum',
-        enum: InstitutionStatus,
+        enum: TokenStatus,
         nullable: false,
-        default: InstitutionStatus.ACTIVE,
+        default: TokenStatus.ACTIVE,
     })
-    tokenStatus: InstitutionStatus;
+    registerTokenStatus: TokenStatus;
 }

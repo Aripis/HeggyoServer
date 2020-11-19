@@ -1,10 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-    Field,
-    InputType,
-    registerEnumType,
-    ObjectType,
-} from '@nestjs/graphql';
+import { Field, InputType, registerEnumType, Int } from '@nestjs/graphql';
 import { InstitutionType, EducationStage } from './institution.model';
 
 registerEnumType(InstitutionType, {
@@ -17,18 +11,18 @@ registerEnumType(EducationStage, {
 
 @InputType()
 export class InstitutionInput {
-    @Field({ nullable: false })
+    @Field()
     name: string;
 
-    @Field({ nullable: false })
+    @Field()
     email: string;
 
-    @Field(type => InstitutionType, { nullable: false })
+    @Field(() => InstitutionType)
     type: InstitutionType;
 
-    @Field({ nullable: false })
-    capacityPerClass: number;
+    @Field(() => Int, { nullable: true })
+    capacityPerClass?: number;
 
-    @Field(type => EducationStage, { nullable: false })
+    @Field(() => EducationStage)
     educationalStage: EducationStage;
 }

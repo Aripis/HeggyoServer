@@ -1,31 +1,28 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Field, InputType } from '@nestjs/graphql';
-import { MaxLength } from 'class-validator';
+import { MaxLength, MinLength } from 'class-validator';
 
 @InputType()
 export class UserInput {
-    @Field({ nullable: false })
+    @Field()
     @MaxLength(50)
     firstName: string;
 
-    @Field({ nullable: false })
+    @Field()
     @MaxLength(50)
     middleName: string;
 
-    @Field({ nullable: false })
+    @Field()
     @MaxLength(50)
     lastName: string;
 
-    @Field({ nullable: false })
-    @MaxLength(25)
-    userName: string;
-
-    @Field({ nullable: false })
+    @Field()
     email: string;
 
-    @Field({ nullable: false })
+    @Field()
+    @MinLength(7)
     password: string;
 
-    @Field({ nullable: false })
-    registerToken: string;
+    @Field({ nullable: true })
+    registerToken?: string;
 }

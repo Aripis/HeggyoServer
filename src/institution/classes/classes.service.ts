@@ -19,7 +19,7 @@ export class InstitutionsService {
     async create(classInput: ClassInput): Promise<Class> {
         const studentsClass = new Class();
         Object.assign(studentsClass, classInput);
-        studentsClass.token = this.generateUniqueToken();
+        studentsClass.registerToken = this.generateUniqueToken();
         try {
             const result = await this.classesRepository.save(studentsClass);
             return result;
@@ -48,13 +48,13 @@ export class InstitutionsService {
         return studentsClass;
     }
 
-    async findOneByToken(token: string): Promise<Class> {
+    async findOneByToken(registerToken: string): Promise<Class> {
         let studentsClass = null;
         studentsClass = await this.classesRepository.findOne({
-            where: { token: token },
+            where: { registerToken: registerToken },
         });
         if (!studentsClass) {
-            throw new NotFoundException(token);
+            throw new NotFoundException(registerToken);
         }
         return studentsClass;
     }

@@ -1,6 +1,7 @@
-import { Field, registerEnumType, ID, ObjectType } from '@nestjs/graphql';
+import { Field, registerEnumType, ID, ObjectType, Int } from '@nestjs/graphql';
 import { Length } from 'class-validator';
 import { Teacher } from 'src/users/teachers/teacher.model';
+import { TokenStatus } from '../institution.model';
 import {
     Column,
     Entity,
@@ -9,13 +10,8 @@ import {
     PrimaryGeneratedColumn,
 } from 'typeorm';
 
-export enum Status {
-    ACTIVE,
-    INACTIVE,
-}
-
-registerEnumType(Status, {
-    name: 'Status',
+registerEnumType(TokenStatus, {
+    name: 'TokenStatus',
 });
 
 @ObjectType()
@@ -25,40 +21,41 @@ export class Class {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Field({ nullable: false })
-    @Column({ nullable: false })
+    @Field(() => Int)
+    @Column('year')
     forYear: number;
 
-    @Field({ nullable: false })
-    @Column({ nullable: false })
+    @Field(() => Int)
+    @Column('tinyint')
     totalStudentCount: number;
 
-    @Field({ nullable: false })
+    @Field(() => Teacher)
     @OneToOne(() => Teacher)
-    @JoinColumn()
-    classTeacherId: Teacher;
+    @JoinColumn({ name: 'classTeacher' })
+    classTeacher: Teacher;
 
-    @Field({ nullable: false })
-    @Column({ nullable: false })
+    // FIXME: think if it shouldn't be only one char
+    @Field()
+    @Column('varchar', { length: 3 })
     @Length(1, 3)
     classLetter: string;
 
-    @Field({ nullable: false })
-    @Column({ nullable: false })
+    @Field(() => Int)
+    @Column('tinyint')
     @Length(1, 3)
     classNumber: number;
 
-    @Field({ nullable: false })
-    @Column({ nullable: false })
+    @Field()
+    @Column('varchar', { length: 5 })
     @Length(5)
-    token: string;
+    registerToken: string;
 
-    @Field({ nullable: false })
+    @Field(() => TokenStatus)
     @Column({
         type: 'enum',
-        enum: Status,
+        enum: TokenStatus,
         nullable: false,
-        default: Status.ACTIVE,
+        default: TokenStatus.ACTIVE,
     })
-    tokenStatus: Status;
+    registerTokenStatus: TokenStatus;
 }

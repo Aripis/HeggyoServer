@@ -25,7 +25,7 @@ export class InstitutionsResolver {
     @Query(returns => String)
     async institutionToken(@Args('id') uuid: string): Promise<string> {
         const institutionToken = await this.institutionsService.findOne(uuid);
-        return institutionToken.token;
+        return institutionToken.registerToken;
     }
 
     @Query(returns => [Institution])
@@ -44,7 +44,7 @@ export class InstitutionsResolver {
     }
 
     @Mutation(returns => Boolean)
-    async removeInstitution(@Args('id') id: number) {
-        return this.institutionsService.remove(id);
+    async removeInstitution(@Args('id') uuid: string) {
+        return this.institutionsService.remove(uuid);
     }
 }
