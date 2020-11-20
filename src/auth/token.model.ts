@@ -3,9 +3,9 @@ import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class Token {
-    @Field({ nullable: false })
+    @Field()
     accessToken: string;
 
-    @Field({ nullable: false })
-    refreshToken: string;
+    @Field({ nullable: true })
+    refreshToken?: string;
 }

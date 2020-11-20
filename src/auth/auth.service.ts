@@ -1,4 +1,9 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import {
+    Injectable,
+    NotFoundException,
+    BadRequestException,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService, JwtVerifyOptions } from '@nestjs/jwt';
 import { LoginInput } from './login.input';
@@ -18,25 +23,34 @@ export class AuthService {
         const user = await this.usersService.findOne(email);
         if (user) {
             if (await bcrypt.compare(pass, user.password)) {
-                // try {
-                //     this.jwtService.verify(
-                //         user.refreshToken,
-                //         this.configService.get<JwtVerifyOptions>('JWT_SECRET'),
-                //     );
-                // } catch (error) {
-                //     user.refreshToken = this.jwtService.sign(
-                //         {},
-                //         { expiresIn: '100d' },
-                //     );
-                // }
-                // this.usersService.update(user);
+                const refreshToken = this.jwtService.sign(
+                    { sub: user.id },
+                    {
+                        expiresIn: `${this.configService.get<number>(
+                            'JWT_REFRESH_TOKEN_EXPIRATION_TIME',
+                        )}s`,
+                    },
+                );
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const { password, ...result } = user;
-                return result;
+                return { ...result, refreshToken };
             }
-            throw new HttpException('Invalid password', HttpStatus.BAD_REQUEST);
+            throw new BadRequestException('Invalid password');
         } else {
-            throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+            throw new NotFoundException('Not found');
+        }
+    }
+
+    async regenerateToken(refreshToken: string) {
+        try {
+            this.jwtService.verify(
+                refreshToken,
+                this.configService.get<JwtVerifyOptions>('JWT_SECRET'),
+            );
+            const decodedRefreshToken = this.jwtService.decode(refreshToken);
+            return this.jwtService.sign({ sub: decodedRefreshToken.sub });
+        } catch (error) {
+            throw new UnauthorizedException('Refresh token expired');
         }
     }
 
@@ -45,11 +59,9 @@ export class AuthService {
             loginData.email,
             loginData.password,
         );
-        const payload = { email: result.email, sub: result.id };
-
         return {
-            accessToken: this.jwtService.sign(payload),
-            refreshToken: '',
+            accessToken: this.jwtService.sign({ sub: result.id }),
+            refreshToken: result.refreshToken,
         };
     }
 }

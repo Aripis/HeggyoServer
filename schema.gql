@@ -69,7 +69,7 @@ enum UserStatus {
 
 type Token {
   accessToken: String!
-  refreshToken: String!
+  refreshToken: String
 }
 
 type Teacher {
@@ -103,11 +103,11 @@ enum TokenStatus {
 }
 
 type Query {
-  userById(id: Int!): User!
-  userByEmail(email: String!): User!
+  user(id: String!): User!
   users: [User!]!
   profile: User!
-  login(newLoginData: LoginInput!): Token!
+  login(loginData: LoginInput!): User!
+  token: Token!
   institutionById(id: String!): Institution!
   institutionByEmail(email: String!): Institution!
   institutionToken(id: String!): String!
@@ -120,8 +120,8 @@ input LoginInput {
 }
 
 type Mutation {
-  register(newUserData: UserInput!): User!
-  addUser(newUserData: UserInput!): User!
+  register(userData: UserInput!): User!
+  addUser(userData: UserInput!): User!
   removeUser(id: Int!): Boolean!
   addInstitution(newInstitutionData: InstitutionInput!): Institution!
   removeInstitution(id: String!): Boolean!
