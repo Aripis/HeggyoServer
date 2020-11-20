@@ -45,7 +45,7 @@ export class UsersResolver {
     async login(@Args('loginData') loginData: LoginInput, @Context() ctx) {
         const tokens = await this.authService.login(loginData);
         ctx.res.cookie('refreshToken', tokens.refreshToken, {
-            maxAge: 144000 * 60 * 1000, //100 days
+            maxAge: 86400 * 60 * 1000, //100 days
             httpOnly: true,
         });
         ctx.res.set('Authorization', 'Bearer ' + tokens.accessToken);
@@ -58,6 +58,7 @@ export class UsersResolver {
         const accessToken = await this.authService.regenerateToken(
             ctx.req.cookies.refreshToken,
         );
+        ctx.res.set('Authorization', 'Bearer ' + accessToken);
         return {
             accessToken,
         };
