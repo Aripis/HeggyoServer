@@ -38,35 +38,39 @@ export class UsersResolver {
     @Query(returns => User)
     @UseGuards(GqlAuthGuard)
     profile(@CurrentUser() user: User) {
-        return this.usersService.findOne('kalata@aripis.com');
+        return this.usersService.findOne(user.id);
+    }
+
+    @Query(returns => User)
+    async login(@Args('loginData') loginData: LoginInput, @Context() ctx) {
+        const tokens = await this.authService.login(loginData);
+        ctx.res.cookie('refreshToken', tokens.refreshToken, {
+            maxAge: 144000 * 60 * 1000, //100 days
+            httpOnly: true,
+        });
+        ctx.res.set('Authorization', 'Bearer ' + tokens.accessToken);
+        const user = await this.usersService.findOne(loginData.email);
+        return user;
     }
 
     @Query(returns => Token)
-    async login(
-        @Args('newLoginData') newLoginData: LoginInput,
-        @Context() ctx,
-    ) {
-        const tokens = await this.authService.login(
-            newLoginData,
+    async token(@Context() ctx) {
+        const accessToken = await this.authService.regenerateToken(
             ctx.req.cookies.refreshToken,
         );
-        if (ctx.req.cookies.refreshToken !== tokens.refreshToken) {
-            ctx.res.cookie('refreshToken', tokens.refreshToken, {
-                maxAge: 144000 * 60 * 1000, //100 days
-                httpOnly: true,
-            });
-        }
-        return tokens;
+        return {
+            accessToken,
+        };
     }
 
     @Mutation(returns => User)
-    async register(@Args('newUserData') newUserData: UserInput): Promise<User> {
-        return this.usersService.create(newUserData);
+    async register(@Args('userData') userData: UserInput): Promise<User> {
+        return this.usersService.create(userData);
     }
 
     @Mutation(returns => User)
-    async addUser(@Args('newUserData') newUserData: UserInput): Promise<User> {
-        return this.usersService.create(newUserData);
+    async addUser(@Args('userData') userData: UserInput): Promise<User> {
+        return this.usersService.create(userData);
     }
 
     @Mutation(returns => Boolean)

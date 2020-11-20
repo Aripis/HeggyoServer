@@ -2,6 +2,7 @@ import {
     Injectable,
     NotFoundException,
     BadRequestException,
+    UnauthorizedException,
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService, JwtVerifyOptions } from '@nestjs/jwt';
@@ -18,25 +19,18 @@ export class AuthService {
         private readonly configService: ConfigService,
     ) {}
 
-    async validateUser(email: string, pass: string, refreshToken: string) {
+    async validateUser(email: string, pass: string) {
         const user = await this.usersService.findOne(email);
         if (user) {
             if (await bcrypt.compare(pass, user.password)) {
-                try {
-                    this.jwtService.verify(
-                        refreshToken,
-                        this.configService.get<JwtVerifyOptions>('JWT_SECRET'),
-                    );
-                } catch (error) {
-                    refreshToken = this.jwtService.sign(
-                        {},
-                        {
-                            expiresIn: `${this.configService.get<number>(
-                                'JWT_REFRESH_TOKEN_EXPIRATION_TIME',
-                            )}s`,
-                        },
-                    );
-                }
+                const refreshToken = this.jwtService.sign(
+                    { sub: user.id },
+                    {
+                        expiresIn: `${this.configService.get<number>(
+                            'JWT_REFRESH_TOKEN_EXPIRATION_TIME',
+                        )}s`,
+                    },
+                );
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const { password, ...result } = user;
                 return { ...result, refreshToken };
@@ -47,16 +41,26 @@ export class AuthService {
         }
     }
 
-    async login(loginData: LoginInput, refreshToken: string): Promise<Token> {
+    async regenerateToken(refreshToken: string) {
+        try {
+            this.jwtService.verify(
+                refreshToken,
+                this.configService.get<JwtVerifyOptions>('JWT_SECRET'),
+            );
+            const decodedRefreshToken = this.jwtService.decode(refreshToken);
+            return this.jwtService.sign({ sub: decodedRefreshToken.sub });
+        } catch (error) {
+            throw new UnauthorizedException('Refresh token expired');
+        }
+    }
+
+    async login(loginData: LoginInput): Promise<Token> {
         const result = await this.validateUser(
             loginData.email,
             loginData.password,
-            refreshToken,
         );
-        const payload = { email: result.email, sub: result.id };
-
         return {
-            accessToken: this.jwtService.sign(payload),
+            accessToken: this.jwtService.sign({ sub: result.id }),
             refreshToken: result.refreshToken,
         };
     }
