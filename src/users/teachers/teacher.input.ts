@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Field, InputType, Int, registerEnumType } from '@nestjs/graphql';
 import { ContractType } from './teacher.model';
 
@@ -16,4 +15,7 @@ export class UserInput {
 
     @Field(() => ContractType, { nullable: true })
     contractType?: ContractType;
+
+    @Field()
+    teacherToken: string;
 }

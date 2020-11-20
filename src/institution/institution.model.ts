@@ -60,11 +60,11 @@ export class Institution {
     id: string;
 
     @Field()
-    @Column()
+    @Column({ unique: true })
     name: string;
 
     @Field()
-    @Column()
+    @Column({ unique: true })
     email: string;
 
     @Field(() => InstitutionType)
@@ -88,7 +88,7 @@ export class Institution {
     educationalStage: EducationStage;
 
     @Field()
-    @Column()
+    @Column({ unique: true })
     @Length(5)
     registerToken: string;
 

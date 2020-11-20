@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Class } from 'src/institution/classes/class.model';
 import {
     Column,
-    CreateDateColumn,
     Entity,
     JoinColumn,
     OneToOne,
@@ -23,14 +21,6 @@ export class Student {
     @JoinColumn({ name: 'user' })
     user: User;
 
-    @Field({ nullable: true })
-    @Column('varchar', { nullable: true, length: 2 })
-    classLetter?: string;
-
-    @Field(() => Int, { nullable: true })
-    @Column({ type: 'tinyint', nullable: true })
-    classNumber?: number;
-
     @Field(() => Date, { nullable: true })
     @Column({ type: 'date', nullable: true })
     startDate?: Date;
@@ -40,7 +30,11 @@ export class Student {
     @JoinColumn({ name: 'class' })
     class?: Class;
 
-    @Field({ nullable: true })
-    @Column('text', { nullable: true })
-    prevEducation?: string;
+    @Field()
+    @Column('text', { default: 'none' })
+    prevEducation: string;
+
+    @Field()
+    @Column('varchar', { length: 5 })
+    studentToken: string;
 }

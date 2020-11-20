@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Institution } from 'src/institution/institution.model';
 import {
     Column,
     CreateDateColumn,
@@ -9,7 +9,6 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { Institution } from 'src/institution/institution.model';
 
 export enum UserStatus {
     ACTIVE,
@@ -82,7 +81,7 @@ export class User {
     userRole: string;
 
     @Field({ nullable: true })
-    @Column('text', { nullable: true })
+    @Column('varchar', { length: 6, nullable: true })
     registerToken?: string;
 
     @Field(() => UserStatus)

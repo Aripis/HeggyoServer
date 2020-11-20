@@ -7,7 +7,6 @@ import {
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from '../user.model';
-// import { ContractType } from './teacher.entity';
 
 export enum ContractType {
     PART_TIME,
@@ -46,4 +45,8 @@ export class Teacher {
         nullable: true,
     })
     contractType?: ContractType;
+
+    @Field()
+    @Column('varchar', { length: 5 })
+    teacherToken: string;
 }

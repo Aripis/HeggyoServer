@@ -46,7 +46,7 @@ export class Class {
     classNumber: number;
 
     @Field()
-    @Column('varchar', { length: 5 })
+    @Column('varchar', { length: 5, unique: true })
     @Length(5)
     registerToken: string;
 

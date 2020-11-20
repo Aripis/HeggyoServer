@@ -78,6 +78,7 @@ type Teacher {
   education: String
   yearsExperience: Int!
   contractType: ContractType
+  teacherToken: String!
 }
 
 enum ContractType {
