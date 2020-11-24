@@ -25,4 +25,7 @@ export class InstitutionInput {
 
     @Field(() => EducationStage)
     educationalStage: EducationStage;
+
+    @Field()
+    alias: string;
 }

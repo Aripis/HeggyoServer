@@ -78,10 +78,10 @@ export class User {
         enum: UserRoles,
         default: UserRoles.VIEWER,
     })
-    userRole: string;
+    userRole: UserRoles;
 
     @Field({ nullable: true })
-    @Column('varchar', { length: 6, nullable: true })
+    @Column({ nullable: true })
     registerToken?: string;
 
     @Field(() => UserStatus)

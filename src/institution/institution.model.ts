@@ -19,11 +19,6 @@ export enum InstitutionType {
     OU,
 }
 
-export enum TokenStatus {
-    ACTIVE,
-    INACTIVE,
-}
-
 export enum EducationStage {
     ELEMENTARY,
     PRIMARY,
@@ -34,10 +29,6 @@ export enum EducationStage {
 
 registerEnumType(InstitutionType, {
     name: 'InstitutionType',
-});
-
-registerEnumType(TokenStatus, {
-    name: 'TokenStatus',
 });
 
 registerEnumType(EducationStage, {
@@ -90,14 +81,5 @@ export class Institution {
     @Field()
     @Column({ unique: true })
     @Length(5)
-    registerToken: string;
-
-    @Field()
-    @Column({
-        type: 'enum',
-        enum: TokenStatus,
-        nullable: false,
-        default: TokenStatus.ACTIVE,
-    })
-    registerTokenStatus: TokenStatus;
+    alias: string;
 }

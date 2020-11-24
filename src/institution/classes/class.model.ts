@@ -1,7 +1,6 @@
 import { Field, registerEnumType, ID, ObjectType, Int } from '@nestjs/graphql';
 import { Length } from 'class-validator';
 import { Teacher } from 'src/users/teachers/teacher.model';
-import { TokenStatus } from '../institution.model';
 import {
     Column,
     Entity,
@@ -9,6 +8,11 @@ import {
     OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
+
+export enum TokenStatus {
+    ACTIVE,
+    INACTIVE,
+}
 
 registerEnumType(TokenStatus, {
     name: 'TokenStatus',
@@ -48,7 +52,7 @@ export class Class {
     @Field()
     @Column('varchar', { length: 5, unique: true })
     @Length(5)
-    registerToken: string;
+    classToken: string;
 
     @Field(() => TokenStatus)
     @Column({

@@ -6,23 +6,25 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
 import { ClassInput } from './class.input';
 import { Class } from './class.model';
 
 @Injectable()
-export class InstitutionsService {
+export class ClassesService {
     constructor(
         @InjectRepository(Class)
         private readonly classesRepository: Repository<Class>,
     ) {}
 
-    async create(classInput: ClassInput): Promise<Class> {
+    create(classInput: ClassInput): Promise<Class> {
         const studentsClass = new Class();
         Object.assign(studentsClass, classInput);
-        studentsClass.registerToken = this.generateUniqueToken();
+
+        studentsClass.classToken = this.generateUniqueToken();
+
         try {
-            const result = await this.classesRepository.save(studentsClass);
-            return result;
+            return this.classesRepository.save(studentsClass);
         } catch (error) {
             if (error.code === 'ER_DUP_ENTRY') {
                 throw new ConflictException('This Class already exists');
@@ -31,36 +33,35 @@ export class InstitutionsService {
         }
     }
 
-    update(studentsClass: Class) {
-        return this.classesRepository.save(studentsClass);
-    }
+    // update(studentsClass: Class) {
+    //     return this.classesRepository.save(studentsClass);
+    // }
 
-    findAll(): Promise<Class[]> {
-        return this.classesRepository.find();
-    }
+    // findAll(): Promise<Class[]> {
+    //     return this.classesRepository.find();
+    // }
 
-    async findOne(id: number): Promise<Class> {
-        let studentsClass = null;
-        studentsClass = await this.classesRepository.findOne(id);
+    async findOne(uuid: string): Promise<Class> {
+        const studentsClass = await this.classesRepository.findOne(uuid);
         if (!studentsClass) {
-            throw new NotFoundException(id);
+            throw new NotFoundException(uuid);
         }
         return studentsClass;
     }
 
-    async findOneByToken(registerToken: string): Promise<Class> {
+    async findOneByToken(classToken: string): Promise<Class> {
         let studentsClass = null;
         studentsClass = await this.classesRepository.findOne({
-            where: { registerToken: registerToken },
+            where: { classToken: classToken },
         });
         if (!studentsClass) {
-            throw new NotFoundException(registerToken);
+            throw new NotFoundException(classToken);
         }
         return studentsClass;
     }
 
-    async remove(id: number): Promise<void> {
-        await this.classesRepository.delete(id);
+    async remove(uuid: string): Promise<void> {
+        await this.classesRepository.delete(uuid);
     }
 
     private generateUniqueToken(): string {

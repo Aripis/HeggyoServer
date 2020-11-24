@@ -1,17 +1,19 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { UseGuards } from '@nestjs/common';
-import { Args, Int, Mutation, Query, Resolver, Context } from '@nestjs/graphql';
-import { UserInput } from './user.input';
+import { Args, Mutation, Query, Resolver, Context } from '@nestjs/graphql';
 import { LoginInput } from '../auth/login.input';
-import { User } from './user.model';
-import { UsersService } from './users.service';
 import { AuthService } from '../auth/auth.service';
 import { Token } from '../auth/token.model';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { CurrentUser } from '../auth/currentuser.decorator';
 import { ConfigService } from '@nestjs/config';
+import * as bcrypt from 'bcrypt';
 
-@Resolver(of => User)
+import { User } from './user.model';
+import { UsersService } from './users.service';
+import { CreateUserInput } from './create-user.input';
+import { UpdateUserInput } from './update-user.input';
+
+@Resolver(() => User)
 export class UsersResolver {
     constructor(
         private readonly usersService: UsersService,
@@ -19,14 +21,14 @@ export class UsersResolver {
         private readonly configService: ConfigService,
     ) {}
 
-    @Query(returns => User)
-    async user(@Args('id') id: string): Promise<User> {
-        const user = await this.usersService.findOne(id);
+    @Query(() => User)
+    async user(@Args('id') uuid: string): Promise<User> {
+        const user = await this.usersService.findOne(uuid);
         user.password = '';
         return user;
     }
 
-    @Query(returns => [User])
+    @Query(() => [User])
     async users(): Promise<User[]> {
         const users = await this.usersService.findAll();
         return users.map(user => {
@@ -35,13 +37,13 @@ export class UsersResolver {
         });
     }
 
-    @Query(returns => User)
+    @Query(() => User)
     @UseGuards(GqlAuthGuard)
     profile(@CurrentUser() user: User) {
         return this.usersService.findOne(user.id);
     }
 
-    @Query(returns => User)
+    @Query(() => User)
     async login(@Args('loginData') loginData: LoginInput, @Context() ctx) {
         const tokens = await this.authService.login(loginData);
         ctx.res.cookie('refreshToken', tokens.refreshToken, {
@@ -53,7 +55,7 @@ export class UsersResolver {
         return user;
     }
 
-    @Query(returns => Token)
+    @Query(() => Token)
     async token(@Context() ctx) {
         const accessToken = await this.authService.regenerateToken(
             ctx.req.cookies.refreshToken,
@@ -64,18 +66,46 @@ export class UsersResolver {
         };
     }
 
-    @Mutation(returns => User)
-    async register(@Args('userData') userData: UserInput): Promise<User> {
-        return this.usersService.create(userData);
+    @Mutation(() => User)
+    async register(@Args('userData') userData: CreateUserInput): Promise<User> {
+        return await this.usersService.create(userData);
     }
 
-    @Mutation(returns => User)
-    async addUser(@Args('userData') userData: UserInput): Promise<User> {
-        return this.usersService.create(userData);
+    @Mutation(() => Boolean)
+    removeUser(@Args('uuid') uuid: string) {
+        return this.usersService.remove(uuid);
     }
 
-    @Mutation(returns => Boolean)
-    async removeUser(@Args('id', { type: () => Int }) id: number) {
-        return this.usersService.remove(id);
+    @Mutation(() => User)
+    @UseGuards(GqlAuthGuard)
+    async updateUser(@Args('userData') userData: UpdateUserInput) {
+        const updatedUser = await this.usersService.findOne(userData.id);
+        if (userData) {
+            if (userData.password) {
+                updatedUser.password = await bcrypt.hash(userData.password, 10);
+            }
+
+            if (userData.email) {
+                updatedUser.email = userData.email;
+            }
+
+            if (userData.firstName) {
+                updatedUser.firstName = userData.firstName;
+            }
+
+            if (userData.lastName) {
+                updatedUser.lastName = userData.lastName;
+            }
+
+            if (userData.middleName) {
+                updatedUser.middleName = userData.middleName;
+            }
+
+            if (userData.userRole) {
+                updatedUser.userRole = userData.userRole;
+            }
+        }
+
+        return await this.usersService.update(updatedUser);
     }
 }

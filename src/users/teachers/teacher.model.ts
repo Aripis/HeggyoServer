@@ -47,6 +47,6 @@ export class Teacher {
     contractType?: ContractType;
 
     @Field()
-    @Column('varchar', { length: 5 })
+    @Column('varchar', { length: 5, default: 't' })
     teacherToken: string;
 }

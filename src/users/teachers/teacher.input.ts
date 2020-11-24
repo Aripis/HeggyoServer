@@ -6,7 +6,7 @@ registerEnumType(ContractType, {
 });
 
 @InputType()
-export class UserInput {
+export class TeacherInput {
     @Field({ nullable: true })
     education?: string;
 

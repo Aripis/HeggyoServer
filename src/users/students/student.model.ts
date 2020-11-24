@@ -1,13 +1,16 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Class } from 'src/institution/classes/class.model';
 import {
     Column,
     Entity,
     JoinColumn,
+    ManyToMany,
     OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
+
 import { User } from '../user.model';
+import { Parent } from '../parents/parent.model';
+import { Class } from 'src/institution/classes/class.model';
 
 @ObjectType()
 @Entity()
@@ -37,4 +40,12 @@ export class Student {
     @Field()
     @Column('varchar', { length: 5 })
     studentToken: string;
+
+    @Field(() => [Parent], { nullable: true })
+    @ManyToMany(
+        () => Parent,
+        parent => parent.children,
+        { nullable: true },
+    )
+    parents?: Parent[];
 }

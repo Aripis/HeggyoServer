@@ -11,8 +11,7 @@ type Institution {
   type: InstitutionType!
   capacityPerClass: Int
   educationalStage: EducationStage!
-  registerToken: String!
-  registerTokenStatus: Float!
+  alias: String!
 }
 
 """Date custom scalar type"""
@@ -67,11 +66,6 @@ enum UserStatus {
   UNVERIFIED
 }
 
-type Token {
-  accessToken: String!
-  refreshToken: String
-}
-
 type Teacher {
   id: ID!
   user: User!
@@ -86,6 +80,11 @@ enum ContractType {
   FULL_TIME
 }
 
+type Token {
+  accessToken: String!
+  refreshToken: String
+}
+
 type Class {
   id: ID!
   forYear: Int!
@@ -93,13 +92,29 @@ type Class {
   classTeacher: Teacher!
   classLetter: String!
   classNumber: Int!
-  registerToken: String!
+  classToken: String!
   registerTokenStatus: TokenStatus!
 }
 
 enum TokenStatus {
   ACTIVE
   INACTIVE
+}
+
+type Student {
+  id: ID!
+  user: User!
+  startDate: Date
+  class: Class
+  prevEducation: String!
+  studentToken: String!
+  parents: [Parent!]
+}
+
+type Parent {
+  id: ID!
+  user: User!
+  children: [Student!]!
 }
 
 type Query {
@@ -110,8 +125,10 @@ type Query {
   token: Token!
   institutionById(id: String!): Institution!
   institutionByEmail(email: String!): Institution!
-  institutionToken(id: String!): String!
+  institutionAlias(id: String!): String!
   institutions: [Institution!]!
+  teacher(id: String!): Teacher!
+  teachers: [Teacher!]!
 }
 
 input LoginInput {
@@ -120,14 +137,15 @@ input LoginInput {
 }
 
 type Mutation {
-  register(userData: UserInput!): User!
-  addUser(userData: UserInput!): User!
-  removeUser(id: Int!): Boolean!
+  register(userData: CreateUserInput!): User!
+  removeUser(id: String!): Boolean!
+  updateUser(userData: UpdateUserInput!): User!
   addInstitution(newInstitutionData: InstitutionInput!): Institution!
   removeInstitution(id: String!): Boolean!
+  updateTeacher(teacherData: TeacherInput!): Teacher!
 }
 
-input UserInput {
+input CreateUserInput {
   firstName: String!
   middleName: String!
   lastName: String!
@@ -136,10 +154,28 @@ input UserInput {
   registerToken: String
 }
 
+input UpdateUserInput {
+  id: String!
+  firstName: String
+  middleName: String
+  lastName: String
+  email: String
+  password: String
+  userRole: UserRoles
+}
+
 input InstitutionInput {
   name: String!
   email: String!
   type: InstitutionType!
   capacityPerClass: Int
   educationalStage: EducationStage!
+  alias: String!
+}
+
+input TeacherInput {
+  education: String
+  yearsExperience: Int
+  contractType: ContractType
+  teacherToken: String!
 }

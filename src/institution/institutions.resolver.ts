@@ -23,9 +23,9 @@ export class InstitutionsResolver {
     }
 
     @Query(returns => String)
-    async institutionToken(@Args('id') uuid: string): Promise<string> {
+    async institutionAlias(@Args('id') uuid: string): Promise<string> {
         const institutionToken = await this.institutionsService.findOne(uuid);
-        return institutionToken.registerToken;
+        return institutionToken.alias;
     }
 
     @Query(returns => [Institution])
