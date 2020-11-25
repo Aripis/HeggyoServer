@@ -5,24 +5,37 @@ import {
     NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { TeachersService } from 'src/users/teachers/teachers.service';
+import { DeleteResult, Repository } from 'typeorm';
+import { InstitutionsService } from '../institutions.service';
 
 import { ClassInput } from './class.input';
 import { Class } from './class.model';
+import { RemoveClassPayload } from './remove-class.payload';
 
 @Injectable()
 export class ClassesService {
     constructor(
+        private readonly teacherService: TeachersService,
+        private readonly institutionsService: InstitutionsService,
+
         @InjectRepository(Class)
         private readonly classesRepository: Repository<Class>,
     ) {}
 
-    create(classInput: ClassInput): Promise<Class> {
+    async create(classInput: ClassInput): Promise<Class> {
         const studentsClass = new Class();
         Object.assign(studentsClass, classInput);
 
-        studentsClass.classToken = this.generateUniqueToken();
-
+        studentsClass.classToken = await this.generateClassToken(studentsClass);
+        studentsClass.institution = await this.institutionsService.findOne(
+            classInput.institution,
+        );
+        if (classInput.classTeacher) {
+            studentsClass.classTeacher = await this.teacherService.findOne(
+                classInput.classTeacher,
+            );
+        }
         try {
             return this.classesRepository.save(studentsClass);
         } catch (error) {
@@ -60,17 +73,20 @@ export class ClassesService {
         return studentsClass;
     }
 
-    async remove(uuid: string): Promise<void> {
+    async remove(uuid: string): Promise<RemoveClassPayload> {
         await this.classesRepository.delete(uuid);
+        return new RemoveClassPayload(uuid);
     }
 
-    private generateUniqueToken(): string {
-        //FIXME: Make sure it's unique for all insatutions
+    private generateClassToken(studentsClass: Class): string {
         return (
-            '_' +
+            studentsClass.classNumber.toString() +
+            '-' +
+            studentsClass.classLetter +
+            '-' +
             Math.random()
                 .toString(36)
-                .substr(2, 5)
+                .substr(2, 2)
         );
     }
 }

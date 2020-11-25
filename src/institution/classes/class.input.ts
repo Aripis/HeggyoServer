@@ -8,9 +8,15 @@ export class ClassInput {
     @Field(() => Int)
     totalStudentCount: number;
 
-    @Field()
-    classNumber: { number: number; letter: string };
+    @Field(() => Int)
+    classNumber: number;
 
     @Field()
-    classTeacherUUId: string;
+    classLetter: string;
+
+    @Field({ nullable: true })
+    classTeacher?: string;
+
+    @Field()
+    institution: string;
 }

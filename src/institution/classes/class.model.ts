@@ -5,9 +5,11 @@ import {
     Column,
     Entity,
     JoinColumn,
+    ManyToOne,
     OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Institution } from '../institution.model';
 
 export enum TokenStatus {
     ACTIVE,
@@ -24,6 +26,11 @@ export class Class {
     @Field(() => ID)
     @PrimaryGeneratedColumn('uuid')
     id: string;
+
+    @Field(() => Institution)
+    @ManyToOne(() => Institution)
+    @JoinColumn({ name: 'institution' })
+    institution: Institution;
 
     @Field(() => Int)
     @Column('year')
@@ -50,7 +57,7 @@ export class Class {
     classNumber: number;
 
     @Field()
-    @Column('varchar', { length: 5, unique: true })
+    @Column('varchar', { length: 10, default: '' })
     @Length(5)
     classToken: string;
 

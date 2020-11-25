@@ -87,6 +87,7 @@ type Token {
 
 type Class {
   id: ID!
+  institution: Institution!
   forYear: Int!
   totalStudentCount: Int!
   classTeacher: Teacher!
@@ -99,6 +100,10 @@ type Class {
 enum TokenStatus {
   ACTIVE
   INACTIVE
+}
+
+type RemoveClassPayload {
+  classId: String!
 }
 
 type Student {
@@ -129,6 +134,7 @@ type Query {
   institutions: [Institution!]!
   teacher(id: String!): Teacher!
   teachers: [Teacher!]!
+  class(id: String!): Class!
 }
 
 input LoginInput {
@@ -143,6 +149,8 @@ type Mutation {
   addInstitution(newInstitutionData: InstitutionInput!): Institution!
   removeInstitution(id: String!): Boolean!
   updateTeacher(teacherData: TeacherInput!): Teacher!
+  addClass(classData: ClassInput!): Class!
+  removeClass(id: String!): RemoveClassPayload!
 }
 
 input CreateUserInput {
@@ -178,4 +186,13 @@ input TeacherInput {
   yearsExperience: Int
   contractType: ContractType
   teacherToken: String!
+}
+
+input ClassInput {
+  forYear: Int!
+  totalStudentCount: Int!
+  classNumber: Int!
+  classLetter: String!
+  classTeacher: String
+  institution: String!
 }

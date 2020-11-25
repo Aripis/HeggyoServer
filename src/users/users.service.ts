@@ -35,7 +35,10 @@ export class UsersService {
                 instAlias,
             );
         }
+
+        // TODO: if registerToken === null : error
         const [role, _] = userSpecific.split('+');
+
         try {
             user.password = await bcrypt.hash(user.password, 10);
             switch (role) {

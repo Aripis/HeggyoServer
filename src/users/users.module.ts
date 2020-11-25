@@ -6,7 +6,7 @@ import { UsersService } from './users.service';
 import { DateScalar } from '../common/scalars/date.scalar';
 import { InstitutionsModule } from 'src/institution/institutions.module';
 import { AuthModule } from '../auth/auth.module';
-import { TeachersModule } from './teachers/teacher.module';
+import { TeachersModule } from './teachers/teachers.module';
 
 @Module({
     imports: [
