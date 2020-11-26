@@ -21,27 +21,19 @@ export class ParentsService {
         private readonly parentssRepository: Repository<Parent>,
     ) {}
 
-    async create(
-        parentInput: ParentInput,
-        user: User,
-        childrenUUIDs: string[],
-    ): Promise<Parent> {
+    async create(user: User, childrenUUIDs: string[]): Promise<Parent> {
         const parent = new Parent();
-        Object.assign(parent, parentInput);
         if (user) {
             parent.user = user;
         }
         const children = [];
-        childrenUUIDs.forEach(uuid => {
-            children.push(this.studentsService.findOne(uuid));
-        });
+        console.log(childrenUUIDs);
+        for (const uuid of childrenUUIDs) {
+            children.push(await this.studentsService.findOne(uuid));
+        }
 
-        //TODO: link to user IF EXISTS else raise error - no such kid
-        //      (should be impossible to raise this error)
-        //detail might be [userID]
-        // const kidsUUIDs = detail.split(',');
-        // kidsUUIDs;
-
+        console.log(children);
+        parent.children = children;
         try {
             return this.parentssRepository.save(parent);
         } catch (error) {
@@ -52,7 +44,8 @@ export class ParentsService {
         }
     }
 
-    update(parent: Parent) {
+    update(parent: Parent): Promise<Parent> {
+        // TODO: Fix update
         return this.parentssRepository.save(parent);
     }
 

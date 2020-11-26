@@ -4,6 +4,8 @@ import {
     Entity,
     JoinColumn,
     ManyToMany,
+    ManyToOne,
+    OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -28,8 +30,8 @@ export class Student {
     @Column({ type: 'date', nullable: true })
     startDate?: Date;
 
-    @Field(() => Class, { nullable: true })
-    @OneToOne(() => Class, { nullable: true })
+    @Field(() => Class)
+    @ManyToOne(() => Class)
     @JoinColumn({ name: 'class' })
     class?: Class;
 
@@ -38,7 +40,7 @@ export class Student {
     prevEducation: string;
 
     @Field()
-    @Column('varchar', { length: 5 })
+    @Column('varchar', { length: 10, default: 'none' })
     studentToken: string;
 
     @Field(() => [Parent], { nullable: true })

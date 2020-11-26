@@ -23,7 +23,6 @@ export class TeachersService {
         if (user) {
             teacher.user = user;
         }
-        console.log(teacher.user.id);
         try {
             return this.teachersRepository.save(teacher);
         } catch (error) {
@@ -35,6 +34,7 @@ export class TeachersService {
     }
 
     async update(teacher: TeacherInput) {
+        // TODO: Fix update
         const newTeacher = await this.teachersRepository.findOne({});
         Object.assign(newTeacher, teacher);
         return this.teachersRepository.save(newTeacher);

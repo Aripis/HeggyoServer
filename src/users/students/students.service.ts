@@ -7,7 +7,6 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ClassesService } from 'src/institution/classes/classes.service';
-import { StudentInput } from './student.input';
 import { Student } from './student.model';
 import { User } from '../user.model';
 
@@ -20,33 +19,35 @@ export class StudentsService {
         private readonly studentsRepository: Repository<Student>,
     ) {}
 
-    async create(
-        studentInput: StudentInput,
-        user: User,
-        classToken?: string,
-    ): Promise<Student> {
+    async create(user: User, classToken?: string): Promise<Student> {
         const student = new Student();
-        Object.assign(student, studentInput);
         if (user) {
             student.user = user;
         }
         if (classToken) {
+            // console.log(student.studentToken);
+            student.studentToken = classToken;
             student.class = await this.classesService.findOneByToken(
                 classToken,
             );
+            console.log(student.class);
         }
-
         try {
-            return this.studentsRepository.save(student);
+            const test = this.studentsRepository.save(student);
+            console.log((await test).id);
+            return test;
         } catch (error) {
             if (error.code === 'ER_DUP_ENTRY') {
-                throw new ConflictException('This student already exists');
+                throw new ConflictException(
+                    'This student already exists: ' + error,
+                );
             }
             throw new InternalServerErrorException(error);
         }
     }
 
     update(student: Student) {
+        // TODO: Fix update
         return this.studentsRepository.save(student);
     }
 
@@ -55,11 +56,12 @@ export class StudentsService {
     }
 
     async findOne(uuid: string): Promise<Student> {
-        let student = null;
-        student = await this.studentsRepository.findOne(uuid);
+        const student = await this.studentsRepository.findOne(uuid);
         if (!student) {
             throw new NotFoundException(uuid);
         }
+
+        console.log(student);
         return student;
     }
 

@@ -66,19 +66,23 @@ export class UsersResolver {
         };
     }
 
+    // TODO: create for each mutation Payload
     @Mutation(() => User)
     async register(@Args('userData') userData: CreateUserInput): Promise<User> {
         return await this.usersService.create(userData);
     }
 
+    // TODO: create for each mutation Payload
     @Mutation(() => Boolean)
-    removeUser(@Args('uuid') uuid: string) {
+    removeUser(@Args('id') uuid: string) {
         return this.usersService.remove(uuid);
     }
 
+    // TODO: create for each mutation Payload
     @Mutation(() => User)
     @UseGuards(GqlAuthGuard)
     async updateUser(@Args('userData') userData: UpdateUserInput) {
+        // TODO: move this part into users.service, where it belongs
         const updatedUser = await this.usersService.findOne(userData.id);
         if (userData) {
             if (userData.password) {

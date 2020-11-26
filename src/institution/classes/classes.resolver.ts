@@ -23,4 +23,6 @@ export class ClassesResolver {
     removeClass(@Args('id') uuid: string): Promise<RemoveClassPayload> {
         return this.classesService.remove(uuid);
     }
+
+    // TODO: create updateClass
 }

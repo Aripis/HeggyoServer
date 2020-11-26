@@ -80,9 +80,20 @@ enum ContractType {
   FULL_TIME
 }
 
-type Token {
-  accessToken: String!
-  refreshToken: String
+type Parent {
+  id: ID!
+  user: User!
+  children: [Student!]!
+}
+
+type Student {
+  id: ID!
+  user: User!
+  startDate: Date
+  class: Class!
+  prevEducation: String!
+  studentToken: String!
+  parents: [Parent!]
 }
 
 type Class {
@@ -94,7 +105,7 @@ type Class {
   classLetter: String!
   classNumber: Int!
   classToken: String!
-  registerTokenStatus: TokenStatus!
+  classTokenStatus: TokenStatus!
 }
 
 enum TokenStatus {
@@ -106,20 +117,9 @@ type RemoveClassPayload {
   classId: String!
 }
 
-type Student {
-  id: ID!
-  user: User!
-  startDate: Date
-  class: Class
-  prevEducation: String!
-  studentToken: String!
-  parents: [Parent!]
-}
-
-type Parent {
-  id: ID!
-  user: User!
-  children: [Student!]!
+type Token {
+  accessToken: String!
+  refreshToken: String
 }
 
 type Query {
@@ -135,6 +135,10 @@ type Query {
   teacher(id: String!): Teacher!
   teachers: [Teacher!]!
   class(id: String!): Class!
+  student(id: String!): Student!
+  students: [Student!]!
+  parent(id: String!): Parent!
+  parents: [Parent!]!
 }
 
 input LoginInput {
@@ -148,9 +152,14 @@ type Mutation {
   updateUser(userData: UpdateUserInput!): User!
   addInstitution(newInstitutionData: InstitutionInput!): Institution!
   removeInstitution(id: String!): Boolean!
+  removeTeacher(id: String!): Boolean!
   updateTeacher(teacherData: TeacherInput!): Teacher!
   addClass(classData: ClassInput!): Class!
   removeClass(id: String!): RemoveClassPayload!
+  removeStudent(id: String!): Boolean!
+  updateStudent(studentData: StudentInput!): Student!
+  removeParent(id: String!): Boolean!
+  updateParent(parentData: ParentInput!): Parent!
 }
 
 input CreateUserInput {
@@ -195,4 +204,13 @@ input ClassInput {
   classLetter: String!
   classTeacher: String
   institution: String!
+}
+
+input StudentInput {
+  prevEducation: String
+  studentToken: String!
+}
+
+input ParentInput {
+  parentToken: String!
 }

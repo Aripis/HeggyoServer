@@ -5,9 +5,11 @@ import {
     NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Teacher } from 'src/users/teachers/teacher.model';
 import { TeachersService } from 'src/users/teachers/teachers.service';
-import { DeleteResult, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InstitutionsService } from '../institutions.service';
+import { TokenStatus } from './class.model';
 
 import { ClassInput } from './class.input';
 import { Class } from './class.model';
@@ -28,6 +30,7 @@ export class ClassesService {
         Object.assign(studentsClass, classInput);
 
         studentsClass.classToken = await this.generateClassToken(studentsClass);
+        studentsClass.classTokenStatus = TokenStatus.ACTIVE;
         studentsClass.institution = await this.institutionsService.findOne(
             classInput.institution,
         );
@@ -63,10 +66,13 @@ export class ClassesService {
     }
 
     async findOneByToken(classToken: string): Promise<Class> {
-        let studentsClass = null;
-        studentsClass = await this.classesRepository.findOne({
-            where: { classToken: classToken },
+        const studentsClass = await this.classesRepository.findOne({
+            where: {
+                classToken: classToken,
+                // classTokenStatus: TokenStatus.ACTIVE,
+            },
         });
+
         if (!studentsClass) {
             throw new NotFoundException(classToken);
         }
@@ -76,6 +82,15 @@ export class ClassesService {
     async remove(uuid: string): Promise<RemoveClassPayload> {
         await this.classesRepository.delete(uuid);
         return new RemoveClassPayload(uuid);
+    }
+
+    async assignTeacherToClass(
+        teacher: Teacher,
+        classId: string,
+    ): Promise<Class> {
+        const stClass = await this.classesRepository.findOne(classId);
+        stClass.classTeacher = teacher;
+        return stClass;
     }
 
     private generateClassToken(studentsClass: Class): string {

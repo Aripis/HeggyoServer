@@ -18,11 +18,13 @@ export class TeachersResolver {
         return await this.teachersService.findAll();
     }
 
+    // TODO: create for each mutation Payload
     @Mutation(() => Boolean)
-    async removeUser(@Args('id') uuid: string) {
+    async removeTeacher(@Args('id') uuid: string) {
         return this.teachersService.remove(uuid);
     }
 
+    // TODO: create for each mutation Payload
     @Mutation(() => Teacher)
     async updateTeacher(
         @Args('teacherData') teacherData: TeacherInput,

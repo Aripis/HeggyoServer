@@ -3,11 +3,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Student } from './student.model';
 import { StudentsService } from './students.service';
 import { ClassesModule } from 'src/institution/classes/classes.module';
-import { UsersModule } from '../users.module';
+import { StudentsResolver } from './students.resolver';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Student]), ClassesModule, UsersModule],
-    providers: [],
+    imports: [TypeOrmModule.forFeature([Student]), ClassesModule],
+    providers: [StudentsResolver, StudentsService],
     exports: [StudentsService],
 })
-export class StudentssModule {}
+export class StudentsModule {}
