@@ -26,6 +26,13 @@ import { ClassesModule } from './institution/classes/classes.module';
             installSubscriptionHandlers: true,
             autoSchemaFile: 'schema.gql',
             context: ({ req, res }) => ({ req, res }),
+            cors: {
+                origin:
+                    process.env.NODE_ENV === 'production'
+                        ? [/^https:\/\/heggyo-client.*\.vercel\.app$/]
+                        : 'http://localhost:3000',
+                credentials: true,
+            },
         }),
     ],
     controllers: [AppController],

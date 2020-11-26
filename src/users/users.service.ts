@@ -37,7 +37,7 @@ export class UsersService {
         }
 
         // TODO: if registerToken === null : error
-        const [role, _] = userSpecific.split('+');
+        const [role, _] = userSpecific.split('@');
 
         try {
             user.password = await bcrypt.hash(user.password, 10);
