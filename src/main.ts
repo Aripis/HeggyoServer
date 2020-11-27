@@ -16,7 +16,14 @@ const bootstrap = async () => {
         }),
     );
     app.use(cookieParser(configService.get('COOKIE_SECRET')));
-    app.enableCors({ origin: process.env.NODE_ENV === 'production' ? [/^https:\/\/heggyo-client.*\.vercel\.app$/] : "http://localhost:3000", exposedHeaders: ['Authorization'], credentials: true });
+    app.enableCors({
+        origin:
+            process.env.NODE_ENV === 'production'
+                ? [/^https:\/\/heggyo-client.*\.vercel\.app$/]
+                : 'http://localhost:3000',
+        exposedHeaders: ['Authorization'],
+        credentials: true,
+    });
 
     await app.listen(8080);
 };

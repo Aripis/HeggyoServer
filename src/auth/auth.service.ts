@@ -42,15 +42,23 @@ export class AuthService {
     }
 
     async regenerateToken(refreshToken: string) {
+        if (this.verifyToken(refreshToken)) {
+            const decodedRefreshToken = this.jwtService.decode(refreshToken);
+            return this.jwtService.sign({ sub: decodedRefreshToken.sub });
+        } else {
+            throw new UnauthorizedException('Refresh token expired');
+        }
+    }
+
+    verifyToken(refreshToken: string): boolean {
         try {
             this.jwtService.verify(
                 refreshToken,
                 this.configService.get<JwtVerifyOptions>('JWT_SECRET'),
             );
-            const decodedRefreshToken = this.jwtService.decode(refreshToken);
-            return this.jwtService.sign({ sub: decodedRefreshToken.sub });
-        } catch (error) {
-            throw new UnauthorizedException('Refresh token expired');
+            return true;
+        } catch {
+            return false;
         }
     }
 

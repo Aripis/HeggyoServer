@@ -43,6 +43,11 @@ export class UsersResolver {
         return this.usersService.findOne(user.id);
     }
 
+    @Query(() => Boolean)
+    checkRefreshToken(@Context() ctx) {
+        return this.authService.verifyToken(ctx.req.cookies.refreshToken);
+    }
+
     @Query(() => User)
     async login(@Args('loginData') loginData: LoginInput, @Context() ctx) {
         const tokens = await this.authService.login(loginData);

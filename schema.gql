@@ -126,6 +126,7 @@ type Query {
   user(id: String!): User!
   users: [User!]!
   profile: User!
+  checkRefreshToken: Boolean!
   login(loginData: LoginInput!): User!
   token: Token!
   institutionById(id: String!): Institution!
