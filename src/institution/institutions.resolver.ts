@@ -1,7 +1,11 @@
 import { Args, Resolver, Mutation, Query } from '@nestjs/graphql';
 import { InstitutionsService } from './institutions.service';
-import { InstitutionInput } from './institution.input';
+import { CreateInstitutionInput } from './institution-input/create-institution.input';
 import { Institution } from './institution.model';
+import { UpdateInstitutionPayload } from './institution-payload/update-institution.payload';
+import { UpdateInstitutionInput } from './institution-input/update-institution.input';
+import { RemoveInstitutionPayload } from './institution-payload/remove-institution.payload';
+import { CreateInstitutionPayload } from './institution-payload/create-institution.payload';
 
 @Resolver()
 export class InstitutionsResolver {
@@ -35,19 +39,25 @@ export class InstitutionsResolver {
         });
     }
 
-    // TODO: create for each mutation Payload
-    @Mutation(() => Institution)
+    @Mutation(() => CreateInstitutionPayload)
     async addInstitution(
-        @Args('newInstitutionData') newInstitutionData: InstitutionInput,
-    ): Promise<Institution> {
+        @Args('newInstitutionData') newInstitutionData: CreateInstitutionInput,
+    ): Promise<CreateInstitutionPayload> {
         return this.institutionsService.create(newInstitutionData);
     }
 
-    // TODO: create for each mutation Payload
-    @Mutation(() => Boolean)
-    async removeInstitution(@Args('id') uuid: string) {
+    // TODO: shouldn't be able to remove it so easily
+    @Mutation(() => RemoveInstitutionPayload)
+    async removeInstitution(
+        @Args('id') uuid: string,
+    ): Promise<RemoveInstitutionPayload> {
         return this.institutionsService.remove(uuid);
     }
 
-    // TODO: create updateInstitution
+    @Mutation(() => UpdateInstitutionPayload)
+    async updateInstitution(
+        @Args('institutionData') institutionData: UpdateInstitutionInput,
+    ): Promise<UpdateInstitutionPayload> {
+        return this.institutionsService.update(institutionData);
+    }
 }
