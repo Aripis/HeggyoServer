@@ -66,6 +66,18 @@ enum UserStatus {
   UNVERIFIED
 }
 
+type CreateInstitutionPayload {
+  institutionId: String!
+}
+
+type RemoveInstitutionPayload {
+  institutionIsRemoved: Boolean!
+}
+
+type UpdateInstitutionPayload {
+  institutionId: String!
+}
+
 type Teacher {
   id: ID!
   user: User!
@@ -78,22 +90,6 @@ type Teacher {
 enum ContractType {
   PART_TIME
   FULL_TIME
-}
-
-type Parent {
-  id: ID!
-  user: User!
-  children: [Student!]!
-}
-
-type Student {
-  id: ID!
-  user: User!
-  startDate: Date
-  class: Class!
-  prevEducation: String!
-  studentToken: String!
-  parents: [Parent!]
 }
 
 type Class {
@@ -117,9 +113,57 @@ type RemoveClassPayload {
   classId: String!
 }
 
+type UpdateClassPayload {
+  classId: String!
+}
+
+type CreateClassPayload {
+  classId: String!
+}
+
+type Parent {
+  id: ID!
+  user: User!
+  children: [Student!]!
+}
+
+type Student {
+  id: ID!
+  user: User!
+  startDate: Date
+  class: Class!
+  prevEducation: String!
+  studentToken: String!
+  parents: [Parent!]
+}
+
+type UpdateStudentPayload {
+  studentId: String!
+}
+
+type UpdateParentPayload {
+  parentId: String!
+}
+
+type UpdateUserPayload {
+  userId: String!
+}
+
+type RemoveUserPayload {
+  userIsRemoved: Boolean!
+}
+
+type RegisterUserPayload {
+  userId: String!
+}
+
 type Token {
   accessToken: String!
   refreshToken: String
+}
+
+type UpdateTeacherPayload {
+  teacherId: String!
 }
 
 type Query {
@@ -136,6 +180,7 @@ type Query {
   teacher(id: String!): Teacher!
   teachers: [Teacher!]!
   class(id: String!): Class!
+  classes: Class!
   student(id: String!): Student!
   students: [Student!]!
   parent(id: String!): Parent!
@@ -148,22 +193,21 @@ input LoginInput {
 }
 
 type Mutation {
-  register(userData: CreateUserInput!): User!
-  removeUser(id: String!): Boolean!
-  updateUser(userData: UpdateUserInput!): User!
-  addInstitution(newInstitutionData: InstitutionInput!): Institution!
-  removeInstitution(id: String!): Boolean!
-  removeTeacher(id: String!): Boolean!
-  updateTeacher(teacherData: TeacherInput!): Teacher!
-  addClass(classData: ClassInput!): Class!
+  register(userData: RegisterClassInput!): RegisterUserPayload!
+  removeUser(id: String!): RemoveUserPayload!
+  updateUser(userData: UpdateUserInput!): UpdateUserPayload!
+  addInstitution(newInstitutionData: CreateInstitutionInput!): CreateInstitutionPayload!
+  removeInstitution(id: String!): RemoveInstitutionPayload!
+  updateInstitution(institutionData: UpdateInstitutionInput!): UpdateInstitutionPayload!
+  updateTeacher(teacherData: UpdateTeacherInput!): UpdateTeacherPayload!
+  addClass(classData: CreateClassInput!): CreateClassPayload!
+  updatreClass(classData: UpdateClassInput!): UpdateClassPayload!
   removeClass(id: String!): RemoveClassPayload!
-  removeStudent(id: String!): Boolean!
-  updateStudent(studentData: StudentInput!): Student!
-  removeParent(id: String!): Boolean!
-  updateParent(parentData: ParentInput!): Parent!
+  updateStudent(studentData: UpdateStudentInput!): UpdateStudentPayload!
+  updateParent(parentData: UpdateParentInput!): UpdateParentPayload!
 }
 
-input CreateUserInput {
+input RegisterClassInput {
   firstName: String!
   middleName: String!
   lastName: String!
@@ -182,7 +226,7 @@ input UpdateUserInput {
   userRole: UserRoles
 }
 
-input InstitutionInput {
+input CreateInstitutionInput {
   name: String!
   email: String!
   type: InstitutionType!
@@ -191,14 +235,24 @@ input InstitutionInput {
   alias: String!
 }
 
-input TeacherInput {
+input UpdateInstitutionInput {
+  id: String!
+  name: String
+  email: String
+  type: InstitutionType
+  capacityPerClass: Int
+  educationalStage: EducationStage
+  alias: String
+}
+
+input UpdateTeacherInput {
+  id: String!
   education: String
   yearsExperience: Int
   contractType: ContractType
-  teacherToken: String!
 }
 
-input ClassInput {
+input CreateClassInput {
   forYear: Int!
   totalStudentCount: Int!
   classNumber: Int!
@@ -207,11 +261,21 @@ input ClassInput {
   institution: String!
 }
 
-input StudentInput {
-  prevEducation: String
-  studentToken: String!
+input UpdateClassInput {
+  id: String!
+  totalStudentCount: Int
+  classLetter: String
+  classNumber: Int
+  classToken: String
+  classTokenStatus: TokenStatus
 }
 
-input ParentInput {
-  parentToken: String!
+input UpdateStudentInput {
+  id: String!
+  startDate: Date
+  prevEducation: String
+}
+
+input UpdateParentInput {
+  id: String!
 }

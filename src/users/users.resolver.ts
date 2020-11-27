@@ -6,12 +6,14 @@ import { Token } from '../auth/token.model';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { CurrentUser } from '../auth/currentuser.decorator';
 import { ConfigService } from '@nestjs/config';
-import * as bcrypt from 'bcrypt';
 
 import { User } from './user.model';
 import { UsersService } from './users.service';
-import { CreateUserInput } from './create-user.input';
-import { UpdateUserInput } from './update-user.input';
+import { RegisterClassInput } from './user-input/register-user.input';
+import { UpdateUserInput } from './user-input/update-user.input';
+import { UpdateUserPayload } from './user-payload/update-user.payload';
+import { RemoveUserPayload } from './user-payload/remove-user.payload';
+import { RegisterUserPayload } from './user-payload/register-user.payload';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -20,6 +22,8 @@ export class UsersResolver {
         private authService: AuthService,
         private readonly configService: ConfigService,
     ) {}
+
+    // TODO: set guards
 
     @Query(() => User)
     async user(@Args('id') uuid: string): Promise<User> {
@@ -71,50 +75,23 @@ export class UsersResolver {
         };
     }
 
-    // TODO: create for each mutation Payload
-    @Mutation(() => User)
-    async register(@Args('userData') userData: CreateUserInput): Promise<User> {
+    @Mutation(() => RegisterUserPayload)
+    async register(
+        @Args('userData') userData: RegisterClassInput,
+    ): Promise<RegisterUserPayload> {
         return await this.usersService.create(userData);
     }
 
-    // TODO: create for each mutation Payload
-    @Mutation(() => Boolean)
-    removeUser(@Args('id') uuid: string) {
+    @Mutation(() => RemoveUserPayload)
+    removeUser(@Args('id') uuid: string): Promise<RemoveUserPayload> {
         return this.usersService.remove(uuid);
     }
 
-    // TODO: create for each mutation Payload
-    @Mutation(() => User)
+    @Mutation(() => UpdateUserPayload)
     @UseGuards(GqlAuthGuard)
-    async updateUser(@Args('userData') userData: UpdateUserInput) {
-        // TODO: move this part into users.service, where it belongs
-        const updatedUser = await this.usersService.findOne(userData.id);
-        if (userData) {
-            if (userData.password) {
-                updatedUser.password = await bcrypt.hash(userData.password, 10);
-            }
-
-            if (userData.email) {
-                updatedUser.email = userData.email;
-            }
-
-            if (userData.firstName) {
-                updatedUser.firstName = userData.firstName;
-            }
-
-            if (userData.lastName) {
-                updatedUser.lastName = userData.lastName;
-            }
-
-            if (userData.middleName) {
-                updatedUser.middleName = userData.middleName;
-            }
-
-            if (userData.userRole) {
-                updatedUser.userRole = userData.userRole;
-            }
-        }
-
-        return await this.usersService.update(updatedUser);
+    async updateUser(
+        @Args('userData') userData: UpdateUserInput,
+    ): Promise<UpdateUserPayload> {
+        return await this.usersService.update(userData);
     }
 }

@@ -8,7 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { InstitutionsModule } from './institution/institutions.module';
-import { ClassesModule } from './institution/classes/classes.module';
+import { ClassesModule } from './classes/classes.module';
 
 @Module({
     imports: [

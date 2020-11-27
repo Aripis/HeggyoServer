@@ -6,8 +6,12 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { InstitutionInput } from './institution.input';
+import { CreateInstitutionInput } from './institution-input/create-institution.input';
+import { CreateInstitutionPayload } from './institution-payload/create-institution.payload';
 import { Institution } from './institution.model';
+import { RemoveInstitutionPayload } from './institution-payload/remove-institution.payload';
+import { UpdateInstitutionInput } from './institution-input/update-institution.input';
+import { UpdateInstitutionPayload } from './institution-payload/update-institution.payload';
 
 @Injectable()
 export class InstitutionsService {
@@ -16,12 +20,14 @@ export class InstitutionsService {
         private readonly institutionsRepository: Repository<Institution>,
     ) {}
 
-    async create(institutionInput: InstitutionInput): Promise<Institution> {
+    async create(
+        institutionInput: CreateInstitutionInput,
+    ): Promise<CreateInstitutionPayload> {
         const institution = new Institution();
         Object.assign(institution, institutionInput);
         try {
-            const result = await this.institutionsRepository.save(institution);
-            return result;
+            const inst = await this.institutionsRepository.save(institution);
+            return new CreateInstitutionPayload(inst.id);
         } catch (error) {
             if (error.code === 'ER_DUP_ENTRY') {
                 throw new ConflictException('This institution already exists');
@@ -30,8 +36,12 @@ export class InstitutionsService {
         }
     }
 
-    update(institution: Institution) {
-        return this.institutionsRepository.save(institution);
+    async update(
+        institution: UpdateInstitutionInput,
+    ): Promise<UpdateInstitutionPayload> {
+        const { id, ...rest } = institution;
+        await this.institutionsRepository.update(id, rest);
+        return new UpdateInstitutionPayload(id);
     }
 
     findAll(): Promise<Institution[]> {
@@ -57,7 +67,8 @@ export class InstitutionsService {
         return institution;
     }
 
-    async remove(uuid: string): Promise<void> {
+    async remove(uuid: string): Promise<RemoveInstitutionPayload> {
         await this.institutionsRepository.delete(uuid);
+        return new RemoveInstitutionPayload(true);
     }
 }
