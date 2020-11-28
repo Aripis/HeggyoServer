@@ -118,7 +118,9 @@ export class UsersService {
     }
 
     findAll(): Promise<User[]> {
-        return this.usersRepository.find();
+        return this.usersRepository.find({
+            relations: ['institution'],
+        });
     }
 
     async findOne(uuid: string): Promise<User> {
@@ -126,6 +128,7 @@ export class UsersService {
         if (!user) {
             user = await this.usersRepository.findOne({
                 where: { email: uuid },
+                // relations: ['institution'],
             });
         }
         if (!user) {
