@@ -1,9 +1,11 @@
 import { Field, registerEnumType, ID, ObjectType, Int } from '@nestjs/graphql';
 import { Length } from 'class-validator';
+import { User } from 'src/users/user.model';
 import {
     Column,
     CreateDateColumn,
     Entity,
+    ManyToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
@@ -82,4 +84,12 @@ export class Institution {
     @Column({ unique: true })
     @Length(5)
     alias: string;
+
+    @Field(() => [User], { nullable: true })
+    @ManyToMany(
+        () => User,
+        user => user.institution,
+        { nullable: true },
+    )
+    user?: User[];
 }

@@ -12,6 +12,7 @@ type Institution {
   capacityPerClass: Int
   educationalStage: EducationStage!
   alias: String!
+  user: [User!]
 }
 
 """Date custom scalar type"""
@@ -48,7 +49,7 @@ type User {
   userRole: UserRoles!
   registerToken: String
   status: UserStatus!
-  institution: Institution
+  institution: [Institution!]!
 }
 
 enum UserRoles {

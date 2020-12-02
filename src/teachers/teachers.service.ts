@@ -41,16 +41,13 @@ export class TeachersService {
     }
 
     findAll(): Promise<Teacher[]> {
-        return this.teachersRepository.find({
-            relations: ['user'],
-        });
+        return this.teachersRepository.find();
     }
 
     async findOne(uuid: string): Promise<Teacher> {
         let teacher = null;
         teacher = await this.teachersRepository.findOne({
             where: { id: uuid },
-            relations: ['user'],
         });
         if (!teacher) {
             throw new NotFoundException(uuid);

@@ -61,22 +61,18 @@ export class ClassesService {
     }
 
     findAll(): Promise<Class[]> {
-        return this.classesRepository.find({
-            relations: ['classTeacher', 'institution'],
-        });
+        return this.classesRepository.find();
     }
 
     async findOne(value: string): Promise<Class> {
         let studentsClass = await this.classesRepository.findOne({
             where: { id: value },
-            relations: ['classTeacher'],
         });
         if (!studentsClass) {
             studentsClass = await this.classesRepository.findOne({
                 where: {
                     classToken: value,
                 },
-                relations: ['classTeacher', 'institution'],
             });
             if (!studentsClass) {
                 throw new NotFoundException(value);

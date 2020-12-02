@@ -31,7 +31,7 @@ export class Class {
     id: string;
 
     @Field(() => Institution)
-    @ManyToOne(() => Institution)
+    @ManyToOne(() => Institution, { eager: true })
     @JoinColumn({ name: 'institution' })
     institution: Institution;
 
@@ -44,7 +44,7 @@ export class Class {
     totalStudentCount: number;
 
     @Field(() => Teacher)
-    @OneToOne(() => Teacher)
+    @OneToOne(() => Teacher, { eager: true })
     @JoinColumn({ name: 'classTeacher' })
     classTeacher: Teacher;
 

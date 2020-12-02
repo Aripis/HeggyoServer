@@ -66,7 +66,6 @@ export class StudentsService {
     async findOne(uuid: string): Promise<Student> {
         const student = await this.studentsRepository.findOne({
             where: { id: uuid },
-            relations: ['class', 'user'],
         });
         console.log(student.class);
         if (!student) {
