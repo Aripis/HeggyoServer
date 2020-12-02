@@ -12,38 +12,21 @@ export class InstitutionsResolver {
     constructor(private readonly institutionsService: InstitutionsService) {}
 
     @Query(() => Institution)
-    async institutionById(@Args('id') uuid: string): Promise<Institution> {
-        const institution = await this.institutionsService.findOne(uuid);
-        return institution;
-    }
-
-    @Query(() => Institution)
-    async institutionByEmail(
-        @Args('email') email: string,
-    ): Promise<Institution> {
-        const institution = await this.institutionsService.findOne(email);
-        return institution;
-    }
-
-    @Query(() => String)
-    async institutionAlias(@Args('id') uuid: string): Promise<string> {
-        const institutionToken = await this.institutionsService.findOne(uuid);
-        return institutionToken.alias;
+    async institution(@Args('id') uuid: string): Promise<Institution> {
+        return this.institutionsService.findOne(uuid);
     }
 
     @Query(() => [Institution])
     async institutions(): Promise<Institution[]> {
-        const institutions = await this.institutionsService.findAll();
-        return institutions.map(institution => {
-            return institution;
-        });
+        return this.institutionsService.findAll();
     }
 
     @Mutation(() => CreateInstitutionPayload)
     async addInstitution(
-        @Args('newInstitutionData') newInstitutionData: CreateInstitutionInput,
+        @Args('createInstitutionInput')
+        createInstitutionInput: CreateInstitutionInput,
     ): Promise<CreateInstitutionPayload> {
-        return this.institutionsService.create(newInstitutionData);
+        return this.institutionsService.create(createInstitutionInput);
     }
 
     // TODO: shouldn't be able to remove it so easily
@@ -56,8 +39,9 @@ export class InstitutionsResolver {
 
     @Mutation(() => UpdateInstitutionPayload)
     async updateInstitution(
-        @Args('institutionData') institutionData: UpdateInstitutionInput,
+        @Args('updateInstitutionInput')
+        updateInstitutionInput: UpdateInstitutionInput,
     ): Promise<UpdateInstitutionPayload> {
-        return this.institutionsService.update(institutionData);
+        return this.institutionsService.update(updateInstitutionInput);
     }
 }

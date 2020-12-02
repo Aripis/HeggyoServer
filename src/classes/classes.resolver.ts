@@ -25,16 +25,16 @@ export class ClassesResolver {
 
     @Mutation(() => CreateClassPayload)
     addClass(
-        @Args('classData') classData: CreateClassInput,
+        @Args('createClassInput') createClassInput: CreateClassInput,
     ): Promise<CreateClassPayload> {
-        return this.classesService.create(classData);
+        return this.classesService.create(createClassInput);
     }
 
     @Mutation(() => UpdateClassPayload)
     updatreClass(
-        @Args('classData') classData: UpdateClassInput,
+        @Args('updateClassInput') updateClassInput: UpdateClassInput,
     ): Promise<UpdateClassPayload> {
-        return this.classesService.update(classData);
+        return this.classesService.update(updateClassInput);
     }
 
     @Mutation(() => RemoveClassPayload)

@@ -44,9 +44,9 @@ export class StudentsService {
     }
 
     async update(
-        studentData: UpdateStudentInput,
+        updateStudentInput: UpdateStudentInput,
     ): Promise<UpdateStudentPayload> {
-        const { id, ...data } = studentData;
+        const { id, ...data } = updateStudentInput;
         if (data.classUUID) {
             const { classUUID, ...info } = data;
             await this.studentsRepository.update(id, {
@@ -67,7 +67,6 @@ export class StudentsService {
         const student = await this.studentsRepository.findOne({
             where: { id: uuid },
         });
-        console.log(student.class);
         if (!student) {
             throw new NotFoundException(uuid);
         }
@@ -75,8 +74,7 @@ export class StudentsService {
     }
 
     async findOneByAlias(registerToken: string): Promise<Student> {
-        let student = null;
-        student = await this.studentsRepository.findOne({
+        const student = await this.studentsRepository.findOne({
             where: { registerToken: registerToken },
         });
         if (!student) {

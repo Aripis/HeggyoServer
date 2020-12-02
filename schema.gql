@@ -93,6 +93,10 @@ enum ContractType {
   FULL_TIME
 }
 
+type UpdateTeacherPayload {
+  teacherId: String!
+}
+
 type Class {
   id: ID!
   institution: Institution!
@@ -154,17 +158,13 @@ type RemoveUserPayload {
   userIsRemoved: Boolean!
 }
 
-type RegisterUserPayload {
+type CreateUserPayload {
   userId: String!
 }
 
 type Token {
   accessToken: String!
   refreshToken: String
-}
-
-type UpdateTeacherPayload {
-  teacherId: String!
 }
 
 type Query {
@@ -174,9 +174,7 @@ type Query {
   checkRefreshToken: Boolean!
   login(loginData: LoginInput!): User!
   token: Token!
-  institutionById(id: String!): Institution!
-  institutionByEmail(email: String!): Institution!
-  institutionAlias(id: String!): String!
+  institution(id: String!): Institution!
   institutions: [Institution!]!
   teacher(id: String!): Teacher!
   teachers: [Teacher!]!
@@ -194,21 +192,21 @@ input LoginInput {
 }
 
 type Mutation {
-  register(userData: RegisterClassInput!): RegisterUserPayload!
+  register(userData: CreateUserInput!): CreateUserPayload!
   removeUser(id: String!): RemoveUserPayload!
   updateUser(userData: UpdateUserInput!): UpdateUserPayload!
-  addInstitution(newInstitutionData: CreateInstitutionInput!): CreateInstitutionPayload!
+  addInstitution(createInstitutionInput: CreateInstitutionInput!): CreateInstitutionPayload!
   removeInstitution(id: String!): RemoveInstitutionPayload!
-  updateInstitution(institutionData: UpdateInstitutionInput!): UpdateInstitutionPayload!
+  updateInstitution(updateInstitutionInput: UpdateInstitutionInput!): UpdateInstitutionPayload!
   updateTeacher(teacherData: UpdateTeacherInput!): UpdateTeacherPayload!
-  addClass(classData: CreateClassInput!): CreateClassPayload!
-  updatreClass(classData: UpdateClassInput!): UpdateClassPayload!
+  addClass(createClassInput: CreateClassInput!): CreateClassPayload!
+  updatreClass(updateClassInput: UpdateClassInput!): UpdateClassPayload!
   removeClass(id: String!): RemoveClassPayload!
   updateStudent(studentData: UpdateStudentInput!): UpdateStudentPayload!
   updateParent(parentData: UpdateParentInput!): UpdateParentPayload!
 }
 
-input RegisterClassInput {
+input CreateUserInput {
   firstName: String!
   middleName: String!
   lastName: String!

@@ -43,8 +43,10 @@ export class ParentsService {
         }
     }
 
-    async update(parent: UpdateParentInput): Promise<UpdateParentPayload> {
-        const { id, ...data } = parent;
+    async update(
+        updateParentInput: UpdateParentInput,
+    ): Promise<UpdateParentPayload> {
+        const { id, ...data } = updateParentInput;
         await this.parentssRepository.update(id, data);
         return new UpdateParentPayload(id);
     }

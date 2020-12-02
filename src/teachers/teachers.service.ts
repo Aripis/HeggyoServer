@@ -34,10 +34,12 @@ export class TeachersService {
         }
     }
 
-    async update(teacher: UpdateTeacherInput): Promise<UpdateTeacherPayload> {
-        const { id, ...data } = teacher;
+    async update(
+        updateTeacherInput: UpdateTeacherInput,
+    ): Promise<UpdateTeacherPayload> {
+        const { id, ...data } = updateTeacherInput;
         await this.teachersRepository.update(id, data);
-        return;
+        return new UpdateTeacherPayload(id);
     }
 
     findAll(): Promise<Teacher[]> {
@@ -45,8 +47,7 @@ export class TeachersService {
     }
 
     async findOne(uuid: string): Promise<Teacher> {
-        let teacher = null;
-        teacher = await this.teachersRepository.findOne({
+        const teacher = await this.teachersRepository.findOne({
             where: { id: uuid },
         });
         if (!teacher) {

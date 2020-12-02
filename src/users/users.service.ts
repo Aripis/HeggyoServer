@@ -8,7 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
-import { RegisterClassInput } from './user-input/register-user.input';
+import { CreateUserInput } from './user-input/create-user.input';
 import { User, UserRoles } from './user.model';
 import { InstitutionsService } from 'src/institution/institutions.service';
 import { ClassesService } from 'src/classes/classes.service';
@@ -18,7 +18,7 @@ import { ParentsService } from '../parents/parents.service';
 import { UpdateUserInput } from './user-input/update-user.input';
 import { UpdateUserPayload } from './user-payload/update-user.payload';
 import { RemoveUserPayload } from './user-payload/remove-user.payload';
-import { RegisterUserPayload } from './user-payload/register-user.payload';
+import { CreateUserPayload } from './user-payload/create-user.payload';
 
 @Injectable()
 export class UsersService {
@@ -33,30 +33,27 @@ export class UsersService {
         private readonly usersRepository: Repository<User>,
     ) {}
 
-    async create(
-        registerClassInput: RegisterClassInput,
-    ): Promise<RegisterUserPayload> {
+    async create(createUserInput: CreateUserInput): Promise<CreateUserPayload> {
         const user = new User();
-        let [instAlias, userSpecific] = [null, null];
-        let resultUser = null;
-        Object.assign(user, registerClassInput);
+        let resultUser: User, instAlias: string, userSpecific: string;
+        Object.assign(user, createUserInput);
 
         if (user && user.registerToken) {
             [instAlias, userSpecific] = user.registerToken.split('#');
-            const insts = [];
-            insts.push(
+            const institutions = [];
+            institutions.push(
                 await this.institutionsService.findOneByAlias(instAlias),
             );
-            user.institution = insts;
+            user.institution = institutions;
         }
 
-        const [role, additionalProps] = userSpecific.split('@');
-        if (role !== 'a' && additionalProps === '') {
+        const [userRole, additionalProps] = userSpecific.split('@');
+        if (userRole !== 'a' && additionalProps === '') {
             throw new Error('Bad register token');
         }
         try {
             user.password = await bcrypt.hash(user.password, 10);
-            switch (role) {
+            switch (userRole) {
                 case 'a': {
                     //admin
                     user.userRole = UserRoles.ADMIN;
@@ -106,21 +103,20 @@ export class UsersService {
             }
             throw new InternalServerErrorException(error);
         }
-        return new RegisterUserPayload(resultUser.id);
+        return new CreateUserPayload(resultUser.id);
     }
 
-    async update(user: UpdateUserInput): Promise<UpdateUserPayload> {
-        const { id, ...data } = user;
+    async update(updateUserInput: UpdateUserInput): Promise<UpdateUserPayload> {
+        const { id, ...data } = updateUserInput;
         if (data.password) {
             data.password = await bcrypt.hash(data.password, 10);
         }
-
         await this.usersRepository.update(id, data);
         return new UpdateUserPayload(id);
     }
 
     findAll(): Promise<User[]> {
-        return this.usersRepository.find({});
+        return this.usersRepository.find();
     }
 
     async findOne(uuid: string): Promise<User> {

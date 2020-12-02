@@ -9,11 +9,11 @@ import { ConfigService } from '@nestjs/config';
 
 import { User } from './user.model';
 import { UsersService } from './users.service';
-import { RegisterClassInput } from './user-input/register-user.input';
+import { CreateUserInput } from './user-input/create-user.input';
 import { UpdateUserInput } from './user-input/update-user.input';
 import { UpdateUserPayload } from './user-payload/update-user.payload';
 import { RemoveUserPayload } from './user-payload/remove-user.payload';
-import { RegisterUserPayload } from './user-payload/register-user.payload';
+import { CreateUserPayload } from './user-payload/create-user.payload';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -43,8 +43,10 @@ export class UsersResolver {
 
     @Query(() => User)
     @UseGuards(GqlAuthGuard)
-    profile(@CurrentUser() user: User) {
-        return this.usersService.findOne(user.id);
+    async profile(@CurrentUser() currUser: User) {
+        const user = await this.usersService.findOne(currUser.id);
+        user.password = '';
+        return user;
     }
 
     @Query(() => Boolean)
@@ -75,10 +77,10 @@ export class UsersResolver {
         };
     }
 
-    @Mutation(() => RegisterUserPayload)
+    @Mutation(() => CreateUserPayload)
     async register(
-        @Args('userData') userData: RegisterClassInput,
-    ): Promise<RegisterUserPayload> {
+        @Args('userData') userData: CreateUserInput,
+    ): Promise<CreateUserPayload> {
         return await this.usersService.create(userData);
     }
 

@@ -21,10 +21,10 @@ export class InstitutionsService {
     ) {}
 
     async create(
-        institutionInput: CreateInstitutionInput,
+        createInstitutionInput: CreateInstitutionInput,
     ): Promise<CreateInstitutionPayload> {
         const institution = new Institution();
-        Object.assign(institution, institutionInput);
+        Object.assign(institution, createInstitutionInput);
         try {
             const inst = await this.institutionsRepository.save(institution);
             return new CreateInstitutionPayload(inst.id);
@@ -37,9 +37,9 @@ export class InstitutionsService {
     }
 
     async update(
-        institution: UpdateInstitutionInput,
+        updateInstitutionInput: UpdateInstitutionInput,
     ): Promise<UpdateInstitutionPayload> {
-        const { id, ...rest } = institution;
+        const { id, ...rest } = updateInstitutionInput;
         await this.institutionsRepository.update(id, rest);
         return new UpdateInstitutionPayload(id);
     }
@@ -49,10 +49,12 @@ export class InstitutionsService {
     }
 
     async findOne(uuid: string): Promise<Institution> {
-        let institution = null;
-        institution = await this.institutionsRepository.findOne({
-            where: { id: uuid },
-        });
+        let institution = await this.institutionsRepository.findOne(uuid);
+        if (!institution) {
+            institution = await this.institutionsRepository.findOne({
+                where: { email: uuid },
+            });
+        }
         if (!institution) {
             throw new NotFoundException(uuid);
         }
