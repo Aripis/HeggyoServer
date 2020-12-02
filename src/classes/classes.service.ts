@@ -65,7 +65,9 @@ export class ClassesService {
     }
 
     async findOne(value: string): Promise<Class> {
-        let studentsClass = await this.classesRepository.findOne(value);
+        let studentsClass = await this.classesRepository.findOne({
+            where: { id: value },
+        });
         if (!studentsClass) {
             studentsClass = await this.classesRepository.findOne({
                 where: {

@@ -54,7 +54,9 @@ export class ParentsService {
     }
 
     async findOne(uuid: string): Promise<Parent> {
-        const parent = await this.parentssRepository.findOne(uuid);
+        const parent = await this.parentssRepository.findOne({
+            where: { id: uuid },
+        });
         if (!parent) {
             throw new NotFoundException(uuid);
         }

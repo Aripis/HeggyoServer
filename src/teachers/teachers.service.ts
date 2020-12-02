@@ -46,20 +46,11 @@ export class TeachersService {
 
     async findOne(uuid: string): Promise<Teacher> {
         let teacher = null;
-        teacher = await this.teachersRepository.findOne(uuid);
-        if (!teacher) {
-            throw new NotFoundException(uuid);
-        }
-        return teacher;
-    }
-
-    async findOneByAlias(registerToken: string): Promise<Teacher> {
-        let teacher = null;
         teacher = await this.teachersRepository.findOne({
-            where: { registerToken: registerToken },
+            where: { id: uuid },
         });
         if (!teacher) {
-            throw new NotFoundException(registerToken);
+            throw new NotFoundException(uuid);
         }
         return teacher;
     }

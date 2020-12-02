@@ -21,7 +21,7 @@ export class Student {
     id: string;
 
     @Field(() => User)
-    @OneToOne(() => User)
+    @OneToOne(() => User, { eager: true })
     @JoinColumn({ name: 'user' })
     user: User;
 
@@ -30,7 +30,7 @@ export class Student {
     startDate?: Date;
 
     @Field(() => Class)
-    @ManyToOne(() => Class)
+    @ManyToOne(() => Class, { eager: true })
     @JoinColumn({ name: 'class' })
     class?: Class;
 

@@ -27,7 +27,7 @@ export class Parent {
     id: string;
 
     @Field(() => User)
-    @OneToOne(() => User, { cascade: true })
+    @OneToOne(() => User, { cascade: true, eager: true })
     @JoinColumn({ name: 'user' })
     user: User;
 
@@ -37,6 +37,7 @@ export class Parent {
         student => student.parents,
         {
             cascade: true,
+            eager: true,
         },
     )
     @JoinTable({

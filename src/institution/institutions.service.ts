@@ -50,7 +50,9 @@ export class InstitutionsService {
 
     async findOne(uuid: string): Promise<Institution> {
         let institution = null;
-        institution = await this.institutionsRepository.findOne(uuid);
+        institution = await this.institutionsRepository.findOne({
+            where: { id: uuid },
+        });
         if (!institution) {
             throw new NotFoundException(uuid);
         }

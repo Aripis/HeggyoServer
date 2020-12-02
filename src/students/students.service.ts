@@ -47,7 +47,15 @@ export class StudentsService {
         studentData: UpdateStudentInput,
     ): Promise<UpdateStudentPayload> {
         const { id, ...data } = studentData;
-        await this.studentsRepository.update(id, data);
+        if (data.classUUID) {
+            const { classUUID, ...info } = data;
+            await this.studentsRepository.update(id, {
+                ...info,
+                class: await this.classesService.findOne(classUUID),
+            });
+        } else {
+            await this.studentsRepository.update(id, data);
+        }
         return new UpdateStudentPayload(id);
     }
 
@@ -56,7 +64,10 @@ export class StudentsService {
     }
 
     async findOne(uuid: string): Promise<Student> {
-        const student = await this.studentsRepository.findOne(uuid);
+        const student = await this.studentsRepository.findOne({
+            where: { id: uuid },
+        });
+        console.log(student.class);
         if (!student) {
             throw new NotFoundException(uuid);
         }

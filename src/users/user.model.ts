@@ -4,8 +4,8 @@ import {
     Column,
     CreateDateColumn,
     Entity,
-    JoinColumn,
-    ManyToOne,
+    JoinTable,
+    ManyToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
@@ -92,8 +92,25 @@ export class User {
     })
     status: UserStatus;
 
-    @Field(() => Institution, { nullable: true })
-    @ManyToOne(() => Institution, { nullable: true })
-    @JoinColumn({ name: 'institution' })
-    institution?: Institution;
+    @Field(() => [Institution])
+    @ManyToMany(
+        () => Institution,
+        student => student.user,
+        {
+            cascade: true,
+            eager: true,
+        },
+    )
+    @JoinTable({
+        name: 'institution_user',
+        joinColumn: {
+            name: 'institution',
+            referencedColumnName: 'id',
+        },
+        inverseJoinColumn: {
+            name: 'user',
+            referencedColumnName: 'id',
+        },
+    })
+    institution: Institution[];
 }
