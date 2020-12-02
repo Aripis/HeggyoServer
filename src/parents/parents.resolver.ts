@@ -10,19 +10,19 @@ export class ParentsResolver {
     constructor(private readonly parentsService: ParentsService) {}
 
     @Query(() => Parent)
-    async parent(@Args('id') uuid: string): Promise<Parent> {
-        return await this.parentsService.findOne(uuid);
+    parent(@Args('id') uuid: string): Promise<Parent> {
+        return this.parentsService.findOne(uuid);
     }
 
     @Query(() => [Parent])
-    async parents(): Promise<Parent[]> {
-        return await this.parentsService.findAll();
+    parents(): Promise<Parent[]> {
+        return this.parentsService.findAll();
     }
 
     @Mutation(() => UpdateParentPayload)
-    async updateParent(
+    updateParent(
         @Args('parentData') parentData: UpdateParentInput,
     ): Promise<UpdateParentPayload> {
-        return await this.parentsService.update(parentData);
+        return this.parentsService.update(parentData);
     }
 }

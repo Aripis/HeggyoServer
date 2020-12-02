@@ -55,14 +55,14 @@ export class UsersResolver {
     }
 
     @Query(() => User)
-    async login(@Args('loginData') loginData: LoginInput, @Context() ctx) {
-        const tokens = await this.authService.login(loginData);
+    async login(@Args('loginInput') loginInput: LoginInput, @Context() ctx) {
+        const tokens = await this.authService.login(loginInput);
         ctx.res.cookie('refreshToken', tokens.refreshToken, {
             maxAge: 86400 * 60 * 1000, //100 days
             httpOnly: true,
         });
         ctx.res.set('Authorization', 'Bearer ' + tokens.accessToken);
-        const user = await this.usersService.findOne(loginData.email);
+        const user = await this.usersService.findOne(loginInput.email);
         return user;
     }
 
@@ -78,10 +78,10 @@ export class UsersResolver {
     }
 
     @Mutation(() => CreateUserPayload)
-    async register(
-        @Args('userData') userData: CreateUserInput,
+    register(
+        @Args('createUserInput') createUserInput: CreateUserInput,
     ): Promise<CreateUserPayload> {
-        return await this.usersService.create(userData);
+        return this.usersService.create(createUserInput);
     }
 
     @Mutation(() => RemoveUserPayload)
@@ -91,9 +91,9 @@ export class UsersResolver {
 
     @Mutation(() => UpdateUserPayload)
     @UseGuards(GqlAuthGuard)
-    async updateUser(
-        @Args('userData') userData: UpdateUserInput,
+    updateUser(
+        @Args('updateUserInput') updateUserInput: UpdateUserInput,
     ): Promise<UpdateUserPayload> {
-        return await this.usersService.update(userData);
+        return this.usersService.update(updateUserInput);
     }
 }

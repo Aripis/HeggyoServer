@@ -10,17 +10,17 @@ export class TeachersResolver {
     constructor(private readonly teachersService: TeachersService) {}
 
     @Query(() => Teacher)
-    async teacher(@Args('id') uuid: string): Promise<Teacher> {
-        return await this.teachersService.findOne(uuid);
+    teacher(@Args('id') uuid: string): Promise<Teacher> {
+        return this.teachersService.findOne(uuid);
     }
 
     @Query(() => [Teacher])
-    async teachers(): Promise<Teacher[]> {
-        return await this.teachersService.findAll();
+    teachers(): Promise<Teacher[]> {
+        return this.teachersService.findAll();
     }
 
     @Mutation(() => UpdateTeacherPayload)
-    async updateTeacher(
+    updateTeacher(
         @Args('teacherData') teacherData: UpdateTeacherInput,
     ): Promise<UpdateTeacherPayload> {
         return this.teachersService.update(teacherData);

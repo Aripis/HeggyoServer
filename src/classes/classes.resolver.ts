@@ -14,13 +14,13 @@ export class ClassesResolver {
     // TODO: Add guards
 
     @Query(() => Class)
-    async class(@Args('id') uuid: string): Promise<Class> {
-        return await this.classesService.findOne(uuid);
+    class(@Args('id') uuid: string): Promise<Class> {
+        return this.classesService.findOne(uuid);
     }
 
-    @Query(() => Class)
-    async classes(): Promise<Class[]> {
-        return await this.classesService.findAll();
+    @Query(() => [Class])
+    classes(): Promise<Class[]> {
+        return this.classesService.findAll();
     }
 
     @Mutation(() => CreateClassPayload)

@@ -12,17 +12,17 @@ export class InstitutionsResolver {
     constructor(private readonly institutionsService: InstitutionsService) {}
 
     @Query(() => Institution)
-    async institution(@Args('id') uuid: string): Promise<Institution> {
+    institution(@Args('id') uuid: string): Promise<Institution> {
         return this.institutionsService.findOne(uuid);
     }
 
     @Query(() => [Institution])
-    async institutions(): Promise<Institution[]> {
+    institutions(): Promise<Institution[]> {
         return this.institutionsService.findAll();
     }
 
     @Mutation(() => CreateInstitutionPayload)
-    async addInstitution(
+    addInstitution(
         @Args('createInstitutionInput')
         createInstitutionInput: CreateInstitutionInput,
     ): Promise<CreateInstitutionPayload> {
@@ -31,14 +31,14 @@ export class InstitutionsResolver {
 
     // TODO: shouldn't be able to remove it so easily
     @Mutation(() => RemoveInstitutionPayload)
-    async removeInstitution(
+    removeInstitution(
         @Args('id') uuid: string,
     ): Promise<RemoveInstitutionPayload> {
         return this.institutionsService.remove(uuid);
     }
 
     @Mutation(() => UpdateInstitutionPayload)
-    async updateInstitution(
+    updateInstitution(
         @Args('updateInstitutionInput')
         updateInstitutionInput: UpdateInstitutionInput,
     ): Promise<UpdateInstitutionPayload> {

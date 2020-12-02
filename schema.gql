@@ -172,14 +172,14 @@ type Query {
   users: [User!]!
   profile: User!
   checkRefreshToken: Boolean!
-  login(loginData: LoginInput!): User!
+  login(loginInput: LoginInput!): User!
   token: Token!
   institution(id: String!): Institution!
   institutions: [Institution!]!
   teacher(id: String!): Teacher!
   teachers: [Teacher!]!
   class(id: String!): Class!
-  classes: Class!
+  classes: [Class!]!
   student(id: String!): Student!
   students: [Student!]!
   parent(id: String!): Parent!
@@ -192,9 +192,9 @@ input LoginInput {
 }
 
 type Mutation {
-  register(userData: CreateUserInput!): CreateUserPayload!
+  register(createUserInput: CreateUserInput!): CreateUserPayload!
   removeUser(id: String!): RemoveUserPayload!
-  updateUser(userData: UpdateUserInput!): UpdateUserPayload!
+  updateUser(updateUserInput: UpdateUserInput!): UpdateUserPayload!
   addInstitution(createInstitutionInput: CreateInstitutionInput!): CreateInstitutionPayload!
   removeInstitution(id: String!): RemoveInstitutionPayload!
   updateInstitution(updateInstitutionInput: UpdateInstitutionInput!): UpdateInstitutionPayload!
