@@ -58,12 +58,20 @@ export class UsersResolver {
     async login(@Args('loginInput') loginInput: LoginInput, @Context() ctx) {
         const tokens = await this.authService.login(loginInput);
         ctx.res.cookie('refreshToken', tokens.refreshToken, {
-            maxAge: 86400 * 60 * 1000, //100 days
+            maxAge:
+                this.configService.get<number>(
+                    'JWT_REFRESH_TOKEN_EXPIRATION_TIME',
+                ) * 1000, //should be 60 days (now is 120s)
             httpOnly: true,
         });
-        ctx.res.set('Authorization', 'Bearer ' + tokens.accessToken);
-        const user = await this.usersService.findOne(loginInput.email);
-        return user;
+        ctx.res.cookie('accessToken', tokens.accessToken, {
+            maxAge:
+                this.configService.get<number>(
+                    'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
+                ) * 1000, //should be 30 mins (now is 60s)
+            httpOnly: true,
+        });
+        return this.usersService.findOne(loginInput.email);
     }
 
     @Query(() => Token)
@@ -71,7 +79,13 @@ export class UsersResolver {
         const accessToken = await this.authService.regenerateToken(
             ctx.req.cookies.refreshToken,
         );
-        ctx.res.set('Authorization', 'Bearer ' + accessToken);
+        ctx.res.cookie('accessToken', accessToken, {
+            maxAge:
+                this.configService.get<number>(
+                    'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
+                ) * 1000, //should be 30 mins (now is 60s)
+            httpOnly: true,
+        });
         return {
             accessToken,
         };
