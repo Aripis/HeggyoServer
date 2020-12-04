@@ -1,11 +1,14 @@
 import { Field, registerEnumType, ID, ObjectType, Int } from '@nestjs/graphql';
 import { Length } from 'class-validator';
+import { Schedule } from 'src/schedule/schedule.model';
+import { Subject } from 'src/subjects/subject.model';
 import { User } from 'src/users/user.model';
 import {
     Column,
     CreateDateColumn,
     Entity,
     ManyToMany,
+    OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
@@ -92,4 +95,20 @@ export class Institution {
         { nullable: true },
     )
     user?: User[];
+
+    @Field(() => [Subject], { nullable: true })
+    @OneToMany(
+        () => Subject,
+        subject => subject.institution,
+        { nullable: true },
+    )
+    subjects: Subject[];
+
+    @Field(() => [Schedule])
+    @OneToMany(
+        () => Schedule,
+        schedule => schedule.institution,
+        { nullable: true },
+    )
+    schedules: Schedule[];
 }

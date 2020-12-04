@@ -75,10 +75,10 @@ export class Class {
     })
     classTokenStatus: TokenStatus;
 
-    @Field(() => Schedule)
+    @Field(() => [Schedule])
     @ManyToOne(
         () => Schedule,
         schedule => schedule.class,
     )
-    schedule: Schedule;
+    schedule: Schedule[];
 }

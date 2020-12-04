@@ -3,7 +3,10 @@ import { Field, InputType, Int } from '@nestjs/graphql';
 @InputType()
 export class CreateClassInput {
     @Field(() => Int)
-    forYear: number;
+    startYear: number;
+
+    @Field(() => Int)
+    endYear: number;
 
     @Field(() => Int)
     totalStudentCount: number;

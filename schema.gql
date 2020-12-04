@@ -2,6 +2,62 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Subject {
+  id: ID!
+  startYear: Int!
+  endYear: Int!
+  name: String!
+  description: String!
+  institution: Institution!
+  teachers: [Teacher!]
+  schedules: [Schedule!]!
+}
+
+type Teacher {
+  id: ID!
+  user: User!
+  education: String
+  yearsExperience: Int!
+  contractType: ContractType
+  teacherToken: String!
+  subjects: [Subject!]
+  schedules: [Schedule!]
+}
+
+enum ContractType {
+  PART_TIME
+  FULL_TIME
+}
+
+type Class {
+  id: ID!
+  institution: Institution!
+  startYear: Int!
+  endYear: Int!
+  totalStudentCount: Int!
+  classTeacher: Teacher!
+  classLetter: String!
+  classNumber: Int!
+  classToken: String!
+  classTokenStatus: TokenStatus!
+  schedule: [Schedule!]!
+}
+
+enum TokenStatus {
+  ACTIVE
+  INACTIVE
+}
+
+type Schedule {
+  id: ID!
+  startTime: String!
+  endTime: String!
+  subject: Subject!
+  class: Class!
+  teachers: [Teacher!]
+  institution: Institution!
+}
+
 type Institution {
   createdAt: Date!
   updatedAt: Date!
@@ -13,6 +69,8 @@ type Institution {
   educationalStage: EducationStage!
   alias: String!
   user: [User!]
+  subjects: [Subject!]
+  schedules: [Schedule!]!
 }
 
 """Date custom scalar type"""
@@ -79,51 +137,8 @@ type UpdateInstitutionPayload {
   institutionId: String!
 }
 
-type Subject {
-  id: ID!
-  startYear: Int!
-  endYear: Int!
-  name: String!
-  description: String!
-  institution: Institution!
-  teachers: [Teacher!]
-}
-
-type Teacher {
-  id: ID!
-  user: User!
-  education: String
-  yearsExperience: Int!
-  contractType: ContractType
-  teacherToken: String!
-  subjects: [Subject!]
-}
-
-enum ContractType {
-  PART_TIME
-  FULL_TIME
-}
-
 type UpdateTeacherPayload {
   teacherId: String!
-}
-
-type Class {
-  id: ID!
-  institution: Institution!
-  startYear: Int!
-  endYear: Int!
-  totalStudentCount: Int!
-  classTeacher: Teacher!
-  classLetter: String!
-  classNumber: Int!
-  classToken: String!
-  classTokenStatus: TokenStatus!
-}
-
-enum TokenStatus {
-  ACTIVE
-  INACTIVE
 }
 
 type RemoveClassPayload {
@@ -187,6 +202,10 @@ type UpdateSubjectPayload {
   subjectId: String!
 }
 
+type CreateSchedulePayload {
+  scheduleId: String!
+}
+
 type Query {
   user(id: String!): User!
   users: [User!]!
@@ -206,6 +225,8 @@ type Query {
   parents: [Parent!]!
   subject(id: String!): Subject!
   subjects: [Subject!]!
+  schedule(id: String!): Schedule!
+  schedules: [Schedule!]!
 }
 
 input LoginInput {
@@ -228,6 +249,7 @@ type Mutation {
   updateParent(parentData: UpdateParentInput!): UpdateParentPayload!
   createSubject(subjectData: CreateSubjectInput!): CreateSubjectPayload!
   updateSubject(subjectData: UpdateSubjectInput!): UpdateSubjectPayload!
+  createSchedule(scheduleInput: CreateScheduleInput!): CreateSchedulePayload!
 }
 
 input CreateUserInput {
@@ -276,7 +298,8 @@ input UpdateTeacherInput {
 }
 
 input CreateClassInput {
-  forYear: Int!
+  startYear: Int!
+  endYear: Int!
   totalStudentCount: Int!
   classNumber: Int!
   classLetter: String!
@@ -319,5 +342,13 @@ input UpdateSubjectInput {
   endYear: Int
   name: String
   description: String
+  teacherUUIDs: [String!]
+}
+
+input CreateScheduleInput {
+  startTime: String!
+  endTime: String!
+  subjectUUID: String!
+  classUUID: String!
   teacherUUIDs: [String!]
 }

@@ -20,7 +20,7 @@ export class ScheduleResolver {
 
     @Mutation(() => CreateSchedulePayload)
     createSchedule(
-        @Args() scheduleInput: CreateScheduleInput,
+        @Args('scheduleInput') scheduleInput: CreateScheduleInput,
     ): Promise<CreateSchedulePayload> {
         return this.scheduleService.create(scheduleInput);
     }

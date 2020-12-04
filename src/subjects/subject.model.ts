@@ -35,7 +35,11 @@ export class Subject {
     description: string;
 
     @Field(() => Institution)
-    @ManyToOne(() => Institution, { eager: true })
+    @ManyToOne(
+        () => Institution,
+        institution => institution.subjects,
+        { eager: true },
+    )
     institution: Institution;
 
     @Field(() => [Teacher], { nullable: true })
@@ -58,9 +62,9 @@ export class Subject {
     teachers?: Teacher[];
 
     @Field(() => [Schedule])
-    @ManyToMany(
+    @ManyToOne(
         () => Schedule,
-        schedule => schedule.subjects,
+        schedule => schedule.subject,
     )
-    schedule: Schedule[];
+    schedules: Schedule[];
 }

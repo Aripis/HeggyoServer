@@ -28,7 +28,7 @@ export class ScheduleService {
         scheduleData: CreateScheduleInput,
     ): Promise<CreateSchedulePayload> {
         const schedule = new Schedule();
-        const { subjectUUIDs, classUUID, ...data } = scheduleData;
+        const { subjectUUID, classUUID, ...data } = scheduleData;
 
         if (data.teacherUUIDs) {
             const { teacherUUIDs, ...info } = data;
@@ -41,15 +41,16 @@ export class ScheduleService {
             Object.assign(schedule, data);
         }
 
-        const subjects = [];
-        for (const uuid of subjectUUIDs) {
-            subjects.push(await this.subjectService.findOne(uuid));
-        }
+        schedule.subject = await this.subjectService.findOne(subjectUUID);
 
         schedule.class = await this.classesService.findOne(classUUID);
+        console.log('----- Schedule: ', schedule);
 
         try {
+            // FIXME: something fails here
             const schdl = await this.scheduleRepository.save(schedule);
+            console.log('----- ScheduleReturn: ', schdl);
+
             return new CreateSchedulePayload(schdl.id);
         } catch (error) {
             if (error.code === 'ER_DUP_ENTRY') {

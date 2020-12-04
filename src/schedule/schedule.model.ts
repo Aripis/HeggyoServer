@@ -20,14 +20,6 @@ export class Schedule {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Field(() => Int)
-    @Column('year')
-    startYear: number;
-
-    @Field(() => Int)
-    @Column('year')
-    endYear: number;
-
     // FIXME: make time not string
     @Field()
     @Column()
@@ -38,24 +30,13 @@ export class Schedule {
     @Column()
     endTime: string;
 
-    @Field(() => [Subject])
-    @ManyToMany(
+    @Field(() => Subject)
+    @OneToMany(
         () => Subject,
-        subject => subject.schedule,
+        subject => subject.schedules,
         { eager: true },
     )
-    @JoinTable({
-        name: 'schedule_subject',
-        joinColumn: {
-            name: 'schedule',
-            referencedColumnName: 'id',
-        },
-        inverseJoinColumn: {
-            name: 'subject',
-            referencedColumnName: 'id',
-        },
-    })
-    subjects: [Subject];
+    subject: Subject;
 
     @Field(() => Class)
     @OneToMany(
@@ -85,6 +66,10 @@ export class Schedule {
     teachers?: Teacher[];
 
     @Field(() => Institution)
-    @ManyToOne(() => Institution, { eager: true })
+    @ManyToOne(
+        () => Institution,
+        institution => institution.schedules,
+        { eager: true },
+    )
     institution: Institution;
 }

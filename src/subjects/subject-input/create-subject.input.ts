@@ -15,5 +15,5 @@ export class CreateSubjectInput {
     description: string;
 
     @Field(() => [String], { nullable: true })
-    teachersUUID?: [string];
+    teachersUUID?: string[];
 }
