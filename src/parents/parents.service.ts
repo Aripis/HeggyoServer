@@ -51,7 +51,7 @@ export class ParentsService {
             await this.parentsRepository.update(id, data);
             return new UpdateParentPayload(id);
         } else {
-            throw new Error('[Update-Parent] Parent Not Found.');
+            throw new NotFoundException('[Update-Parent] Parent Not Found.');
         }
     }
 

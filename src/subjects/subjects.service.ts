@@ -76,7 +76,7 @@ export class SubjectService {
             }
             return new UpdateSubjectPayload(id);
         } else {
-            throw new Error('[Update-Subject] Subject Not Found.');
+            throw new NotFoundException('[Update-Subject] Subject Not Found.');
         }
     }
 

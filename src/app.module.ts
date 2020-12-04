@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { InstitutionsModule } from './institution/institutions.module';
 import { ClassesModule } from './classes/classes.module';
 import { SubjectsModule } from './subjects/subjects.module';
+import { ScheduleModule } from './schedule/schedule.module';
 
 @Module({
     imports: [
@@ -36,6 +37,7 @@ import { SubjectsModule } from './subjects/subjects.module';
         InstitutionsModule,
         ClassesModule,
         SubjectsModule,
+        ScheduleModule,
     ],
     controllers: [AppController],
     providers: [AppService],

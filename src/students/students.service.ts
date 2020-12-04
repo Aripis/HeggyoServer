@@ -59,7 +59,7 @@ export class StudentsService {
             }
             return new UpdateStudentPayload(id);
         } else {
-            throw new Error('[Update-Student]: Student not found.');
+            throw new NotFoundException('[Update-Student]: Student not found.');
         }
     }
 

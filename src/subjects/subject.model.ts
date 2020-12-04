@@ -1,5 +1,6 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { Institution } from 'src/institution/institution.model';
+import { Schedule } from 'src/schedule/schedule.model';
 import { Teacher } from 'src/teachers/teacher.model';
 import {
     Column,
@@ -55,4 +56,11 @@ export class Subject {
         },
     })
     teachers?: Teacher[];
+
+    @Field(() => [Schedule])
+    @ManyToMany(
+        () => Schedule,
+        schedule => schedule.subjects,
+    )
+    schedule: Schedule[];
 }

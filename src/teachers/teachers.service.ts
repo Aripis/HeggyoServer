@@ -42,7 +42,7 @@ export class TeachersService {
             await this.teachersRepository.update(id, data);
             return new UpdateTeacherPayload(id);
         } else {
-            throw new Error('[Update-Teacher] Teacher Not Found.');
+            throw new NotFoundException('[Update-Teacher] Teacher Not Found.');
         }
     }
 

@@ -12,6 +12,7 @@ import {
 
 import { Teacher } from 'src/teachers/teacher.model';
 import { Institution } from '../institution/institution.model';
+import { Schedule } from 'src/schedule/schedule.model';
 
 export enum TokenStatus {
     ACTIVE,
@@ -73,4 +74,11 @@ export class Class {
         default: TokenStatus.ACTIVE,
     })
     classTokenStatus: TokenStatus;
+
+    @Field(() => Schedule)
+    @ManyToOne(
+        () => Schedule,
+        schedule => schedule.class,
+    )
+    schedule: Schedule;
 }

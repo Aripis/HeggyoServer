@@ -44,7 +44,9 @@ export class InstitutionsService {
             this.institutionsRepository.update(id, rest);
             return new UpdateInstitutionPayload(id);
         } else {
-            throw new Error('[Update-Institution] Institution Not Found.');
+            throw new NotFoundException(
+                '[Update-Institution] Institution Not Found.',
+            );
         }
     }
 
