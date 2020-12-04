@@ -108,11 +108,16 @@ export class UsersService {
 
     async update(updateUserInput: UpdateUserInput): Promise<UpdateUserPayload> {
         const { id, ...data } = updateUserInput;
-        if (data.password) {
-            data.password = await bcrypt.hash(data.password, 10);
+        if (await this.usersRepository.findOne(id)) {
+            if (data.password) {
+                data.password = await bcrypt.hash(data.password, 10);
+            }
+
+            await this.usersRepository.update(id, data);
+            return new UpdateUserPayload(id);
+        } else {
+            throw new Error('[Update-User] User Not Found.');
         }
-        await this.usersRepository.update(id, data);
-        return new UpdateUserPayload(id);
     }
 
     findAll(): Promise<User[]> {

@@ -40,8 +40,12 @@ export class InstitutionsService {
         updateInstitutionInput: UpdateInstitutionInput,
     ): Promise<UpdateInstitutionPayload> {
         const { id, ...rest } = updateInstitutionInput;
-        await this.institutionsRepository.update(id, rest);
-        return new UpdateInstitutionPayload(id);
+        if (await this.institutionsRepository.findOne(id)) {
+            this.institutionsRepository.update(id, rest);
+            return new UpdateInstitutionPayload(id);
+        } else {
+            throw new Error('[Update-Institution] Institution Not Found.');
+        }
     }
 
     findAll(): Promise<Institution[]> {

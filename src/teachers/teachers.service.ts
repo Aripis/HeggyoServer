@@ -38,8 +38,12 @@ export class TeachersService {
         updateTeacherInput: UpdateTeacherInput,
     ): Promise<UpdateTeacherPayload> {
         const { id, ...data } = updateTeacherInput;
-        await this.teachersRepository.update(id, data);
-        return new UpdateTeacherPayload(id);
+        if (await this.teachersRepository.findOne(id)) {
+            await this.teachersRepository.update(id, data);
+            return new UpdateTeacherPayload(id);
+        } else {
+            throw new Error('[Update-Teacher] Teacher Not Found.');
+        }
     }
 
     findAll(): Promise<Teacher[]> {

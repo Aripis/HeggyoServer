@@ -19,7 +19,7 @@ export class ParentsService {
         private readonly studentsService: StudentsService,
 
         @InjectRepository(Parent)
-        private readonly parentssRepository: Repository<Parent>,
+        private readonly parentsRepository: Repository<Parent>,
     ) {}
 
     async create(user: User, childrenUUIDs: string[]): Promise<Parent> {
@@ -34,7 +34,7 @@ export class ParentsService {
 
         parent.children = children;
         try {
-            return this.parentssRepository.save(parent);
+            return this.parentsRepository.save(parent);
         } catch (error) {
             if (error.code === 'ER_DUP_ENTRY') {
                 throw new ConflictException('This parent already exists');
@@ -47,16 +47,20 @@ export class ParentsService {
         updateParentInput: UpdateParentInput,
     ): Promise<UpdateParentPayload> {
         const { id, ...data } = updateParentInput;
-        await this.parentssRepository.update(id, data);
-        return new UpdateParentPayload(id);
+        if (await this.parentsRepository.findOne(id)) {
+            await this.parentsRepository.update(id, data);
+            return new UpdateParentPayload(id);
+        } else {
+            throw new Error('[Update-Parent] Parent Not Found.');
+        }
     }
 
     findAll(): Promise<Parent[]> {
-        return this.parentssRepository.find();
+        return this.parentsRepository.find();
     }
 
     async findOne(uuid: string): Promise<Parent> {
-        const parent = await this.parentssRepository.findOne({
+        const parent = await this.parentsRepository.findOne({
             where: { id: uuid },
         });
         if (!parent) {
@@ -66,6 +70,6 @@ export class ParentsService {
     }
 
     async remove(uuid: string): Promise<void> {
-        await this.parentssRepository.delete(uuid);
+        await this.parentsRepository.delete(uuid);
     }
 }

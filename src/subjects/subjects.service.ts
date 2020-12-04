@@ -11,10 +11,12 @@ import { UpdateSubjectInput } from './subject-input/update-subject.input';
 import { CreateSubjectInput } from './subject-input/create-subject.input';
 import { UpdateSubjectPayload } from './subject-payload/update-subject.payload';
 import { CreateSubjectPayload } from './subject-payload/create-subject.payload';
+import { TeachersService } from 'src/teachers/teachers.service';
 
 @Injectable()
 export class SubjectService {
     constructor(
+        private readonly teachersService: TeachersService,
         @InjectRepository(Subject)
         private readonly subjectRepository: Repository<Subject>,
     ) {}
@@ -41,8 +43,23 @@ export class SubjectService {
         updateSubjectInput: UpdateSubjectInput,
     ): Promise<UpdateSubjectPayload> {
         const { id, ...data } = updateSubjectInput;
-        await this.subjectRepository.update(id, data);
-        return new UpdateSubjectPayload(id);
+        if (await this.subjectRepository.findOne(id)) {
+            if (data.teacherUUIDs) {
+                const teachers = [];
+                const { teacherUUIDs, ...info } = data;
+                for (const uuid of teacherUUIDs) {
+                    teachers.push(await this.teachersService.findOne(uuid));
+                }
+                this.subjectRepository.update(id, {
+                    ...info,
+                    teachers: teachers,
+                });
+            }
+            this.subjectRepository.update(id, data);
+            return new UpdateSubjectPayload(id);
+        } else {
+            throw new Error('[Update-Subject] Subject Not Found.');
+        }
     }
 
     findAll(): Promise<Subject[]> {

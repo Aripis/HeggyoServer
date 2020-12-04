@@ -71,7 +71,7 @@ export class ClassesService {
             }
             return new UpdateClassPayload(studentsClass.id);
         } else {
-            throw new Error('[UpdateClass]: Class not found.');
+            throw new Error('[Update-Class]: Class not found.');
         }
     }
 

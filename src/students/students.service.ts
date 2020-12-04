@@ -47,16 +47,20 @@ export class StudentsService {
         updateStudentInput: UpdateStudentInput,
     ): Promise<UpdateStudentPayload> {
         const { id, ...data } = updateStudentInput;
-        if (data.classUUID) {
-            const { classUUID, ...info } = data;
-            await this.studentsRepository.update(id, {
-                ...info,
-                class: await this.classesService.findOne(classUUID),
-            });
+        if (await this.studentsRepository.findOne(id)) {
+            if (data.classUUID) {
+                const { classUUID, ...info } = data;
+                await this.studentsRepository.update(id, {
+                    ...info,
+                    class: await this.classesService.findOne(classUUID),
+                });
+            } else {
+                await this.studentsRepository.update(id, data);
+            }
+            return new UpdateStudentPayload(id);
         } else {
-            await this.studentsRepository.update(id, data);
+            throw new Error('[Update-Student]: Student not found.');
         }
-        return new UpdateStudentPayload(id);
     }
 
     findAll(): Promise<Student[]> {

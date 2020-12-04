@@ -1,5 +1,4 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
-// import { Teacher } from 'src/teachers/teacher.model';
 
 @InputType()
 export class UpdateSubjectInput {
@@ -18,7 +17,6 @@ export class UpdateSubjectInput {
     @Field({ nullable: true })
     description: string;
 
-    // TODO: make it work
-    // @Field(() => [Teacher], { nullable: true })
-    // teachers?: Teacher[];
+    @Field({ nullable: true })
+    teacherUUIDs?: [string];
 }
