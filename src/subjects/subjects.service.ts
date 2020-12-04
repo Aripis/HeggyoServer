@@ -12,20 +12,36 @@ import { CreateSubjectInput } from './subject-input/create-subject.input';
 import { UpdateSubjectPayload } from './subject-payload/update-subject.payload';
 import { CreateSubjectPayload } from './subject-payload/create-subject.payload';
 import { TeachersService } from 'src/teachers/teachers.service';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class SubjectService {
     constructor(
         private readonly teachersService: TeachersService,
+        private readonly userService: UsersService,
+
         @InjectRepository(Subject)
         private readonly subjectRepository: Repository<Subject>,
     ) {}
 
     async create(
         createSubjectData: CreateSubjectInput,
+        userUUID: string,
     ): Promise<CreateSubjectPayload> {
         const subject = new Subject();
         Object.assign(subject, createSubjectData);
+        // TODO: Fix so to get curr Institution when selected. Need conceptual solution first to
+        subject.institution = (
+            await this.userService.findOne(userUUID)
+        ).institution[0];
+        if (createSubjectData.teachersUUID) {
+            const tchrs = [];
+            for (const uuid of createSubjectData.teachersUUID) {
+                tchrs.push(await this.teachersService.findOne(uuid));
+            }
+            subject.teachers = tchrs;
+        }
+
         try {
             const subj = await this.subjectRepository.save(subject);
             return new CreateSubjectPayload(subj.id);
@@ -43,6 +59,7 @@ export class SubjectService {
         updateSubjectInput: UpdateSubjectInput,
     ): Promise<UpdateSubjectPayload> {
         const { id, ...data } = updateSubjectInput;
+        console.log(id);
         if (await this.subjectRepository.findOne(id)) {
             if (data.teacherUUIDs) {
                 const teachers = [];
@@ -54,8 +71,9 @@ export class SubjectService {
                     ...info,
                     teachers: teachers,
                 });
+            } else {
+                this.subjectRepository.update(id, data);
             }
-            this.subjectRepository.update(id, data);
             return new UpdateSubjectPayload(id);
         } else {
             throw new Error('[Update-Subject] Subject Not Found.');

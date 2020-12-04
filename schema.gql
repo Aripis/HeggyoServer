@@ -226,8 +226,8 @@ type Mutation {
   removeClass(id: String!): RemoveClassPayload!
   updateStudent(studentData: UpdateStudentInput!): UpdateStudentPayload!
   updateParent(parentData: UpdateParentInput!): UpdateParentPayload!
-  createSubject: CreateSubjectPayload!
-  updateSubject(studentData: UpdateSubjectInput!): UpdateSubjectPayload!
+  createSubject(subjectData: CreateSubjectInput!): CreateSubjectPayload!
+  updateSubject(subjectData: UpdateSubjectInput!): UpdateSubjectPayload!
 }
 
 input CreateUserInput {
@@ -287,6 +287,7 @@ input CreateClassInput {
 input UpdateClassInput {
   id: String!
   totalStudentCount: Int
+  teacherUUID: String
   classLetter: String
   classNumber: Int
   classToken: String
@@ -304,10 +305,19 @@ input UpdateParentInput {
   id: String!
 }
 
+input CreateSubjectInput {
+  startYear: Int!
+  endYear: Int!
+  name: String!
+  description: String!
+  teachersUUID: [String!]
+}
+
 input UpdateSubjectInput {
   id: String!
   startYear: Int
   endYear: Int
   name: String
   description: String
+  teacherUUIDs: [String!]
 }

@@ -3,6 +3,7 @@ import { Length } from 'class-validator';
 import {
     Column,
     Entity,
+    JoinColumn,
     ManyToOne,
     OneToOne,
     PrimaryGeneratedColumn,
@@ -47,6 +48,7 @@ export class Class {
 
     @Field(() => Teacher)
     @OneToOne(() => Teacher, { eager: true })
+    @JoinColumn()
     classTeacher: Teacher;
 
     @Field()

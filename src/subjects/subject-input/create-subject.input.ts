@@ -14,6 +14,6 @@ export class CreateSubjectInput {
     @Field()
     description: string;
 
-    @Field({ nullable: true })
-    teachersUUID?: string;
+    @Field(() => [String], { nullable: true })
+    teachersUUID?: [string];
 }

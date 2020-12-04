@@ -51,9 +51,7 @@ export class TeachersService {
     }
 
     async findOne(uuid: string): Promise<Teacher> {
-        const teacher = await this.teachersRepository.findOne({
-            where: { id: uuid },
-        });
+        const teacher = await this.teachersRepository.findOne(uuid);
         if (!teacher) {
             throw new NotFoundException(uuid);
         }

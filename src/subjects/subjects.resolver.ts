@@ -1,4 +1,8 @@
+import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { CurrentUser } from 'src/auth/currentuser.decorator';
+import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
+import { User } from 'src/users/user.model';
 import { CreateSubjectInput } from './subject-input/create-subject.input';
 import { UpdateSubjectInput } from './subject-input/update-subject.input';
 import { CreateSubjectPayload } from './subject-payload/create-subject.payload';
@@ -21,14 +25,17 @@ export class SubjectsResolver {
     }
 
     @Mutation(() => CreateSubjectPayload)
+    @UseGuards(GqlAuthGuard)
     createSubject(
-        createSubjectData: CreateSubjectInput,
+        @Args('subjectData') createSubjectData: CreateSubjectInput,
+        @CurrentUser() currUser: User,
     ): Promise<CreateSubjectPayload> {
-        return this.subjectService.create(createSubjectData);
+        return this.subjectService.create(createSubjectData, currUser.id);
     }
+
     @Mutation(() => UpdateSubjectPayload)
     updateSubject(
-        @Args('studentData') studentData: UpdateSubjectInput,
+        @Args('subjectData') studentData: UpdateSubjectInput,
     ): Promise<UpdateSubjectPayload> {
         return this.subjectService.update(studentData);
     }

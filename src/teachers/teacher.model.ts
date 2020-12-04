@@ -3,6 +3,7 @@ import { Subject } from 'src/subjects/subject.model';
 import {
     Column,
     Entity,
+    JoinColumn,
     ManyToMany,
     OneToOne,
     PrimaryGeneratedColumn,
@@ -27,6 +28,7 @@ export class Teacher {
 
     @Field(() => User)
     @OneToOne(() => User, { eager: true })
+    @JoinColumn()
     user: User;
 
     @Field({ nullable: true })

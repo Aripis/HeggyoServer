@@ -17,6 +17,6 @@ export class UpdateSubjectInput {
     @Field({ nullable: true })
     description: string;
 
-    @Field({ nullable: true })
+    @Field(() => [String], { nullable: true })
     teacherUUIDs?: [string];
 }
