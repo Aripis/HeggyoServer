@@ -8,7 +8,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ClassesService } from 'src/classes/classes.service';
 import { SubjectService } from 'src/subjects/subjects.service';
 import { TeachersService } from 'src/teachers/teachers.service';
-import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { CreateScheduleInput } from './schedule-input/create-schedule.input';
 import { CreateSchedulePayload } from './schedule-payload/create-schedule.payload';
@@ -20,7 +19,6 @@ export class ScheduleService {
         private readonly subjectService: SubjectService,
         private readonly classesService: ClassesService,
         private readonly teacherService: TeachersService,
-        private readonly usersService: UsersService,
 
         @InjectRepository(Schedule)
         private readonly scheduleRepository: Repository<Schedule>,
@@ -28,7 +26,6 @@ export class ScheduleService {
 
     async create(
         scheduleData: CreateScheduleInput,
-        currUserId: string,
     ): Promise<CreateSchedulePayload> {
         const schedule = new Schedule();
         const { subjectUUID, classUUID, ...data } = scheduleData;
@@ -39,7 +36,6 @@ export class ScheduleService {
             for (const uuid of teacherUUIDs) {
                 teachers.push(await this.teacherService.findOne(uuid));
             }
-            schedule.teachers = teachers;
             Object.assign(schedule, info);
         } else {
             Object.assign(schedule, data);
@@ -48,13 +44,12 @@ export class ScheduleService {
         schedule.subject = await this.subjectService.findOne(subjectUUID);
 
         schedule.class = await this.classesService.findOne(classUUID);
-
-        schedule.institution = (
-            await this.usersService.findOne(currUserId)
-        ).institution;
+        console.log('----- Schedule: ', schedule);
 
         try {
+            // FIXME: something fails here
             const schdl = await this.scheduleRepository.save(schedule);
+            console.log('----- ScheduleReturn: ', schdl);
 
             return new CreateSchedulePayload(schdl.id);
         } catch (error) {

@@ -8,7 +8,6 @@ import {
     CreateDateColumn,
     Entity,
     ManyToMany,
-    ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
@@ -105,11 +104,11 @@ export class Institution {
     )
     subjects: Subject[];
 
-    @Field(() => Schedule)
-    @ManyToOne(
+    @Field(() => [Schedule])
+    @OneToMany(
         () => Schedule,
         schedule => schedule.institution,
         { nullable: true },
     )
-    schedules: Schedule;
+    schedules: Schedule[];
 }
