@@ -1,6 +1,5 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 
-// import { Teacher } from 'src/users/teachers/teacher.model';
 import { TokenStatus } from '../class.model';
 
 @InputType()
@@ -11,8 +10,8 @@ export class UpdateClassInput {
     @Field(() => Int, { nullable: true })
     totalStudentCount?: number;
 
-    // @Field(() => Teacher, { nullable: true })
-    // classTeacher?: Teacher;
+    @Field({ nullable: true })
+    teacherUUID?: string;
 
     @Field({ nullable: true })
     classLetter?: string;

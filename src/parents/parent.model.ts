@@ -1,7 +1,6 @@
 import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
 import {
     Entity,
-    JoinColumn,
     JoinTable,
     ManyToMany,
     OneToOne,
@@ -28,7 +27,6 @@ export class Parent {
 
     @Field(() => User)
     @OneToOne(() => User, { cascade: true, eager: true })
-    @JoinColumn({ name: 'user' })
     user: User;
 
     @Field(() => [Student])

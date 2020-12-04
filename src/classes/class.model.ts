@@ -3,7 +3,6 @@ import { Length } from 'class-validator';
 import {
     Column,
     Entity,
-    JoinColumn,
     ManyToOne,
     OneToOne,
     PrimaryGeneratedColumn,
@@ -32,12 +31,15 @@ export class Class {
 
     @Field(() => Institution)
     @ManyToOne(() => Institution, { eager: true })
-    @JoinColumn({ name: 'institution' })
     institution: Institution;
 
     @Field(() => Int)
     @Column('year')
-    forYear: number;
+    startYear: number;
+
+    @Field(() => Int)
+    @Column('year')
+    endYear: number;
 
     @Field(() => Int)
     @Column('tinyint')
@@ -45,7 +47,6 @@ export class Class {
 
     @Field(() => Teacher)
     @OneToOne(() => Teacher, { eager: true })
-    @JoinColumn({ name: 'classTeacher' })
     classTeacher: Teacher;
 
     @Field()

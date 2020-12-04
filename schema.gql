@@ -79,6 +79,16 @@ type UpdateInstitutionPayload {
   institutionId: String!
 }
 
+type Subject {
+  id: ID!
+  startYear: Int!
+  endYear: Int!
+  name: String!
+  description: String!
+  institution: Institution!
+  teachers: [Teacher!]
+}
+
 type Teacher {
   id: ID!
   user: User!
@@ -86,6 +96,7 @@ type Teacher {
   yearsExperience: Int!
   contractType: ContractType
   teacherToken: String!
+  subjects: [Subject!]
 }
 
 enum ContractType {
@@ -100,7 +111,8 @@ type UpdateTeacherPayload {
 type Class {
   id: ID!
   institution: Institution!
-  forYear: Int!
+  startYear: Int!
+  endYear: Int!
   totalStudentCount: Int!
   classTeacher: Teacher!
   classLetter: String!
@@ -167,6 +179,14 @@ type Token {
   refreshToken: String
 }
 
+type CreateSubjectPayload {
+  subjectId: String!
+}
+
+type UpdateSubjectPayload {
+  subjectId: String!
+}
+
 type Query {
   user(id: String!): User!
   users: [User!]!
@@ -184,6 +204,8 @@ type Query {
   students: [Student!]!
   parent(id: String!): Parent!
   parents: [Parent!]!
+  subject(id: String!): Subject!
+  subjects: [Subject!]!
 }
 
 input LoginInput {
@@ -204,6 +226,8 @@ type Mutation {
   removeClass(id: String!): RemoveClassPayload!
   updateStudent(studentData: UpdateStudentInput!): UpdateStudentPayload!
   updateParent(parentData: UpdateParentInput!): UpdateParentPayload!
+  createSubject: CreateSubjectPayload!
+  updateSubject(studentData: UpdateSubjectInput!): UpdateSubjectPayload!
 }
 
 input CreateUserInput {
@@ -278,4 +302,12 @@ input UpdateStudentInput {
 
 input UpdateParentInput {
   id: String!
+}
+
+input UpdateSubjectInput {
+  id: String!
+  startYear: Int
+  endYear: Int
+  name: String
+  description: String
 }

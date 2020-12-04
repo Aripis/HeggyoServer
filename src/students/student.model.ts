@@ -2,7 +2,6 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 import {
     Column,
     Entity,
-    JoinColumn,
     ManyToMany,
     ManyToOne,
     OneToOne,
@@ -22,7 +21,6 @@ export class Student {
 
     @Field(() => User)
     @OneToOne(() => User, { eager: true })
-    @JoinColumn({ name: 'user' })
     user: User;
 
     @Field(() => Date, { nullable: true })
@@ -31,7 +29,6 @@ export class Student {
 
     @Field(() => Class)
     @ManyToOne(() => Class, { eager: true })
-    @JoinColumn({ name: 'class' })
     class?: Class;
 
     @Field()

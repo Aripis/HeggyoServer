@@ -56,8 +56,23 @@ export class ClassesService {
     }
 
     async update(studentsClass: UpdateClassInput): Promise<UpdateClassPayload> {
-        await this.classesRepository.save(studentsClass);
-        return new UpdateClassPayload(studentsClass.id);
+        const { id, ...data } = studentsClass;
+        if (await this.classesRepository.findOne(id)) {
+            if (data.teacherUUID) {
+                const { teacherUUID, ...info } = data;
+                await this.classesRepository.update(id, {
+                    ...info,
+                    classTeacher: await this.teacherService.findOne(
+                        teacherUUID,
+                    ),
+                });
+            } else {
+                await this.classesRepository.update(id, data);
+            }
+            return new UpdateClassPayload(studentsClass.id);
+        } else {
+            throw new Error('[UpdateClass]: Class not found.');
+        }
     }
 
     findAll(): Promise<Class[]> {

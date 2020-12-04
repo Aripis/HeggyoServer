@@ -1,8 +1,9 @@
 import { Field, ID, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Subject } from 'src/subjects/subject.model';
 import {
     Column,
     Entity,
-    JoinColumn,
+    ManyToMany,
     OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -26,7 +27,6 @@ export class Teacher {
 
     @Field(() => User)
     @OneToOne(() => User, { eager: true })
-    @JoinColumn({ name: 'user' })
     user: User;
 
     @Field({ nullable: true })
@@ -49,4 +49,12 @@ export class Teacher {
     @Field()
     @Column('varchar', { length: 5, default: 't' })
     teacherToken: string;
+
+    @Field(() => [Subject], { nullable: true })
+    @ManyToMany(
+        () => Subject,
+        subject => subject.teachers,
+        { nullable: true },
+    )
+    subjects?: Subject[];
 }

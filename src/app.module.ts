@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { InstitutionsModule } from './institution/institutions.module';
 import { ClassesModule } from './classes/classes.module';
+import { SubjectsModule } from './subjects/subjects.module';
 
 @Module({
     imports: [
@@ -18,10 +19,6 @@ import { ClassesModule } from './classes/classes.module';
             useFactory: async (configService: ConfigService) =>
                 configService.get('database'),
         }),
-        UsersModule,
-        AuthModule,
-        InstitutionsModule,
-        ClassesModule,
         GraphQLModule.forRoot({
             installSubscriptionHandlers: true,
             autoSchemaFile: 'schema.gql',
@@ -34,6 +31,11 @@ import { ClassesModule } from './classes/classes.module';
                 credentials: true,
             },
         }),
+        UsersModule,
+        AuthModule,
+        InstitutionsModule,
+        ClassesModule,
+        SubjectsModule,
     ],
     controllers: [AppController],
     providers: [AppService],
