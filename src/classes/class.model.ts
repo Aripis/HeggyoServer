@@ -5,6 +5,7 @@ import {
     Entity,
     JoinColumn,
     ManyToOne,
+    OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
     Unique,
@@ -76,7 +77,7 @@ export class Class {
     classTokenStatus: TokenStatus;
 
     @Field(() => [Schedule])
-    @ManyToOne(
+    @OneToMany(
         () => Schedule,
         schedule => schedule.class,
     )

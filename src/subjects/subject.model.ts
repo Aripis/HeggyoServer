@@ -8,6 +8,7 @@ import {
     JoinTable,
     ManyToMany,
     ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -62,7 +63,7 @@ export class Subject {
     teachers?: Teacher[];
 
     @Field(() => [Schedule])
-    @ManyToOne(
+    @OneToMany(
         () => Schedule,
         schedule => schedule.subject,
     )

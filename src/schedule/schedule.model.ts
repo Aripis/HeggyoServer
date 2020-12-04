@@ -1,4 +1,4 @@
-import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Class } from 'src/classes/class.model';
 import { Institution } from 'src/institution/institution.model';
 import { Subject } from 'src/subjects/subject.model';
@@ -31,7 +31,7 @@ export class Schedule {
     endTime: string;
 
     @Field(() => Subject)
-    @OneToMany(
+    @ManyToOne(
         () => Subject,
         subject => subject.schedules,
         { eager: true },
@@ -39,7 +39,7 @@ export class Schedule {
     subject: Subject;
 
     @Field(() => Class)
-    @OneToMany(
+    @ManyToOne(
         () => Class,
         cls => cls.schedule,
         { eager: true },
@@ -65,11 +65,11 @@ export class Schedule {
     })
     teachers?: Teacher[];
 
-    @Field(() => Institution)
-    @ManyToOne(
+    @Field(() => [Institution], { nullable: true })
+    @OneToMany(
         () => Institution,
         institution => institution.schedules,
-        { eager: true },
+        { eager: true, nullable: true },
     )
-    institution: Institution;
+    institution?: Institution[];
 }

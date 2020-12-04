@@ -55,7 +55,7 @@ type Schedule {
   subject: Subject!
   class: Class!
   teachers: [Teacher!]
-  institution: Institution!
+  institution: [Institution!]
 }
 
 type Institution {
@@ -70,7 +70,7 @@ type Institution {
   alias: String!
   user: [User!]
   subjects: [Subject!]
-  schedules: [Schedule!]!
+  schedules: Schedule!
 }
 
 """Date custom scalar type"""
