@@ -1,5 +1,6 @@
 import { Field, InputType, registerEnumType } from '@nestjs/graphql';
 import { MaxLength, MinLength } from 'class-validator';
+import { UploadScalar } from 'src/common/scalars/upload.scalar';
 import { UserRoles } from '../user.model';
 
 registerEnumType(UserRoles, { name: 'UserRoles' });
@@ -29,5 +30,8 @@ export class UpdateUserInput {
     password?: string;
 
     @Field(() => UserRoles, { nullable: true })
-    userRole: UserRoles;
+    userRole?: UserRoles;
+
+    @Field({ nullable: true })
+    photo?: UploadScalar;
 }

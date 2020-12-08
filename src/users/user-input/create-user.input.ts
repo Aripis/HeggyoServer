@@ -1,5 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { MaxLength, MinLength } from 'class-validator';
+import { UploadScalar } from 'src/common/scalars/upload.scalar';
 
 @InputType()
 export class CreateUserInput {
@@ -24,4 +25,7 @@ export class CreateUserInput {
 
     @Field({ nullable: true })
     registerToken?: string;
+
+    @Field({ nullable: true })
+    photo?: UploadScalar;
 }

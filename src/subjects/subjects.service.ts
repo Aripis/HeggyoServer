@@ -13,13 +13,14 @@ import { UpdateSubjectPayload } from './subject-payload/update-subject.payload';
 import { CreateSubjectPayload } from './subject-payload/create-subject.payload';
 import { TeachersService } from 'src/teachers/teachers.service';
 import { UsersService } from 'src/users/users.service';
+import { ClassesService } from 'src/classes/classes.service';
 
 @Injectable()
 export class SubjectService {
     constructor(
         private readonly teachersService: TeachersService,
         private readonly userService: UsersService,
-
+        private readonly classesService: ClassesService,
         @InjectRepository(Subject)
         private readonly subjectRepository: Repository<Subject>,
     ) {}
@@ -30,10 +31,14 @@ export class SubjectService {
     ): Promise<CreateSubjectPayload> {
         const subject = new Subject();
         Object.assign(subject, createSubjectData);
-        // TODO: Fix so to get curr Institution when selected. Need conceptual solution first to
         subject.institution = (
             await this.userService.findOne(userUUID)
         ).institution[0];
+        if (createSubjectData.classUUID) {
+            subject.class = await this.classesService.findOne(
+                createSubjectData.classUUID,
+            );
+        }
         if (createSubjectData.teachersUUID) {
             const tchrs = [];
             for (const uuid of createSubjectData.teachersUUID) {
@@ -58,6 +63,7 @@ export class SubjectService {
     async update(
         updateSubjectInput: UpdateSubjectInput,
     ): Promise<UpdateSubjectPayload> {
+        // TODO: add update subject class
         const { id, ...data } = updateSubjectInput;
         console.log(id);
         if (await this.subjectRepository.findOne(id)) {

@@ -1,4 +1,5 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
+import { Class } from 'src/classes/class.model';
 
 @InputType()
 export class CreateSubjectInput {
@@ -16,4 +17,7 @@ export class CreateSubjectInput {
 
     @Field(() => [String], { nullable: true })
     teachersUUID?: string[];
+
+    @Field({ nullable: true })
+    classUUID?: string;
 }

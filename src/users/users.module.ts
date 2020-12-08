@@ -10,6 +10,7 @@ import { TeachersModule } from '../teachers/teachers.module';
 import { ClassesModule } from 'src/classes/classes.module';
 import { StudentsModule } from '../students/students.module';
 import { ParentsModule } from '../parents/parents.module';
+import { UploadScalar } from 'src/common/scalars/upload.scalar';
 
 @Module({
     imports: [
@@ -21,7 +22,7 @@ import { ParentsModule } from '../parents/parents.module';
         ParentsModule,
         TypeOrmModule.forFeature([User]),
     ],
-    providers: [UsersResolver, UsersService, DateScalar],
+    providers: [UsersResolver, UsersService, DateScalar, UploadScalar],
     exports: [UsersService],
 })
 export class UsersModule {}

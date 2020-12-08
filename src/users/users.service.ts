@@ -36,7 +36,13 @@ export class UsersService {
     async create(createUserInput: CreateUserInput): Promise<CreateUserPayload> {
         const user = new User();
         let resultUser: User, instAlias: string, userSpecific: string;
-        Object.assign(user, createUserInput);
+        if (createUserInput.photo) {
+            const { photo, ...data } = createUserInput;
+            console.log('Photo: ', photo);
+            Object.assign(user, data);
+        } else {
+            Object.assign(user, createUserInput);
+        }
 
         if (user && user.registerToken) {
             [instAlias, userSpecific] = user.registerToken.split('#');

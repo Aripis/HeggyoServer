@@ -1,13 +1,16 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { Class } from 'src/classes/class.model';
 import { Institution } from 'src/institution/institution.model';
 import { Schedule } from 'src/schedule/schedule.model';
 import { Teacher } from 'src/teachers/teacher.model';
 import {
     Column,
     Entity,
+    JoinColumn,
     JoinTable,
     ManyToMany,
     ManyToOne,
+    OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -67,4 +70,9 @@ export class Subject {
         schedule => schedule.subject,
     )
     schedules: Schedule[];
+
+    @Field(() => Class)
+    @OneToOne(() => Class, { nullable: true })
+    @JoinColumn()
+    class: Class;
 }
