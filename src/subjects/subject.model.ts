@@ -72,7 +72,7 @@ export class Subject {
     schedules: Schedule[];
 
     @Field(() => Class)
-    @OneToOne(() => Class, { nullable: true })
+    @OneToOne(() => Class, { nullable: true, eager: true })
     @JoinColumn()
-    class: Class;
+    class?: Class;
 }
