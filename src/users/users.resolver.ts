@@ -14,6 +14,8 @@ import { UpdateUserInput } from './user-input/update-user.input';
 import { UpdateUserPayload } from './user-payload/update-user.payload';
 import { RemoveUserPayload } from './user-payload/remove-user.payload';
 import { CreateUserPayload } from './user-payload/create-user.payload';
+import { GenerateUserTokenPayload } from './user-payload/generate-user-token.payload';
+import { GenerateUserTokenInput } from './user-input/generate-user-token.input';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -96,6 +98,15 @@ export class UsersResolver {
         return {
             accessToken,
         };
+    }
+
+    @Query(() => GenerateUserTokenPayload)
+    @UseGuards(GqlAuthGuard)
+    generateUserToken(
+        @Args('tokenpreferences') tokenpreferences: GenerateUserTokenInput,
+        @CurrentUser() currUser: User,
+    ) {
+        return this.usersService.generateUserToken(currUser, tokenpreferences);
     }
 
     @Mutation(() => CreateUserPayload)

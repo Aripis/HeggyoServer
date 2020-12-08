@@ -190,6 +190,10 @@ type CreateUserPayload {
   userId: String!
 }
 
+type GenerateUserTokenPayload {
+  userRoleToken: String!
+}
+
 type Token {
   accessToken: String!
   refreshToken: String
@@ -215,6 +219,7 @@ type Query {
   login(loginInput: LoginInput!): User!
   logout: Boolean!
   token: Token!
+  generateUserToken(tokenpreferences: GenerateUserTokenInput!): GenerateUserTokenPayload!
   institution(id: String!): Institution!
   institutions: [Institution!]!
   teacher(id: String!): Teacher!
@@ -234,6 +239,11 @@ type Query {
 input LoginInput {
   email: String!
   password: String!
+}
+
+input GenerateUserTokenInput {
+  classUUID: String
+  userRole: UserRoles
 }
 
 type Mutation {

@@ -19,6 +19,8 @@ import { UpdateUserInput } from './user-input/update-user.input';
 import { UpdateUserPayload } from './user-payload/update-user.payload';
 import { RemoveUserPayload } from './user-payload/remove-user.payload';
 import { CreateUserPayload } from './user-payload/create-user.payload';
+import { GenerateUserTokenPayload } from './user-payload/generate-user-token.payload';
+import { GenerateUserTokenInput } from './user-input/generate-user-token.input';
 
 @Injectable()
 export class UsersService {
@@ -102,6 +104,10 @@ export class UsersService {
                     this.parentsService.create(resultUser, students);
                     break;
                 }
+                case 'v': {
+                    //viewer
+                    //TODO: create logic for viewers
+                }
             }
         } catch (error) {
             if (error.code === 'ER_DUP_ENTRY') {
@@ -150,5 +156,22 @@ export class UsersService {
         } catch (error) {
             throw new Error(error);
         }
+    }
+
+    async generateUserToken(
+        user: User,
+        tokenpreferences: GenerateUserTokenInput,
+    ): Promise<GenerateUserTokenPayload> {
+        const instAlias = (await this.usersRepository.findOne(user.id))
+            .institution[0].alias;
+        const userRole = tokenpreferences.userRole[0];
+        let token = instAlias + '#' + userRole + '@';
+        if (tokenpreferences.classUUID) {
+            const classToken = (
+                await this.classesService.findOne(tokenpreferences.classUUID)
+            ).classToken;
+            token += classToken;
+        }
+        return new GenerateUserTokenPayload(token);
     }
 }

@@ -18,11 +18,11 @@ export enum UserStatus {
 }
 
 export enum UserRoles {
-    ADMIN,
-    PARENT,
-    STUDENT,
-    TEACHER,
-    VIEWER,
+    ADMIN = 'admin',
+    PARENT = 'parent',
+    STUDENT = 'student',
+    TEACHER = 'teacher',
+    VIEWER = 'viewer',
 }
 
 registerEnumType(UserStatus, {
