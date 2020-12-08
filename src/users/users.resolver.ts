@@ -74,6 +74,13 @@ export class UsersResolver {
         return this.usersService.findOne(loginInput.email);
     }
 
+    @Query(() => Boolean)
+    async logout(@Context() ctx) {
+        ctx.res.clearCookie('accessToken');
+        ctx.res.clearCookie('refreshToken');
+        return true;
+    }
+
     @Query(() => Token)
     async token(@Context() ctx) {
         const accessToken = await this.authService.regenerateToken(

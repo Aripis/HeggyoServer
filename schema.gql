@@ -213,6 +213,7 @@ type Query {
   profile: User!
   checkRefreshToken: Boolean!
   login(loginInput: LoginInput!): User!
+  logout: Boolean!
   token: Token!
   institution(id: String!): Institution!
   institutions: [Institution!]!
