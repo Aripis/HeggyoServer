@@ -3,6 +3,8 @@ import {
     ConflictException,
     InternalServerErrorException,
     NotFoundException,
+	forwardRef,
+	Inject
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -16,7 +18,9 @@ import { UsersService } from 'src/users/users.service';
 @Injectable()
 export class StudentsService {
     constructor(
+    	@Inject(forwardRef(() => ClassesService))
         private readonly classesService: ClassesService,
+    	@Inject(forwardRef(() => UsersService))
         private readonly userService: UsersService,
 
         @InjectRepository(Student)

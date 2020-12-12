@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user.model';
 import { UsersResolver } from './users.resolver';
@@ -14,7 +14,7 @@ import { UploadScalar } from 'src/common/scalars/upload.scalar';
 
 @Module({
     imports: [
-        forwardRef(() => AuthModule),
+        AuthModule,
         InstitutionsModule,
         TeachersModule,
         ClassesModule,

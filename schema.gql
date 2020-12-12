@@ -220,7 +220,7 @@ type Query {
   logout: Boolean!
   token: Token!
   generateUserToken(tokenpreferences: GenerateUserTokenInput!): GenerateUserTokenPayload!
-  institution(id: String!): Institution!
+  institution: Institution!
   institutions: [Institution!]!
   teacher(id: String!): Teacher!
   teachers: [Teacher!]!
@@ -251,11 +251,11 @@ type Mutation {
   removeUser(id: String!): RemoveUserPayload!
   updateUser(updateUserInput: UpdateUserInput!): UpdateUserPayload!
   addInstitution(createInstitutionInput: CreateInstitutionInput!): CreateInstitutionPayload!
-  removeInstitution(id: String!): RemoveInstitutionPayload!
+  removeInstitution: RemoveInstitutionPayload!
   updateInstitution(updateInstitutionInput: UpdateInstitutionInput!): UpdateInstitutionPayload!
   updateTeacher(teacherData: UpdateTeacherInput!): UpdateTeacherPayload!
   addClass(createClassInput: CreateClassInput!): CreateClassPayload!
-  updatreClass(updateClassInput: UpdateClassInput!): UpdateClassPayload!
+  updateClass(updateClassInput: UpdateClassInput!): UpdateClassPayload!
   removeClass(id: String!): RemoveClassPayload!
   updateStudent(studentData: UpdateStudentInput!): UpdateStudentPayload!
   updateParent(parentData: UpdateParentInput!): UpdateParentPayload!
@@ -321,7 +321,6 @@ input CreateClassInput {
   classNumber: Int!
   classLetter: String!
   classTeacher: String
-  institution: String!
 }
 
 input UpdateClassInput {

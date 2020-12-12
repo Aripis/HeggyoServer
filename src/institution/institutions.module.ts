@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Institution } from './institution.model';
 import { InstitutionsResolver } from './institutions.resolver';
@@ -7,7 +7,7 @@ import { DateScalar } from '../common/scalars/date.scalar';
 import { UsersModule } from 'src/users/users.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Institution]), UsersModule],
+    imports: [TypeOrmModule.forFeature([Institution]), forwardRef(() => UsersModule)],
     providers: [InstitutionsResolver, InstitutionsService, DateScalar],
     exports: [InstitutionsService],
 })

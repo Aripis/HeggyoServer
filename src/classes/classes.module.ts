@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TeachersModule } from 'src/teachers/teachers.module';
-import { InstitutionsModule } from '../institution/institutions.module';
+import { UsersModule } from 'src/users/users.module';
 import { Class } from './class.model';
 import { ClassesResolver } from './classes.resolver';
 import { ClassesService } from './classes.service';
@@ -10,7 +10,7 @@ import { ClassesService } from './classes.service';
     imports: [
         TypeOrmModule.forFeature([Class]),
         TeachersModule,
-        InstitutionsModule,
+		forwardRef(() => UsersModule)
     ],
     providers: [ClassesResolver, ClassesService],
     exports: [ClassesService],
