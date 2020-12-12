@@ -83,7 +83,7 @@ export class ClassesService {
 
     async findAll(currUser: User): Promise<Class[]> {
         const institution = (await this.userService.findOne(currUser.id))
-            .institution;
+            .institution[0];
         return this.classesRepository.find({
             where: { institution: institution },
         });

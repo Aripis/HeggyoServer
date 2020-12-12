@@ -134,7 +134,7 @@ export class UsersService {
 
     async findAll(currUser: User): Promise<User[]> {
         const institution = (await this.usersRepository.findOne(currUser.id))
-            .institution;
+            .institution[0];
         return this.usersRepository.find({
             where: { institution: institution },
         });

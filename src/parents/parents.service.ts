@@ -5,8 +5,8 @@ import {
     ConflictException,
     InternalServerErrorException,
     NotFoundException,
-	forwardRef,
-	Inject
+    forwardRef,
+    Inject,
 } from '@nestjs/common';
 
 import { User } from '../users/user.model';
@@ -19,10 +19,10 @@ import { UsersService } from 'src/users/users.service';
 @Injectable()
 export class ParentsService {
     constructor(
-	    @Inject(forwardRef(() => StudentsService))
+        @Inject(forwardRef(() => StudentsService))
         private readonly studentsService: StudentsService,
-	    @Inject(forwardRef(() => UsersService))        
-		private readonly userService: UsersService,
+        @Inject(forwardRef(() => UsersService))
+        private readonly userService: UsersService,
 
         @InjectRepository(Parent)
         private readonly parentsRepository: Repository<Parent>,
@@ -63,7 +63,7 @@ export class ParentsService {
 
     async findAll(currUser: User): Promise<Parent[]> {
         const institution = (await this.userService.findOne(currUser.id))
-            .institution;
+            .institution[0];
         return this.parentsRepository.find({
             where: { institution: institution },
         });

@@ -89,7 +89,7 @@ export class SubjectService {
 
     async findAll(currUser: User): Promise<Subject[]> {
         const institution = (await this.userService.findOne(currUser.id))
-            .institution;
+            .institution[0];
         return this.subjectRepository.find({
             where: { institution: institution },
         });
