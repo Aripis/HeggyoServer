@@ -1,4 +1,5 @@
-import { Field, InputType, Int } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
+import { WeekDays } from 'src/schedule/schedule.model';
 
 @InputType()
 export class CreateScheduleInput {
@@ -7,6 +8,9 @@ export class CreateScheduleInput {
 
     @Field()
     endTime: string;
+
+    @Field()
+    day: WeekDays;
 
     @Field(() => String)
     subjectUUID: string;

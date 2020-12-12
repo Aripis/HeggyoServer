@@ -5,6 +5,7 @@ import {
     Entity,
     JoinColumn,
     ManyToOne,
+    OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
     Unique,
@@ -13,6 +14,7 @@ import {
 import { Teacher } from 'src/teachers/teacher.model';
 import { Institution } from '../institution/institution.model';
 import { Schedule } from 'src/schedule/schedule.model';
+import { Subject } from 'src/subjects/subject.model';
 
 export enum TokenStatus {
     ACTIVE,
@@ -76,9 +78,16 @@ export class Class {
     classTokenStatus: TokenStatus;
 
     @Field(() => [Schedule])
-    @ManyToOne(
+    @OneToMany(
         () => Schedule,
         schedule => schedule.class,
     )
-    schedule: Schedule[];
+    schedules: Schedule[];
+
+    @Field(() => [Subject])
+    @OneToMany(
+        () => Subject,
+        subject => subject.class,
+    )
+    subjects: Subject[];
 }

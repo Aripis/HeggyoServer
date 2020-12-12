@@ -6,11 +6,10 @@ import { Teacher } from 'src/teachers/teacher.model';
 import {
     Column,
     Entity,
-    JoinColumn,
     JoinTable,
     ManyToMany,
     ManyToOne,
-    OneToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -65,14 +64,17 @@ export class Subject {
     teachers?: Teacher[];
 
     @Field(() => [Schedule])
-    @ManyToOne(
+    @OneToMany(
         () => Schedule,
         schedule => schedule.subject,
     )
     schedules: Schedule[];
 
     @Field(() => Class)
-    @OneToOne(() => Class, { nullable: true, eager: true })
-    @JoinColumn()
+    @ManyToOne(
+        () => Class,
+        cls => cls.schedules,
+        { nullable: true, eager: true },
+    )
     class?: Class;
 }

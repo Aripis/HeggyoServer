@@ -1,4 +1,4 @@
-import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Class } from 'src/classes/class.model';
 import { Institution } from 'src/institution/institution.model';
 import { Subject } from 'src/subjects/subject.model';
@@ -12,6 +12,20 @@ import {
     OneToMany,
     PrimaryGeneratedColumn,
 } from 'typeorm';
+
+export enum WeekDays {
+    MONDAY = 'monday',
+    TUESDAY = 'tuesday',
+    WEDNESDAY = 'wednesday',
+    THURSDAY = 'thursday',
+    FRIDAY = 'friday',
+    SATURDAY = 'saturday',
+    SUNDAY = 'sunday',
+}
+
+registerEnumType(WeekDays, {
+    name: 'WeekDays',
+});
 
 @ObjectType()
 @Entity()
@@ -30,8 +44,12 @@ export class Schedule {
     @Column()
     endTime: string;
 
+    @Field(() => WeekDays)
+    @Column('enum', { enum: WeekDays })
+    day: WeekDays;
+
     @Field(() => Subject)
-    @OneToMany(
+    @ManyToOne(
         () => Subject,
         subject => subject.schedules,
         { eager: true },
@@ -39,9 +57,9 @@ export class Schedule {
     subject: Subject;
 
     @Field(() => Class)
-    @OneToMany(
+    @ManyToOne(
         () => Class,
-        cls => cls.schedule,
+        cls => cls.schedules,
         { eager: true },
     )
     class: Class;

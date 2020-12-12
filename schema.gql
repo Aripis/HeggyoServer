@@ -41,7 +41,8 @@ type Class {
   classNumber: Int!
   classToken: String!
   classTokenStatus: TokenStatus!
-  schedule: [Schedule!]!
+  schedules: [Schedule!]!
+  subjects: [Subject!]!
 }
 
 enum TokenStatus {
@@ -53,10 +54,21 @@ type Schedule {
   id: ID!
   startTime: String!
   endTime: String!
+  day: WeekDays!
   subject: Subject!
   class: Class!
   teachers: [Teacher!]
   institution: Institution!
+}
+
+enum WeekDays {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
 }
 
 type Institution {
@@ -366,6 +378,7 @@ input UpdateSubjectInput {
 input CreateScheduleInput {
   startTime: String!
   endTime: String!
+  day: String!
   subjectUUID: String!
   classUUID: String!
   teacherUUIDs: [String!]
