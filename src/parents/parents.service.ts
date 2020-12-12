@@ -12,11 +12,13 @@ import { Parent } from './parent.model';
 import { StudentsService } from '../students/students.service';
 import { UpdateParentInput } from './parent-input/update-parent.input';
 import { UpdateParentPayload } from './parent-payload/update-parent.payload';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class ParentsService {
     constructor(
         private readonly studentsService: StudentsService,
+        private readonly userService: UsersService,
 
         @InjectRepository(Parent)
         private readonly parentsRepository: Repository<Parent>,
@@ -55,8 +57,12 @@ export class ParentsService {
         }
     }
 
-    findAll(): Promise<Parent[]> {
-        return this.parentsRepository.find();
+    async findAll(currUser: User): Promise<Parent[]> {
+        const institution = (await this.userService.findOne(currUser.id))
+            .institution;
+        return this.parentsRepository.find({
+            where: { institution: institution },
+        });
     }
 
     async findOne(uuid: string): Promise<Parent> {

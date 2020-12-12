@@ -1,4 +1,8 @@
+import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { CurrentUser } from 'src/auth/currentuser.decorator';
+import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
+import { User } from 'src/users/user.model';
 import { UpdateParentInput } from './parent-input/update-parent.input';
 import { UpdateParentPayload } from './parent-payload/update-parent.payload';
 
@@ -15,8 +19,9 @@ export class ParentsResolver {
     }
 
     @Query(() => [Parent])
-    parents(): Promise<Parent[]> {
-        return this.parentsService.findAll();
+    @UseGuards(GqlAuthGuard)
+    parents(@CurrentUser() currUser: User): Promise<Parent[]> {
+        return this.parentsService.findAll(currUser);
     }
 
     @Mutation(() => UpdateParentPayload)

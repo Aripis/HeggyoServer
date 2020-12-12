@@ -15,13 +15,15 @@ export class SubjectsResolver {
     constructor(private readonly subjectService: SubjectService) {}
 
     @Query(() => Subject)
+    @UseGuards(GqlAuthGuard)
     subject(@Args('id') uuid: string): Promise<Subject> {
         return this.subjectService.findOne(uuid);
     }
 
     @Query(() => [Subject])
-    subjects(): Promise<Subject[]> {
-        return this.subjectService.findAll();
+    @UseGuards(GqlAuthGuard)
+    subjects(@CurrentUser() currUser: User): Promise<Subject[]> {
+        return this.subjectService.findAll(currUser);
     }
 
     @Mutation(() => CreateSubjectPayload)
@@ -34,6 +36,7 @@ export class SubjectsResolver {
     }
 
     @Mutation(() => UpdateSubjectPayload)
+    @UseGuards(GqlAuthGuard)
     updateSubject(
         @Args('subjectData') studentData: UpdateSubjectInput,
     ): Promise<UpdateSubjectPayload> {

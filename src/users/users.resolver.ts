@@ -28,6 +28,7 @@ export class UsersResolver {
     // TODO: set guards
 
     @Query(() => User)
+    @UseGuards(GqlAuthGuard)
     async user(@Args('id') uuid: string): Promise<User> {
         const user = await this.usersService.findOne(uuid);
         user.password = '';
@@ -35,8 +36,9 @@ export class UsersResolver {
     }
 
     @Query(() => [User])
-    async users(): Promise<User[]> {
-        const users = await this.usersService.findAll();
+    @UseGuards(GqlAuthGuard)
+    async users(@CurrentUser() currUser: User): Promise<User[]> {
+        const users = await this.usersService.findAll(currUser);
         return users.map(user => {
             user.password = '';
             return user;
@@ -77,6 +79,7 @@ export class UsersResolver {
     }
 
     @Query(() => Boolean)
+    @UseGuards(GqlAuthGuard)
     async logout(@Context() ctx) {
         ctx.res.clearCookie('accessToken');
         ctx.res.clearCookie('refreshToken');
@@ -117,6 +120,7 @@ export class UsersResolver {
     }
 
     @Mutation(() => RemoveUserPayload)
+    @UseGuards(GqlAuthGuard)
     removeUser(@Args('id') uuid: string): Promise<RemoveUserPayload> {
         return this.usersService.remove(uuid);
     }

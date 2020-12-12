@@ -11,6 +11,8 @@ registerEnumType(EducationStage, {
 
 @InputType()
 export class UpdateInstitutionInput {
+    // FIXME: shouldn't have id - get it automatically from @CurrentUser in resolver
+    // but the way of knowing currInstitution has to be created
     @Field()
     id: string;
 

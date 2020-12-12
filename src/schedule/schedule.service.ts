@@ -8,6 +8,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ClassesService } from 'src/classes/classes.service';
 import { SubjectService } from 'src/subjects/subjects.service';
 import { TeachersService } from 'src/teachers/teachers.service';
+import { User } from 'src/users/user.model';
+import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { CreateScheduleInput } from './schedule-input/create-schedule.input';
 import { CreateSchedulePayload } from './schedule-payload/create-schedule.payload';
@@ -19,6 +21,7 @@ export class ScheduleService {
         private readonly subjectService: SubjectService,
         private readonly classesService: ClassesService,
         private readonly teacherService: TeachersService,
+        private readonly userService: UsersService,
 
         @InjectRepository(Schedule)
         private readonly scheduleRepository: Repository<Schedule>,
@@ -68,7 +71,11 @@ export class ScheduleService {
         return schedule;
     }
 
-    findAll(): Promise<Schedule[]> {
-        return this.scheduleRepository.find();
+    async findAll(currUser: User): Promise<Schedule[]> {
+        const institution = (await this.userService.findOne(currUser.id))
+            .institution;
+        return this.scheduleRepository.find({
+            where: { institution: institution },
+        });
     }
 }

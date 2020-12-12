@@ -14,6 +14,7 @@ import { CreateSubjectPayload } from './subject-payload/create-subject.payload';
 import { TeachersService } from 'src/teachers/teachers.service';
 import { UsersService } from 'src/users/users.service';
 import { ClassesService } from 'src/classes/classes.service';
+import { User } from 'src/users/user.model';
 
 @Injectable()
 export class SubjectService {
@@ -86,8 +87,12 @@ export class SubjectService {
         }
     }
 
-    findAll(): Promise<Subject[]> {
-        return this.subjectRepository.find();
+    async findAll(currUser: User): Promise<Subject[]> {
+        const institution = (await this.userService.findOne(currUser.id))
+            .institution;
+        return this.subjectRepository.find({
+            where: { institution: institution },
+        });
     }
 
     async findOne(uuid: string): Promise<Subject> {

@@ -12,10 +12,14 @@ import { Institution } from './institution.model';
 import { RemoveInstitutionPayload } from './institution-payload/remove-institution.payload';
 import { UpdateInstitutionInput } from './institution-input/update-institution.input';
 import { UpdateInstitutionPayload } from './institution-payload/update-institution.payload';
+import { User } from 'src/users/user.model';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class InstitutionsService {
     constructor(
+        private readonly userService: UsersService,
+
         @InjectRepository(Institution)
         private readonly institutionsRepository: Repository<Institution>,
     ) {}
@@ -54,15 +58,17 @@ export class InstitutionsService {
         return this.institutionsRepository.find();
     }
 
-    async findOne(uuid: string): Promise<Institution> {
-        let institution = await this.institutionsRepository.findOne(uuid);
+    async findOne(user: User): Promise<Institution> {
+        const instId = (await this.userService.findOne(user.id)).institution[0]
+            .id;
+        let institution = await this.institutionsRepository.findOne(instId);
         if (!institution) {
             institution = await this.institutionsRepository.findOne({
-                where: { email: uuid },
+                where: { email: instId },
             });
         }
         if (!institution) {
-            throw new NotFoundException(uuid);
+            throw new NotFoundException(instId);
         }
         return institution;
     }
@@ -77,8 +83,10 @@ export class InstitutionsService {
         return institution;
     }
 
-    async remove(uuid: string): Promise<RemoveInstitutionPayload> {
-        await this.institutionsRepository.delete(uuid);
+    async remove(currUser: User): Promise<RemoveInstitutionPayload> {
+        const instId = (await this.userService.findOne(currUser.id))
+            .institution[0].id;
+        await this.institutionsRepository.delete(instId);
         return new RemoveInstitutionPayload(true);
     }
 }

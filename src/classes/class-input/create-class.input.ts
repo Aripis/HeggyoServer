@@ -19,7 +19,4 @@ export class CreateClassInput {
 
     @Field({ nullable: true })
     classTeacher?: string;
-
-    @Field()
-    institution: string;
 }

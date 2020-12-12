@@ -11,11 +11,13 @@ import { Student } from './student.model';
 import { User } from '../users/user.model';
 import { UpdateStudentInput } from './student-input/update-student.input';
 import { UpdateStudentPayload } from './student-payload/update-student.payload';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class StudentsService {
     constructor(
         private readonly classesService: ClassesService,
+        private readonly userService: UsersService,
 
         @InjectRepository(Student)
         private readonly studentsRepository: Repository<Student>,
@@ -63,8 +65,12 @@ export class StudentsService {
         }
     }
 
-    findAll(): Promise<Student[]> {
-        return this.studentsRepository.find();
+    async findAll(currUser: User): Promise<Student[]> {
+        const institution = (await this.userService.findOne(currUser.id))
+            .institution[0];
+        return this.studentsRepository.find({
+            where: { institution: institution },
+        });
     }
 
     async findOne(uuid: string): Promise<Student> {

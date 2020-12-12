@@ -6,18 +6,26 @@ import { UpdateInstitutionPayload } from './institution-payload/update-instituti
 import { UpdateInstitutionInput } from './institution-input/update-institution.input';
 import { RemoveInstitutionPayload } from './institution-payload/remove-institution.payload';
 import { CreateInstitutionPayload } from './institution-payload/create-institution.payload';
+import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
+import { UseGuards } from '@nestjs/common';
+import { CurrentUser } from 'src/auth/currentuser.decorator';
+import { User } from 'src/users/user.model';
 
 @Resolver()
 export class InstitutionsResolver {
     constructor(private readonly institutionsService: InstitutionsService) {}
 
     @Query(() => Institution)
-    institution(@Args('id') uuid: string): Promise<Institution> {
-        return this.institutionsService.findOne(uuid);
+    @UseGuards(GqlAuthGuard)
+    institution(@CurrentUser() user: User): Promise<Institution> {
+        return this.institutionsService.findOne(user);
     }
 
     @Query(() => [Institution])
-    institutions(): Promise<Institution[]> {
+    @UseGuards(GqlAuthGuard)
+    institutions(/*FIXME: shouldn't be able to get other institutions. ONlY system can*/): Promise<
+        Institution[]
+    > {
         return this.institutionsService.findAll();
     }
 
@@ -31,13 +39,15 @@ export class InstitutionsResolver {
 
     // TODO: shouldn't be able to remove it so easily
     @Mutation(() => RemoveInstitutionPayload)
+    @UseGuards(GqlAuthGuard)
     removeInstitution(
-        @Args('id') uuid: string,
+        @CurrentUser() currUser: User,
     ): Promise<RemoveInstitutionPayload> {
-        return this.institutionsService.remove(uuid);
+        return this.institutionsService.remove(currUser);
     }
 
     @Mutation(() => UpdateInstitutionPayload)
+    @UseGuards(GqlAuthGuard)
     updateInstitution(
         @Args('updateInstitutionInput')
         updateInstitutionInput: UpdateInstitutionInput,

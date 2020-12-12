@@ -4,9 +4,10 @@ import { Institution } from './institution.model';
 import { InstitutionsResolver } from './institutions.resolver';
 import { InstitutionsService } from './institutions.service';
 import { DateScalar } from '../common/scalars/date.scalar';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Institution])],
+    imports: [TypeOrmModule.forFeature([Institution]), UsersModule],
     providers: [InstitutionsResolver, InstitutionsService, DateScalar],
     exports: [InstitutionsService],
 })

@@ -8,7 +8,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Teacher } from 'src/teachers/teacher.model';
 import { TeachersService } from 'src/teachers/teachers.service';
 import { Repository } from 'typeorm';
-import { InstitutionsService } from '../institution/institutions.service';
 import { TokenStatus } from './class.model';
 
 import { CreateClassInput } from './class-input/create-class.input';
@@ -17,12 +16,14 @@ import { RemoveClassPayload } from './class-payload/remove-class.payload';
 import { UpdateClassPayload } from './class-payload/update-class.payload';
 import { UpdateClassInput } from './class-input/update-class.input';
 import { CreateClassPayload } from './class-payload/create-class.payload';
+import { UsersService } from 'src/users/users.service';
+import { User } from 'src/users/user.model';
 
 @Injectable()
 export class ClassesService {
     constructor(
         private readonly teacherService: TeachersService,
-        private readonly institutionsService: InstitutionsService,
+        private readonly userService: UsersService,
 
         @InjectRepository(Class)
         private readonly classesRepository: Repository<Class>,
@@ -30,15 +31,16 @@ export class ClassesService {
 
     async create(
         createClassInput: CreateClassInput,
+        currUser: User,
     ): Promise<CreateClassPayload> {
         const studentsClass = new Class();
         Object.assign(studentsClass, createClassInput);
 
         studentsClass.classToken = await this.generateClassToken(studentsClass);
         studentsClass.classTokenStatus = TokenStatus.ACTIVE;
-        studentsClass.institution = await this.institutionsService.findOne(
-            createClassInput.institution,
-        );
+        studentsClass.institution = (
+            await this.userService.findOne(currUser.id)
+        ).institution[0];
         if (createClassInput.classTeacher) {
             studentsClass.classTeacher = await this.teacherService.findOne(
                 createClassInput.classTeacher,
@@ -75,8 +77,12 @@ export class ClassesService {
         }
     }
 
-    findAll(): Promise<Class[]> {
-        return this.classesRepository.find();
+    async findAll(currUser: User): Promise<Class[]> {
+        const institution = (await this.userService.findOne(currUser.id))
+            .institution;
+        return this.classesRepository.find({
+            where: { institution: institution },
+        });
     }
 
     async findOne(value: string): Promise<Class> {
