@@ -56,7 +56,7 @@ export class UsersService {
         }
 
         const [userRole, additionalProps] = userSpecific.split('@');
-        if (userRole !== 'a' && additionalProps === '') {
+        if (userRole !== 'a' && userRole !== 't' && additionalProps === '') {
             throw new Error('Bad register token');
         }
         try {

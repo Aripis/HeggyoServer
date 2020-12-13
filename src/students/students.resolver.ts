@@ -4,6 +4,7 @@ import { CurrentUser } from 'src/auth/currentuser.decorator';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
 import { User } from 'src/users/user.model';
 import { UpdateStudentInput } from './student-input/update-student.input';
+import { GetStudentTokenPayload } from './student-payload/get-student-token.payload';
 import { UpdateStudentPayload } from './student-payload/update-student.payload';
 
 import { Student } from './student.model';
@@ -23,6 +24,14 @@ export class StudentsResolver {
     @UseGuards(GqlAuthGuard)
     students(@CurrentUser() currUser: User): Promise<Student[]> {
         return this.studentsService.findAll(currUser);
+    }
+
+    @Query(() => GetStudentTokenPayload)
+    @UseGuards(GqlAuthGuard)
+    getStudentToken(
+        @CurrentUser() currUser: User,
+    ): Promise<GetStudentTokenPayload> {
+        return this.studentsService.getToken(currUser);
     }
 
     @Mutation(() => UpdateStudentPayload)

@@ -38,6 +38,10 @@ export class Student {
     prevEducation: string;
 
     @Field()
+    @Column('varchar', { length: 10})
+    token: string;
+
+    @Field()
     @Column('varchar', { length: 10, default: 'none' })
     studentToken: string;
 

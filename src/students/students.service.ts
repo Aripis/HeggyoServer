@@ -14,6 +14,7 @@ import { User } from '../users/user.model';
 import { UpdateStudentInput } from './student-input/update-student.input';
 import { UpdateStudentPayload } from './student-payload/update-student.payload';
 import { UsersService } from 'src/users/users.service';
+import { GetStudentTokenPayload } from './student-payload/get-student-token.payload';
 
 @Injectable()
 export class StudentsService {
@@ -29,12 +30,32 @@ export class StudentsService {
 
     async create(user: User, classToken?: string): Promise<Student> {
         const student = new Student();
+        // {lastCharOfEmail}{2randomChars}{classNumber}{classLetter}{firstLetterFirstName}{firstLetterMiddleName}{firstLetterLastName}
+        let lastEmailChar = '',
+            twoRandoms = '',
+            firstThree: string;
+
         if (user) {
             student.user = user;
+            lastEmailChar = user.email.split('@')[0];
+            lastEmailChar = lastEmailChar[lastEmailChar.length - 1];
+            twoRandoms = Math.random()
+                .toString(36)
+                .substr(2, 2);
+            firstThree =
+                user.firstName[0] + user.middleName[0] + user.lastName[0];
         }
         if (classToken) {
             student.studentToken = classToken;
             student.class = await this.classesService.findOne(classToken);
+            const classNumber = student.class.classNumber;
+            const classLetter = student.class.classLetter;
+            student.token =
+                lastEmailChar +
+                twoRandoms +
+                classNumber +
+                classLetter +
+                firstThree;
         }
         try {
             const test = this.studentsRepository.save(student);
@@ -75,6 +96,19 @@ export class StudentsService {
         return this.studentsRepository.find({
             where: { institution: institution },
         });
+    }
+
+    async getToken(currUser: User): Promise<GetStudentTokenPayload> {
+        // console.log(currUser);
+        const token = (
+            await this.studentsRepository.findOne({
+                where: { user: await this.userService.findOne(currUser.id) },
+            })
+        ).token;
+        if (!token) {
+            throw new NotFoundException('No Student Token was Found');
+        }
+        return new GetStudentTokenPayload(token);
     }
 
     async findOne(uuid: string): Promise<Student> {

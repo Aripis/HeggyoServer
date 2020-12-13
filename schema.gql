@@ -178,12 +178,17 @@ type Student {
   startDate: Date
   class: Class!
   prevEducation: String!
+  token: String!
   studentToken: String!
   parents: [Parent!]
 }
 
 type UpdateStudentPayload {
   studentId: String!
+}
+
+type GetStudentTokenPayload {
+  token: String!
 }
 
 type UpdateParentPayload {
@@ -240,6 +245,7 @@ type Query {
   classes: [Class!]!
   student(id: String!): Student!
   students: [Student!]!
+  getStudentToken: GetStudentTokenPayload!
   parent(id: String!): Parent!
   parents: [Parent!]!
   subject(id: String!): Subject!
