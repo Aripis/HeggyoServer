@@ -18,7 +18,7 @@ export class UpdateSubjectInput {
     description: string;
 
     @Field(() => [String], { nullable: true })
-    teacherUUIDs?: string[];
+    teachersUUIDs?: string[];
 
     @Field({ nullable: true })
     classUUID?: string;

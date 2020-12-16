@@ -40,9 +40,9 @@ export class SubjectService {
                 createSubjectData.classUUID,
             );
         }
-        if (createSubjectData.teachersUUID) {
+        if (createSubjectData.teachersUUIDs) {
             const tchrs = [];
-            for (const uuid of createSubjectData.teachersUUID) {
+            for (const uuid of createSubjectData.teachersUUIDs) {
                 tchrs.push(await this.teachersService.findOne(uuid));
             }
             subject.teachers = tchrs;
@@ -64,23 +64,26 @@ export class SubjectService {
     async update(
         updateSubjectInput: UpdateSubjectInput,
     ): Promise<UpdateSubjectPayload> {
-        // TODO: add update subject class
         const { id, ...data } = updateSubjectInput;
-        console.log(id);
         if (await this.subjectRepository.findOne(id)) {
-            if (data.teacherUUIDs) {
-                const teachers = [];
-                const { teacherUUIDs, ...info } = data;
-                for (const uuid of teacherUUIDs) {
+            let subjectClass;
+            const teachers = [];
+            if (data.classUUID) {
+                subjectClass = await this.classesService.findOne(
+                    data.classUUID,
+                );
+            }
+            if (data.teachersUUIDs) {
+                for (const uuid of data.teachersUUIDs) {
                     teachers.push(await this.teachersService.findOne(uuid));
                 }
-                this.subjectRepository.update(id, {
-                    ...info,
-                    teachers: teachers,
-                });
-            } else {
-                this.subjectRepository.update(id, data);
             }
+            const { teachersUUIDs, classUUID, ...info } = data;
+            const subject = await this.subjectRepository.findOne(id);
+            Object.assign(subject, info);
+            subject.teachers = teachers;
+
+            await this.subjectRepository.save(subject);
             return new UpdateSubjectPayload(id);
         } else {
             throw new NotFoundException('[Update-Subject] Subject Not Found.');

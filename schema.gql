@@ -391,7 +391,7 @@ input CreateSubjectInput {
   endYear: Int!
   name: String!
   description: String!
-  teachersUUID: [String!]
+  teachersUUIDs: [String!]
   classUUID: String
 }
 
@@ -401,7 +401,7 @@ input UpdateSubjectInput {
   endYear: Int
   name: String
   description: String
-  teacherUUIDs: [String!]
+  teachersUUIDs: [String!]
   classUUID: String
 }
 
