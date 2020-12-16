@@ -15,6 +15,7 @@ import { TeachersService } from 'src/teachers/teachers.service';
 import { UsersService } from 'src/users/users.service';
 import { ClassesService } from 'src/classes/classes.service';
 import { User } from 'src/users/user.model';
+import { Class } from 'src/classes/class.model';
 
 @Injectable()
 export class SubjectService {
@@ -66,23 +67,22 @@ export class SubjectService {
     ): Promise<UpdateSubjectPayload> {
         const { id, ...data } = updateSubjectInput;
         if (await this.subjectRepository.findOne(id)) {
-            let subjectClass;
-            const teachers = [];
-            if (data.classUUID) {
-                subjectClass = await this.classesService.findOne(
-                    data.classUUID,
-                );
+            let subjectClass: Class;
+            const subject = await this.subjectRepository.findOne(id);
+            const { classUUID, teachersUUIDs, ...info } = data;
+            if (classUUID) {
+                subjectClass = await this.classesService.findOne(classUUID);
+                subject.class = subjectClass;
             }
-            if (data.teachersUUIDs) {
-                for (const uuid of data.teachersUUIDs) {
+            if (teachersUUIDs) {
+                const teachers = [];
+                for (const uuid of teachersUUIDs) {
                     teachers.push(await this.teachersService.findOne(uuid));
                 }
+                subject.teachers = teachers;
             }
-            const { teachersUUIDs, classUUID, ...info } = data;
-            const subject = await this.subjectRepository.findOne(id);
-            Object.assign(subject, info);
-            subject.teachers = teachers;
 
+            Object.assign(subject, info);
             await this.subjectRepository.save(subject);
             return new UpdateSubjectPayload(id);
         } else {

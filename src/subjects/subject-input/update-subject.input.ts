@@ -6,16 +6,16 @@ export class UpdateSubjectInput {
     id: string;
 
     @Field(() => Int, { nullable: true })
-    startYear: number;
+    startYear?: number;
 
     @Field(() => Int, { nullable: true })
-    endYear: number;
+    endYear?: number;
 
     @Field({ nullable: true })
-    name: string;
+    name?: string;
 
     @Field({ nullable: true })
-    description: string;
+    description?: string;
 
     @Field(() => [String], { nullable: true })
     teachersUUIDs?: string[];
