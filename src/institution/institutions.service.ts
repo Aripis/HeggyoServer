@@ -3,8 +3,8 @@ import {
     ConflictException,
     InternalServerErrorException,
     NotFoundException,
-	forwardRef,
-	Inject
+    forwardRef,
+    Inject,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -20,7 +20,7 @@ import { UsersService } from 'src/users/users.service';
 @Injectable()
 export class InstitutionsService {
     constructor(
-	    @Inject(forwardRef(() => UsersService))
+        @Inject(forwardRef(() => UsersService))
         private readonly userService: UsersService,
 
         @InjectRepository(Institution)
@@ -62,8 +62,7 @@ export class InstitutionsService {
     }
 
     async findOne(user: User): Promise<Institution> {
-        const instId = (await this.userService.findOne(user.id)).institution[0]
-            .id;
+        const instId = (await this.userService.findOne(user.id)).institution.id;
         let institution = await this.institutionsRepository.findOne(instId);
         if (!institution) {
             institution = await this.institutionsRepository.findOne({
@@ -87,8 +86,8 @@ export class InstitutionsService {
     }
 
     async remove(currUser: User): Promise<RemoveInstitutionPayload> {
-        const instId = (await this.userService.findOne(currUser.id))
-            .institution[0].id;
+        const instId = (await this.userService.findOne(currUser.id)).institution
+            .id;
         await this.institutionsRepository.delete(instId);
         return new RemoveInstitutionPayload(true);
     }

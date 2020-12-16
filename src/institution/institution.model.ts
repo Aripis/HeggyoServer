@@ -89,7 +89,7 @@ export class Institution {
     alias: string;
 
     @Field(() => [User], { nullable: true })
-    @ManyToMany(
+    @OneToMany(
         () => User,
         user => user.institution,
         { nullable: true },

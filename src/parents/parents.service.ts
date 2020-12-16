@@ -62,11 +62,11 @@ export class ParentsService {
     }
 
     async findAll(currUser: User): Promise<Parent[]> {
-        const institution = (await this.userService.findOne(currUser.id))
-            .institution[0];
-        return this.parentsRepository.find({
-            where: { institution: institution },
-        });
+        const users = await this.userService.findAll(currUser);
+        const parents = await this.parentsRepository.find();
+        return parents.filter(parent =>
+            users.map(user => parent.user.id === user.id),
+        );
     }
 
     async findOne(uuid: string): Promise<Parent> {

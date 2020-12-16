@@ -73,7 +73,7 @@ export class ScheduleService {
 
     async findAll(currUser: User): Promise<Schedule[]> {
         const institution = (await this.userService.findOne(currUser.id))
-            .institution[0];
+            .institution;
         return this.scheduleRepository.find({
             where: { institution: institution },
         });

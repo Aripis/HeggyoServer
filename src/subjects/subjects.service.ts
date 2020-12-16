@@ -34,7 +34,7 @@ export class SubjectService {
         Object.assign(subject, createSubjectData);
         subject.institution = (
             await this.userService.findOne(userUUID)
-        ).institution[0];
+        ).institution;
         if (createSubjectData.classUUID) {
             subject.class = await this.classesService.findOne(
                 createSubjectData.classUUID,
@@ -89,7 +89,7 @@ export class SubjectService {
 
     async findAll(currUser: User): Promise<Subject[]> {
         const institution = (await this.userService.findOne(currUser.id))
-            .institution[0];
+            .institution;
         return this.subjectRepository.find({
             where: { institution: institution },
         });

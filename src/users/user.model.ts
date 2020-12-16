@@ -5,7 +5,7 @@ import {
     Column,
     CreateDateColumn,
     Entity,
-    JoinTable,
+    ManyToOne,
     ManyToMany,
     OneToMany,
     PrimaryGeneratedColumn,
@@ -94,8 +94,8 @@ export class User {
     })
     status: UserStatus;
 
-    @Field(() => [Institution])
-    @ManyToMany(
+    @Field(() => Institution)
+    @ManyToOne(
         () => Institution,
         student => student.user,
         {
@@ -103,18 +103,7 @@ export class User {
             eager: true,
         },
     )
-    @JoinTable({
-        name: 'institution_user',
-        joinColumn: {
-            name: 'institution',
-            referencedColumnName: 'id',
-        },
-        inverseJoinColumn: {
-            name: 'user',
-            referencedColumnName: 'id',
-        },
-    })
-    institution: Institution[];
+    institution: Institution;
 
     @Field(() => [Message])
     @OneToMany(

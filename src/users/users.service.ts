@@ -48,11 +48,9 @@ export class UsersService {
 
         if (user && user.registerToken) {
             [instAlias, userSpecific] = user.registerToken.split('#');
-            const institutions = [];
-            institutions.push(
-                await this.institutionsService.findOneByAlias(instAlias),
+            user.institution = await this.institutionsService.findOneByAlias(
+                instAlias,
             );
-            user.institution = institutions;
         }
 
         const [userRole, additionalProps] = userSpecific.split('@');
@@ -134,7 +132,7 @@ export class UsersService {
 
     async findAll(currUser: User): Promise<User[]> {
         const institution = (await this.usersRepository.findOne(currUser.id))
-            .institution[0];
+            .institution;
         return this.usersRepository.find({
             where: { institution: institution },
         });
@@ -167,7 +165,7 @@ export class UsersService {
         tokenpreferences: GenerateUserTokenInput,
     ): Promise<GenerateUserTokenPayload> {
         const instAlias = (await this.usersRepository.findOne(user.id))
-            .institution[0].alias;
+            .institution.alias;
         const userRole = tokenpreferences.userRole[0];
         let token = instAlias + '#' + userRole + '@';
         if (tokenpreferences.classUUID) {

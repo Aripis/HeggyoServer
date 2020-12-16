@@ -91,11 +91,11 @@ export class StudentsService {
     }
 
     async findAll(currUser: User): Promise<Student[]> {
-        const institution = (await this.userService.findOne(currUser.id))
-            .institution[0];
-        return this.studentsRepository.find({
-            where: { institution: institution },
-        });
+        const users = await this.userService.findAll(currUser);
+        const students = await this.studentsRepository.find();
+        return students.filter(student =>
+            users.map(user => student.user.id === user.id),
+        );
     }
 
     async getToken(currUser: User): Promise<GetStudentTokenPayload> {

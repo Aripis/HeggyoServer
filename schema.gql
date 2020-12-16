@@ -142,7 +142,7 @@ type User {
   userRole: UserRoles!
   registerToken: String
   status: UserStatus!
-  institution: [Institution!]!
+  institution: Institution!
   sentMessages: [Message!]!
   receivedMessages: [Message!]!
 }

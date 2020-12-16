@@ -3,8 +3,8 @@ import {
     ConflictException,
     InternalServerErrorException,
     NotFoundException,
-	forwardRef,
-	Inject
+    forwardRef,
+    Inject,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -18,7 +18,7 @@ import { UsersService } from 'src/users/users.service';
 @Injectable()
 export class TeachersService {
     constructor(
-    	@Inject(forwardRef(() => UsersService))
+        @Inject(forwardRef(() => UsersService))
         private readonly userService: UsersService,
 
         @InjectRepository(Teacher)
@@ -53,11 +53,12 @@ export class TeachersService {
     }
 
     async findAll(currUser: User): Promise<Teacher[]> {
-        const institution = (await this.userService.findOne(currUser.id))
-            .institution[0];
-        return this.teachersRepository.find({
-            where: { institution: institution },
-        });
+        // FIXME: Implement with query builder
+        const users = await this.userService.findAll(currUser);
+        const teachers = await this.teachersRepository.find();
+        return teachers.filter(teacher =>
+            users.map(user => teacher.user.id === user.id),
+        );
     }
 
     async findOne(uuid: string): Promise<Teacher> {
