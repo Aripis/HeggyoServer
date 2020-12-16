@@ -30,6 +30,30 @@ enum ContractType {
   FULL_TIME
 }
 
+type Message {
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  from: User!
+  toUser: [User!]!
+  toClasses: [Class!]!
+  data: String!
+  type: MessageType!
+  status: MessageStatus!
+}
+
+"""Date custom scalar type"""
+scalar Date
+
+enum MessageType {
+  ASSIGNMENT
+}
+
+enum MessageStatus {
+  CREATED
+  PUBLISHED
+}
+
 type Class {
   id: ID!
   institution: Institution!
@@ -43,6 +67,7 @@ type Class {
   classTokenStatus: TokenStatus!
   schedules: [Schedule!]!
   subjects: [Subject!]!
+  messages: [Message!]!
 }
 
 enum TokenStatus {
@@ -86,9 +111,6 @@ type Institution {
   schedules: [Schedule!]!
 }
 
-"""Date custom scalar type"""
-scalar Date
-
 enum InstitutionType {
   TECHNOLOGICAL
   MATHEMATICAL
@@ -121,6 +143,8 @@ type User {
   registerToken: String
   status: UserStatus!
   institution: [Institution!]!
+  sentMessages: [Message!]!
+  receivedMessages: [Message!]!
 }
 
 enum UserRoles {

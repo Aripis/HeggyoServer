@@ -99,7 +99,6 @@ export class StudentsService {
     }
 
     async getToken(currUser: User): Promise<GetStudentTokenPayload> {
-        // console.log(currUser);
         const token = (
             await this.studentsRepository.findOne({
                 where: { user: await this.userService.findOne(currUser.id) },

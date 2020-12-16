@@ -1,11 +1,13 @@
 import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Institution } from 'src/institution/institution.model';
+import { Message } from 'src/messages/message.model';
 import {
     Column,
     CreateDateColumn,
     Entity,
     JoinTable,
     ManyToMany,
+    OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
@@ -113,4 +115,20 @@ export class User {
         },
     })
     institution: Institution[];
+
+    @Field(() => [Message])
+    @OneToMany(
+        () => Message,
+        message => message.from,
+        { cascade: true },
+    )
+    sentMessages: Message[];
+
+    @Field(() => [Message])
+    @ManyToMany(
+        () => Message,
+        message => message.toUser,
+        { cascade: true },
+    )
+    receivedMessages: Message[];
 }

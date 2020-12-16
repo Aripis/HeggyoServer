@@ -4,6 +4,7 @@ import {
     Column,
     Entity,
     JoinColumn,
+    ManyToMany,
     ManyToOne,
     OneToMany,
     OneToOne,
@@ -15,6 +16,7 @@ import { Teacher } from 'src/teachers/teacher.model';
 import { Institution } from '../institution/institution.model';
 import { Schedule } from 'src/schedule/schedule.model';
 import { Subject } from 'src/subjects/subject.model';
+import { Message } from 'src/messages/message.model';
 
 export enum TokenStatus {
     ACTIVE,
@@ -90,4 +92,14 @@ export class Class {
         subject => subject.class,
     )
     subjects: Subject[];
+
+    @Field(() => [Message])
+    @ManyToMany(
+        () => Message,
+        message => message.toClasses,
+        {
+            cascade: true,
+        },
+    )
+    messages: Message[];
 }
