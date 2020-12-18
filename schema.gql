@@ -37,7 +37,8 @@ type Message {
   from: User!
   toUser: [User!]!
   toClasses: [Class!]!
-  data: String!
+  data: String
+  filePath: String
   type: MessageType!
   status: MessageStatus!
 }
@@ -252,6 +253,10 @@ type CreateSchedulePayload {
   scheduleId: String!
 }
 
+type CreateMessagePayload {
+  messageId: String!
+}
+
 type Query {
   user(id: String!): User!
   users: [User!]!
@@ -276,6 +281,8 @@ type Query {
   subjects: [Subject!]!
   schedule(id: String!): Schedule!
   schedules: [Schedule!]!
+  message(id: String!): Message!
+  messages: [Message!]!
 }
 
 input LoginInput {
@@ -304,6 +311,7 @@ type Mutation {
   createSubject(subjectData: CreateSubjectInput!): CreateSubjectPayload!
   updateSubject(subjectData: UpdateSubjectInput!): UpdateSubjectPayload!
   createSchedule(scheduleInput: CreateScheduleInput!): CreateSchedulePayload!
+  createMessage(createMessageData: CreateMessageInput!): CreateMessagePayload!
 }
 
 input CreateUserInput {
@@ -412,4 +420,11 @@ input CreateScheduleInput {
   subjectUUID: String!
   classUUID: String!
   teacherUUIDs: [String!]
+}
+
+input CreateMessageInput {
+  toUserUUIDs: [String!]
+  toClassUUIDs: [String!]
+  data: String
+  type: MessageType!
 }

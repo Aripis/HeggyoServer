@@ -11,6 +11,7 @@ import { InstitutionsModule } from './institution/institutions.module';
 import { ClassesModule } from './classes/classes.module';
 import { SubjectsModule } from './subjects/subjects.module';
 import { ScheduleModule } from './schedule/schedule.module';
+import { MessageModule } from './messages/message.module';
 
 @Module({
     imports: [
@@ -38,6 +39,7 @@ import { ScheduleModule } from './schedule/schedule.module';
         ClassesModule,
         SubjectsModule,
         ScheduleModule,
+        MessageModule,
     ],
     controllers: [AppController],
     providers: [AppService],

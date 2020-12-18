@@ -94,6 +94,7 @@ export class User {
     })
     status: UserStatus;
 
+    // TODO: Make it many to many relationship
     @Field(() => Institution)
     @ManyToOne(
         () => Institution,

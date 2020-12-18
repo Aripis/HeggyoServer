@@ -96,9 +96,13 @@ export class Message {
     })
     toClasses: Class[];
 
-    @Field()
-    @Column()
-    data: string;
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    data?: string;
+
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    filePath?: string;
 
     @Field(() => MessageType)
     @Column({
@@ -111,6 +115,7 @@ export class Message {
     @Column({
         type: 'enum',
         enum: MessageStatus,
+        default: MessageStatus.CREATED,
     })
     status: MessageStatus;
 }
