@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
-import { Message } from './message.model';
+import { Message, MessageStatus, MessageType } from './message.model';
 import { CreateMessageInput } from './messages-input/create-message.input';
 import { User } from 'src/users/user.model';
 import { CreateMessagePayload } from './messages-payload/create-message.payload';
@@ -114,6 +114,45 @@ export class MessageService {
             throw new NotFoundException(uuid);
         }
         return message;
+    }
+
+    async findByCriteria(
+        currUser: User,
+        messageType?: MessageType,
+        messageStatus?: MessageStatus,
+    ): Promise<Message[]> {
+        if (!messageType && !messageStatus) {
+            console.log(messageType, messageStatus)
+            console.log(await this.findAll(currUser))
+            return this.findAll(currUser);
+        }
+
+        let messages: Message[];
+        if (messageType && messageStatus) {
+            messages = await this.messageRepository.find({
+                where: {
+                    from: await this.userService.findOne(currUser.id),
+                    type: messageType,
+                    status: messageStatus,
+                },
+            });
+        } else if (!messageType) {
+            messages = await this.messageRepository.find({
+                where: {
+                    from: await this.userService.findOne(currUser.id),
+                    status: messageStatus,
+                },
+            });
+        } else if (!messageStatus) {
+            messages = await this.messageRepository.find({
+                where: {
+                    from: await this.userService.findOne(currUser.id),
+                    type: messageType,
+                },
+            });
+        }
+
+        return messages;
     }
 
     // async remove(uuid: string): Promise<void> {

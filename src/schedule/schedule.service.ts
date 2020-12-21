@@ -29,10 +29,13 @@ export class ScheduleService {
 
     async create(
         scheduleData: CreateScheduleInput,
+        currUser: User,
     ): Promise<CreateSchedulePayload> {
         const schedule = new Schedule();
         const { subjectUUID, classUUID, ...data } = scheduleData;
-
+        schedule.institution = (
+            await this.userService.findOne(currUser.id)
+        ).institution;
         if (data.teachersUUIDs) {
             const { teachersUUIDs, ...info } = data;
             const teachers = [];
@@ -47,12 +50,10 @@ export class ScheduleService {
         schedule.subject = await this.subjectService.findOne(subjectUUID);
 
         schedule.class = await this.classesService.findOne(classUUID);
-        console.log('----- Schedule: ', schedule);
 
         try {
             // FIXME: something fails here
             const schdl = await this.scheduleRepository.save(schedule);
-            console.log('----- ScheduleReturn: ', schdl);
 
             return new CreateSchedulePayload(schdl.id);
         } catch (error) {

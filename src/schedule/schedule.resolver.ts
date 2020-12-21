@@ -28,7 +28,8 @@ export class ScheduleResolver {
     @UseGuards(GqlAuthGuard)
     createSchedule(
         @Args('scheduleInput') scheduleInput: CreateScheduleInput,
+        @CurrentUser() currUser: User,
     ): Promise<CreateSchedulePayload> {
-        return this.scheduleService.create(scheduleInput);
+        return this.scheduleService.create(scheduleInput, currUser);
     }
 }
