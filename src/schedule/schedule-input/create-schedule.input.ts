@@ -1,23 +1,27 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { WeekDays } from 'src/schedule/schedule.model';
 
+registerEnumType(WeekDays, {
+    name: 'WeekDays',
+});
+
 @InputType()
 export class CreateScheduleInput {
     @Field()
-    startTime: string;
+    startTime: Date;
 
     @Field()
-    endTime: string;
+    endTime: Date;
 
-    @Field()
+    @Field(() => WeekDays)
     day: WeekDays;
 
-    @Field(() => String)
+    @Field()
     subjectUUID: string;
 
-    @Field(() => String)
+    @Field()
     classUUID: string;
 
     @Field(() => [String], { nullable: true })
-    teacherUUIDs?: string[];
+    teachersUUIDs?: string[];
 }
