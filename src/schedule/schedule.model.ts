@@ -11,6 +11,7 @@ import {
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
+    Unique,
 } from 'typeorm';
 
 export enum WeekDays {
@@ -29,6 +30,7 @@ registerEnumType(WeekDays, {
 
 @ObjectType()
 @Entity()
+@Unique(['institution', 'day', 'subject', 'class', 'startTime', 'endTime'])
 export class Schedule {
     @Field(() => ID)
     @PrimaryGeneratedColumn('uuid')
