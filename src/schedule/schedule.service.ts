@@ -29,10 +29,13 @@ export class ScheduleService {
 
     async create(
         scheduleData: CreateScheduleInput,
+        currUser: User,
     ): Promise<CreateSchedulePayload> {
         const schedule = new Schedule();
         const { subjectUUID, classUUID, ...data } = scheduleData;
-
+        schedule.institution = (
+            await this.userService.findOne(currUser.id)
+        ).institution;
         if (data.teacherUUIDs) {
             const { teacherUUIDs, ...info } = data;
             const teachers = [];
