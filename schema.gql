@@ -78,8 +78,8 @@ enum TokenStatus {
 
 type Schedule {
   id: ID!
-  startTime: String!
-  endTime: String!
+  startTime: Date!
+  endTime: Date!
   day: WeekDays!
   subject: Subject!
   class: Class!
@@ -414,12 +414,12 @@ input UpdateSubjectInput {
 }
 
 input CreateScheduleInput {
-  startTime: String!
-  endTime: String!
-  day: String!
+  startTime: Date!
+  endTime: Date!
+  day: WeekDays!
   subjectUUID: String!
   classUUID: String!
-  teacherUUIDs: [String!]
+  teachersUUIDs: [String!]
 }
 
 input CreateMessageInput {

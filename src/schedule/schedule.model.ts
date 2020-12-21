@@ -34,15 +34,13 @@ export class Schedule {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    // FIXME: make time not string
     @Field()
     @Column()
-    startTime: string;
+    startTime: Date;
 
-    // FIXME: make time not string
     @Field()
     @Column()
-    endTime: string;
+    endTime: Date;
 
     @Field(() => WeekDays)
     @Column('enum', { enum: WeekDays })

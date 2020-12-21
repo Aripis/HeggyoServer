@@ -33,10 +33,10 @@ export class ScheduleService {
         const schedule = new Schedule();
         const { subjectUUID, classUUID, ...data } = scheduleData;
 
-        if (data.teacherUUIDs) {
-            const { teacherUUIDs, ...info } = data;
+        if (data.teachersUUIDs) {
+            const { teachersUUIDs, ...info } = data;
             const teachers = [];
-            for (const uuid of teacherUUIDs) {
+            for (const uuid of teachersUUIDs) {
                 teachers.push(await this.teacherService.findOne(uuid));
             }
             Object.assign(schedule, info);
