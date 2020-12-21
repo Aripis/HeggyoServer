@@ -48,6 +48,7 @@ scalar Date
 
 enum MessageType {
   ASSIGNMENT
+  MESSAGE
 }
 
 enum MessageStatus {
@@ -283,6 +284,7 @@ type Query {
   schedules: [Schedule!]!
   message(id: String!): Message!
   messages: [Message!]!
+  messagesByCriteria(criteria: MessagesByCriteriaInput!): [Message!]!
 }
 
 input LoginInput {
@@ -293,6 +295,11 @@ input LoginInput {
 input GenerateUserTokenInput {
   classUUID: String
   userRole: UserRoles
+}
+
+input MessagesByCriteriaInput {
+  messageType: MessageType
+  messageStatus: MessageStatus
 }
 
 type Mutation {

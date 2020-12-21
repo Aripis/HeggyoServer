@@ -38,7 +38,6 @@ export class UsersResolver {
     @Query(() => [User])
     @UseGuards(GqlAuthGuard)
     async users(@CurrentUser() currUser: User): Promise<User[]> {
-        console.log('-----');
         const users = await this.usersService.findAll(currUser);
         return users.map(user => {
             user.password = '';

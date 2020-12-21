@@ -47,12 +47,10 @@ export class ScheduleService {
         schedule.subject = await this.subjectService.findOne(subjectUUID);
 
         schedule.class = await this.classesService.findOne(classUUID);
-        console.log('----- Schedule: ', schedule);
 
         try {
             // FIXME: something fails here
             const schdl = await this.scheduleRepository.save(schedule);
-            console.log('----- ScheduleReturn: ', schdl);
 
             return new CreateSchedulePayload(schdl.id);
         } catch (error) {
