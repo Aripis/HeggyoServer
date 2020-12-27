@@ -64,6 +64,14 @@ export class MessageService {
             throw new Error('[Create-Message] No input data for message');
         }
 
+        if (createSubjectData.assignmentDueDate){
+            message.assignmentDueDate = createSubjectData.assignmentDueDate;        
+        }
+
+        if (createSubjectData.assignmentType){
+            message.assignmentType = createSubjectData.assignmentType;
+        }
+
         // TODO: File save
         // if (createSubjectData.file) {
         //     message.filesPath = ['file1Path', 'file2Path'];

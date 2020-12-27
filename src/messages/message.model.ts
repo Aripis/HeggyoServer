@@ -114,8 +114,7 @@ export class Message {
     @Column({
         nullable: true,
         type: 'enum',
-        enum: AssignmentType,
-        default: AssignmentType.HOMEWORK,
+        enum: AssignmentType
     })
     assignmentType?: AssignmentType;
 
