@@ -12,13 +12,15 @@ import { CreateMessageInput } from './messages-input/create-message.input';
 import { User } from 'src/users/user.model';
 import { CreateMessagePayload } from './messages-payload/create-message.payload';
 import { ClassesService } from 'src/classes/classes.service';
+import { File } from './file.model';
+import { SubjectService } from 'src/subjects/subjects.service';
 
 @Injectable()
 export class MessageService {
     constructor(
         private readonly userService: UsersService,
         private readonly classesService: ClassesService,
-
+        private readonly subjectService: SubjectService,
         @InjectRepository(Message)
         private readonly messageRepository: Repository<Message>,
     ) {}
@@ -31,6 +33,15 @@ export class MessageService {
 
         message.from = await this.userService.findOne(currUser.id);
         message.type = createSubjectData.type;
+
+        // const file =  new File()
+        // file.filesPath = 'PATH'
+
+        if (createSubjectData.subjectUUID) {
+            message.subject = await this.subjectService.findOne(
+                createSubjectData.subjectUUID,
+            );
+        }
 
         if (createSubjectData.data) {
             message.data = createSubjectData.data;
@@ -122,8 +133,8 @@ export class MessageService {
         messageStatus?: MessageStatus,
     ): Promise<Message[]> {
         if (!messageType && !messageStatus) {
-            console.log(messageType, messageStatus)
-            console.log(await this.findAll(currUser))
+            console.log(messageType, messageStatus);
+            console.log(await this.findAll(currUser));
             return this.findAll(currUser);
         }
 

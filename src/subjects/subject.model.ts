@@ -1,6 +1,7 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { Class } from 'src/classes/class.model';
 import { Institution } from 'src/institution/institution.model';
+import { Message } from 'src/messages/message.model';
 import { Schedule } from 'src/schedule/schedule.model';
 import { Teacher } from 'src/teachers/teacher.model';
 import {
@@ -77,4 +78,12 @@ export class Subject {
         { nullable: true, eager: true },
     )
     class?: Class;
+
+    @Field(() => Message, { nullable: true })
+    @ManyToOne(
+        () => Message,
+        message => message.subject,
+        { nullable: true },
+    )
+    messages?: Message[];
 }

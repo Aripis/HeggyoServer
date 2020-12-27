@@ -21,4 +21,7 @@ export class CreateMessageInput {
 
     @Field(() => MessageType)
     type: MessageType;
+
+    @Field()
+    subjectUUID: string;
 }

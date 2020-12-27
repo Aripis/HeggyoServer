@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Class } from 'src/classes/class.model';
+import { Subject } from 'src/subjects/subject.model';
 import { User } from 'src/users/user.model';
 import {
     Column,
@@ -8,9 +9,11 @@ import {
     JoinTable,
     ManyToMany,
     ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
+import { File } from './file.model';
 
 export enum MessageType {
     ASSIGNMENT = 'assignment',
@@ -120,9 +123,13 @@ export class Message {
     @Column({ nullable: true })
     data?: string;
 
-    @Field({ nullable: true })
-    @Column({ nullable: true })
-    filePath?: string;
+    @Field(() => File, { nullable: true })
+    @OneToMany(
+        () => File,
+        fil => fil.message,
+        { nullable: true, eager: true },
+    )
+    files?: File[];
 
     @Field(() => MessageType)
     @Column({
@@ -138,4 +145,12 @@ export class Message {
         default: MessageStatus.CREATED,
     })
     status: MessageStatus;
+
+    @Field(() => Subject, { nullable: true })
+    @ManyToOne(
+        () => Subject,
+        subject => subject.messages,
+        { eager: true, nullable: true },
+    )
+    subject?: Subject;
 }
