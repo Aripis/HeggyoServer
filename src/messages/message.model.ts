@@ -117,7 +117,7 @@ export class Message {
         enum: AssignmentType,
         default: AssignmentType.HOMEWORK,
     })
-    assingmentType?: AssignmentType;
+    assignmentType?: AssignmentType;
 
     @Field({ nullable: true })
     @Column({ nullable: true })

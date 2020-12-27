@@ -17,7 +17,7 @@ export class CreateMessageInput {
     //files
 
     @Field(() => AssignmentType, { nullable: true })
-    assingmentType?: AssignmentType;
+    assignmentType?: AssignmentType;
 
     @Field(() => MessageType)
     type: MessageType;

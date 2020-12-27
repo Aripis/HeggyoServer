@@ -15,7 +15,7 @@ type Message {
   from: User!
   toUser: [User!]!
   toClasses: [Class!]!
-  assingmentType: AssignmentType
+  assignmentType: AssignmentType
   data: String
   files: File
   type: MessageType!
@@ -449,7 +449,7 @@ input CreateMessageInput {
   toUserUUIDs: [String!]
   toClassUUIDs: [String!]
   data: String
-  assingmentType: AssignmentType
+  assignmentType: AssignmentType
   type: MessageType!
   subjectUUID: String!
 }
