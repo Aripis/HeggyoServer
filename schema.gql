@@ -21,6 +21,7 @@ type Message {
   type: MessageType!
   status: MessageStatus!
   subject: Subject
+  assignmentDueDate: Date
 }
 
 """Date custom scalar type"""
@@ -452,4 +453,5 @@ input CreateMessageInput {
   assingmentType: AssignmentType
   type: MessageType!
   subjectUUID: String!
+  assignmentDueDate: Date
 }

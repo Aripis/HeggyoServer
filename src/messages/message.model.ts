@@ -153,4 +153,8 @@ export class Message {
         { eager: true, nullable: true },
     )
     subject?: Subject;
+
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    assignmentDueDate?: Date;
 }
