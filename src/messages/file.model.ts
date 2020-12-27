@@ -13,7 +13,7 @@ export class File {
     @Column()
     filePath: string;
 
-    @Field()
+    @Field(() => Message)
     @ManyToOne(
         () => Message,
         message => message.files,

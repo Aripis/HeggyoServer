@@ -2,32 +2,10 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Subject {
+type File {
   id: ID!
-  startYear: Int!
-  endYear: Int!
-  name: String!
-  description: String!
-  institution: Institution!
-  teachers: [Teacher!]
-  schedules: [Schedule!]!
-  class: Class!
-}
-
-type Teacher {
-  id: ID!
-  user: User!
-  education: String
-  yearsExperience: Int!
-  contractType: ContractType
-  teacherToken: String!
-  subjects: [Subject!]
-  schedules: [Schedule!]
-}
-
-enum ContractType {
-  PART_TIME
-  FULL_TIME
+  filePath: String!
+  message: Message!
 }
 
 type Message {
@@ -39,9 +17,10 @@ type Message {
   toClasses: [Class!]!
   assingmentType: AssignmentType
   data: String
-  filePath: String
+  files: File
   type: MessageType!
   status: MessageStatus!
+  subject: Subject
 }
 
 """Date custom scalar type"""
@@ -61,6 +40,35 @@ enum MessageType {
 enum MessageStatus {
   CREATED
   PUBLISHED
+}
+
+type Subject {
+  id: ID!
+  startYear: Int!
+  endYear: Int!
+  name: String!
+  description: String!
+  institution: Institution!
+  teachers: [Teacher!]
+  schedules: [Schedule!]!
+  class: Class!
+  messages: Message
+}
+
+type Teacher {
+  id: ID!
+  user: User!
+  education: String
+  yearsExperience: Int!
+  contractType: ContractType
+  teacherToken: String!
+  subjects: [Subject!]
+  schedules: [Schedule!]
+}
+
+enum ContractType {
+  PART_TIME
+  FULL_TIME
 }
 
 type Class {
@@ -443,4 +451,5 @@ input CreateMessageInput {
   data: String
   assingmentType: AssignmentType
   type: MessageType!
+  subjectUUID: String!
 }

@@ -133,8 +133,6 @@ export class MessageService {
         messageStatus?: MessageStatus,
     ): Promise<Message[]> {
         if (!messageType && !messageStatus) {
-            console.log(messageType, messageStatus);
-            console.log(await this.findAll(currUser));
             return this.findAll(currUser);
         }
 

@@ -40,7 +40,6 @@ export class UsersService {
         let resultUser: User, instAlias: string, userSpecific: string;
         if (createUserInput.photo) {
             const { photo, ...data } = createUserInput;
-            console.log('Photo: ', photo);
             Object.assign(user, data);
         } else {
             Object.assign(user, createUserInput);
