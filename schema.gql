@@ -37,6 +37,7 @@ type Message {
   from: User!
   toUser: [User!]!
   toClasses: [Class!]!
+  assingmentType: AssignmentType
   data: String
   filePath: String
   type: MessageType!
@@ -45,6 +46,12 @@ type Message {
 
 """Date custom scalar type"""
 scalar Date
+
+enum AssignmentType {
+  HOMEWORK
+  CLASSWORK
+  EXAM
+}
 
 enum MessageType {
   ASSIGNMENT
@@ -300,6 +307,7 @@ input GenerateUserTokenInput {
 input MessagesByCriteriaInput {
   messageType: MessageType
   messageStatus: MessageStatus
+  assingmentType: AssignmentType
 }
 
 type Mutation {
@@ -433,5 +441,6 @@ input CreateMessageInput {
   toUserUUIDs: [String!]
   toClassUUIDs: [String!]
   data: String
+  assingmentType: AssignmentType
   type: MessageType!
 }

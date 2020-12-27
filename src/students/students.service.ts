@@ -94,7 +94,7 @@ export class StudentsService {
         const users = await this.userService.findAll(currUser);
         const students = await this.studentsRepository.find();
         return students.filter(student =>
-            users.map(user => student.user.id === user.id),
+            users.map(user => student?.user?.id === user?.id),
         );
     }
 

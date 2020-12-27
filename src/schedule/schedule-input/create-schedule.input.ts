@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, registerEnumType } from '@nestjs/graphql';
 import { WeekDays } from 'src/schedule/schedule.model';
 
 registerEnumType(WeekDays, {

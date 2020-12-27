@@ -22,6 +22,16 @@ export enum MessageStatus {
     PUBLISHED = 'published',
 }
 
+export enum AssignmentType {
+    HOMEWORK = 'homework',
+    CLASSWORK = 'classwork',
+    EXAM = 'exam',
+}
+
+registerEnumType(AssignmentType, {
+    name: 'AssignmentType',
+});
+
 registerEnumType(MessageType, {
     name: 'MessageType',
 });
@@ -96,6 +106,15 @@ export class Message {
         },
     })
     toClasses: Class[];
+
+    @Field(() => AssignmentType, { nullable: true })
+    @Column({
+        nullable: true,
+        type: 'enum',
+        enum: AssignmentType,
+        default: AssignmentType.HOMEWORK,
+    })
+    assingmentType?: AssignmentType;
 
     @Field({ nullable: true })
     @Column({ nullable: true })

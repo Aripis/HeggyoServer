@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { MessageType } from '../message.model';
+import { AssignmentType, MessageType } from '../message.model';
 
 @InputType()
 export class CreateMessageInput {
@@ -15,6 +15,9 @@ export class CreateMessageInput {
     // TODO: implement file upload
     // @Field({ nullable: true})
     //files
+
+    @Field(() => AssignmentType, { nullable: true })
+    assingmentType?: AssignmentType;
 
     @Field(() => MessageType)
     type: MessageType;

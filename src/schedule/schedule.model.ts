@@ -9,13 +9,13 @@ import {
     JoinTable,
     ManyToMany,
     ManyToOne,
-    OneToMany,
     PrimaryGeneratedColumn,
     Unique,
 } from 'typeorm';
 
 export enum WeekDays {
     MONDAY = 'monday',
+
     TUESDAY = 'tuesday',
     WEDNESDAY = 'wednesday',
     THURSDAY = 'thursday',

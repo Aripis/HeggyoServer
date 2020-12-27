@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { MessageStatus, MessageType } from '../message.model';
+import { AssignmentType, MessageStatus, MessageType } from '../message.model';
 
 @InputType()
 export class MessagesByCriteriaInput {
@@ -8,4 +8,7 @@ export class MessagesByCriteriaInput {
 
     @Field(() => MessageStatus, { nullable: true })
     messageStatus?: MessageStatus;
+
+    @Field(() => AssignmentType, { nullable: true })
+    assingmentType?: AssignmentType;
 }
