@@ -12,7 +12,7 @@ import { CreateMessageInput } from './messages-input/create-message.input';
 import { User } from 'src/users/user.model';
 import { CreateMessagePayload } from './messages-payload/create-message.payload';
 import { ClassesService } from 'src/classes/classes.service';
-import { File } from './file.model';
+// import { File } from './file.model';
 import { SubjectService } from 'src/subjects/subjects.service';
 
 @Injectable()
