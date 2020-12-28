@@ -37,8 +37,8 @@ export class StudentsResolver {
     @Mutation(() => UpdateStudentPayload)
     @UseGuards(GqlAuthGuard)
     updateStudent(
-        @Args('studentData') studentData: UpdateStudentInput,
+        @Args('updateStudentInput') updateStudentInput: UpdateStudentInput,
     ): Promise<UpdateStudentPayload> {
-        return this.studentsService.update(studentData);
+        return this.studentsService.update(updateStudentInput);
     }
 }

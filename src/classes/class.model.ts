@@ -54,7 +54,7 @@ export class Class {
     @Field(() => Teacher)
     @OneToOne(() => Teacher, { eager: true })
     @JoinColumn()
-    classTeacher: Teacher;
+    teacher: Teacher;
 
     @Field()
     @Column('varchar', { length: 1 })

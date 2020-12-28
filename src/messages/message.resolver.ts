@@ -40,16 +40,16 @@ export class MessageResolver {
     @Mutation(() => CreateMessagePayload)
     @UseGuards(GqlAuthGuard)
     createMessage(
-        @Args('createMessageData') message: CreateMessageInput,
+        @Args('createMessageInput') createMessageInput: CreateMessageInput,
         @CurrentUser() currUser: User,
     ): Promise<CreateMessagePayload> {
-        return this.messageService.create(message, currUser);
+        return this.messageService.create(createMessageInput, currUser);
     }
 
     // @Mutation(() => UpdateMessagePayload)
     // updateMessage(
-    //     @Args('parentData') parentData: UpdateMessageInput,
+    //     @Args('updateMessageInput') updateMessageInput: UpdateMessageInput,
     // ): Promise<UpdateMessagePayload> {
-    //     return this.messageService.update(parentData);
+    //     return this.messageService.update(updateMessageInput);
     // }
 }

@@ -45,9 +45,9 @@ export class ClassesService {
         studentsClass.institution = (
             await this.userService.findOne(currUser.id)
         ).institution;
-        if (createClassInput.classTeacher) {
-            studentsClass.classTeacher = await this.teacherService.findOne(
-                createClassInput.classTeacher,
+        if (createClassInput.teacherUUID) {
+            studentsClass.teacher = await this.teacherService.findOne(
+                createClassInput.teacherUUID,
             );
         }
         try {
@@ -61,21 +61,21 @@ export class ClassesService {
         }
     }
 
-    async update(studentsClass: UpdateClassInput): Promise<UpdateClassPayload> {
-        const { id, ...data } = studentsClass;
+    async update(
+        updateClassInput: UpdateClassInput,
+    ): Promise<UpdateClassPayload> {
+        const { id, ...data } = updateClassInput;
         if (await this.classesRepository.findOne(id)) {
             if (data.teacherUUID) {
                 const { teacherUUID, ...info } = data;
                 await this.classesRepository.update(id, {
                     ...info,
-                    classTeacher: await this.teacherService.findOne(
-                        teacherUUID,
-                    ),
+                    teacher: await this.teacherService.findOne(teacherUUID),
                 });
             } else {
                 await this.classesRepository.update(id, data);
             }
-            return new UpdateClassPayload(studentsClass.id);
+            return new UpdateClassPayload(updateClassInput.id);
         } else {
             throw new NotFoundException('[Update-Class]: Class not found.');
         }
@@ -118,7 +118,7 @@ export class ClassesService {
         const stClass = await this.classesRepository.findOne({
             where: { classToken: classToken },
         });
-        stClass.classTeacher = teacher;
+        stClass.teacher = teacher;
         const { id, ...restProps } = stClass;
         await this.classesRepository.update(id, restProps);
         return stClass;

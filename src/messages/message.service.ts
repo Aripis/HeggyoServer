@@ -26,54 +26,57 @@ export class MessageService {
     ) {}
 
     async create(
-        createSubjectData: CreateMessageInput,
+        createMessageInput: CreateMessageInput,
         currUser: User,
     ): Promise<CreateMessagePayload> {
         const message = new Message();
 
         message.from = await this.userService.findOne(currUser.id);
-        message.type = createSubjectData.type;
+        message.type = createMessageInput.type;
 
         // const file =  new File()
         // file.filesPath = 'PATH'
 
-        if (createSubjectData.subjectUUID) {
+        if (createMessageInput.subjectUUID) {
             message.subject = await this.subjectService.findOne(
-                createSubjectData.subjectUUID,
+                createMessageInput.subjectUUID,
             );
         }
 
-        if (createSubjectData.data) {
-            message.data = createSubjectData.data;
+        if (createMessageInput.data) {
+            message.data = createMessageInput.data;
         }
-        if (createSubjectData.toClassUUIDs) {
+        if (createMessageInput.toClassUUIDs) {
             const toClasses = [];
-            for (const uuid of createSubjectData.toClassUUIDs) {
+            for (const uuid of createMessageInput.toClassUUIDs) {
                 toClasses.push(await this.classesService.findOne(uuid));
             }
             message.toClasses = toClasses;
         }
-        if (createSubjectData.toUserUUIDs) {
+        if (createMessageInput.toUserUUIDs) {
             const toUsers = [];
-            for (const uuid of createSubjectData.toUserUUIDs) {
+            for (const uuid of createMessageInput.toUserUUIDs) {
                 toUsers.push(await this.userService.findOne(uuid));
             }
             message.toUser = toUsers;
         }
-        if (!createSubjectData.toClassUUIDs && !createSubjectData.toUserUUIDs) {
+        if (
+            !createMessageInput.toClassUUIDs &&
+            !createMessageInput.toUserUUIDs
+        ) {
             throw new Error('[Create-Message] No input data for message');
         }
 
-        if (createSubjectData.assignmentDueDate){
-            message.assignmentDueDate = createSubjectData.assignmentDueDate;        
+        if (createMessageInput.assignmentDueDate) {
+            message.assignmentDueDate = createMessageInput.assignmentDueDate;
         }
 
-        if (createSubjectData.assignmentType){
-            message.assignmentType = createSubjectData.assignmentType;
+        if (createMessageInput.assignmentType) {
+            message.assignmentType = createMessageInput.assignmentType;
         }
 
         // TODO: File save
-        // if (createSubjectData.file) {
+        // if (createMessageInput.file) {
         //     message.filesPath = ['file1Path', 'file2Path'];
         // }
 
