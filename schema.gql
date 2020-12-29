@@ -452,6 +452,6 @@ input CreateMessageInput {
   data: String
   assignmentType: AssignmentType
   type: MessageType!
-  subjectUUID: String!
+  subjectUUID: String
   assignmentDueDate: Date
 }

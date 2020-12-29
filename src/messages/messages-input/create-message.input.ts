@@ -22,8 +22,8 @@ export class CreateMessageInput {
     @Field(() => MessageType)
     type: MessageType;
 
-    @Field()
-    subjectUUID: string;
+    @Field({nullable: true})
+    subjectUUID?: string;
 
     @Field({ nullable: true })
     assignmentDueDate?: Date;
