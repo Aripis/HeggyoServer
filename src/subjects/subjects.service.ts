@@ -28,22 +28,22 @@ export class SubjectService {
     ) {}
 
     async create(
-        createSubjectData: CreateSubjectInput,
+        createSubjectInput: CreateSubjectInput,
         userUUID: string,
     ): Promise<CreateSubjectPayload> {
         const subject = new Subject();
-        Object.assign(subject, createSubjectData);
+        Object.assign(subject, createSubjectInput);
         subject.institution = (
             await this.userService.findOne(userUUID)
         ).institution;
-        if (createSubjectData.classUUID) {
+        if (createSubjectInput.classUUID) {
             subject.class = await this.classesService.findOne(
-                createSubjectData.classUUID,
+                createSubjectInput.classUUID,
             );
         }
-        if (createSubjectData.teachersUUIDs) {
+        if (createSubjectInput.teachersUUIDs) {
             const tchrs = [];
-            for (const uuid of createSubjectData.teachersUUIDs) {
+            for (const uuid of createSubjectInput.teachersUUIDs) {
                 tchrs.push(await this.teachersService.findOne(uuid));
             }
             subject.teachers = tchrs;

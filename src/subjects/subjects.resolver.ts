@@ -29,17 +29,17 @@ export class SubjectsResolver {
     @Mutation(() => CreateSubjectPayload)
     @UseGuards(GqlAuthGuard)
     createSubject(
-        @Args('subjectData') createSubjectData: CreateSubjectInput,
+        @Args('createSubjectInput') createSubjectInput: CreateSubjectInput,
         @CurrentUser() currUser: User,
     ): Promise<CreateSubjectPayload> {
-        return this.subjectService.create(createSubjectData, currUser.id);
+        return this.subjectService.create(createSubjectInput, currUser.id);
     }
 
     @Mutation(() => UpdateSubjectPayload)
     @UseGuards(GqlAuthGuard)
     updateSubject(
-        @Args('subjectData') studentData: UpdateSubjectInput,
+        @Args('updateSubjectInput') updateSubjectInput: UpdateSubjectInput,
     ): Promise<UpdateSubjectPayload> {
-        return this.subjectService.update(studentData);
+        return this.subjectService.update(updateSubjectInput);
     }
 }

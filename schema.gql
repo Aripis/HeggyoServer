@@ -78,7 +78,7 @@ type Class {
   startYear: Int!
   endYear: Int!
   totalStudentCount: Int!
-  classTeacher: Teacher!
+  teacher: Teacher!
   classLetter: String!
   classNumber: Int!
   classToken: String!
@@ -330,12 +330,12 @@ type Mutation {
   addClass(createClassInput: CreateClassInput!): CreateClassPayload!
   updateClass(updateClassInput: UpdateClassInput!): UpdateClassPayload!
   removeClass(id: String!): RemoveClassPayload!
-  updateStudent(studentData: UpdateStudentInput!): UpdateStudentPayload!
+  updateStudent(updateStudentInput: UpdateStudentInput!): UpdateStudentPayload!
   updateParent(parentData: UpdateParentInput!): UpdateParentPayload!
-  createSubject(subjectData: CreateSubjectInput!): CreateSubjectPayload!
-  updateSubject(subjectData: UpdateSubjectInput!): UpdateSubjectPayload!
-  createSchedule(scheduleInput: CreateScheduleInput!): CreateSchedulePayload!
-  createMessage(createMessageData: CreateMessageInput!): CreateMessagePayload!
+  createSubject(createSubjectInput: CreateSubjectInput!): CreateSubjectPayload!
+  updateSubject(updateSubjectInput: UpdateSubjectInput!): UpdateSubjectPayload!
+  createSchedule(createScheduleInput: CreateScheduleInput!): CreateSchedulePayload!
+  createMessage(createMessageInput: CreateMessageInput!): CreateMessagePayload!
 }
 
 input CreateUserInput {
@@ -394,7 +394,7 @@ input CreateClassInput {
   totalStudentCount: Int!
   classNumber: Int!
   classLetter: String!
-  classTeacher: String
+  teacherUUID: String
 }
 
 input UpdateClassInput {

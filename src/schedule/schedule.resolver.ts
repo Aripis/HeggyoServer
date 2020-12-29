@@ -27,9 +27,9 @@ export class ScheduleResolver {
     @Mutation(() => CreateSchedulePayload)
     @UseGuards(GqlAuthGuard)
     createSchedule(
-        @Args('scheduleInput') scheduleInput: CreateScheduleInput,
+        @Args('createScheduleInput') createScheduleInput: CreateScheduleInput,
         @CurrentUser() currUser: User,
     ): Promise<CreateSchedulePayload> {
-        return this.scheduleService.create(scheduleInput, currUser);
+        return this.scheduleService.create(createScheduleInput, currUser);
     }
 }
