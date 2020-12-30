@@ -3,6 +3,8 @@ import {
     ConflictException,
     InternalServerErrorException,
     NotFoundException,
+    forwardRef,
+    Inject,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -25,10 +27,15 @@ import { GenerateUserTokenInput } from './user-input/generate-user-token.input';
 @Injectable()
 export class UsersService {
     constructor(
+        @Inject(forwardRef(() => InstitutionsService))
         private readonly institutionsService: InstitutionsService,
+        @Inject(forwardRef(() => TeachersService))
         private readonly teacherService: TeachersService,
+        @Inject(forwardRef(() => ClassesService))
         private readonly classesService: ClassesService,
+        @Inject(forwardRef(() => StudentsService))
         private readonly studentsService: StudentsService,
+        @Inject(forwardRef(() => ParentsService))
         private readonly parentsService: ParentsService,
 
         @InjectRepository(User)

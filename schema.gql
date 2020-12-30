@@ -78,7 +78,7 @@ type Class {
   startYear: Int!
   endYear: Int!
   totalStudentCount: Int!
-  teacher: Teacher!
+  teacher: Teacher
   classLetter: String!
   classNumber: Int!
   classToken: String!
@@ -287,6 +287,7 @@ type Query {
   institutions: [Institution!]!
   teacher(id: String!): Teacher!
   teachers: [Teacher!]!
+  availableClassTeachers(includeClassId: String): [Teacher!]!
   class(id: String!): Class!
   classes: [Class!]!
   student(id: String!): Student!
@@ -326,12 +327,12 @@ type Mutation {
   addInstitution(createInstitutionInput: CreateInstitutionInput!): CreateInstitutionPayload!
   removeInstitution: RemoveInstitutionPayload!
   updateInstitution(updateInstitutionInput: UpdateInstitutionInput!): UpdateInstitutionPayload!
-  updateTeacher(teacherData: UpdateTeacherInput!): UpdateTeacherPayload!
+  updateTeacher(updateTeacherInput: UpdateTeacherInput!): UpdateTeacherPayload!
   addClass(createClassInput: CreateClassInput!): CreateClassPayload!
   updateClass(updateClassInput: UpdateClassInput!): UpdateClassPayload!
   removeClass(id: String!): RemoveClassPayload!
   updateStudent(updateStudentInput: UpdateStudentInput!): UpdateStudentPayload!
-  updateParent(parentData: UpdateParentInput!): UpdateParentPayload!
+  updateParent(updateParentInput: UpdateParentInput!): UpdateParentPayload!
   createSubject(createSubjectInput: CreateSubjectInput!): CreateSubjectPayload!
   updateSubject(updateSubjectInput: UpdateSubjectInput!): UpdateSubjectPayload!
   createSchedule(createScheduleInput: CreateScheduleInput!): CreateSchedulePayload!

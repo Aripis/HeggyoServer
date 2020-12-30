@@ -19,7 +19,6 @@ import { UsersService } from 'src/users/users.service';
 @Injectable()
 export class ParentsService {
     constructor(
-        @Inject(forwardRef(() => StudentsService))
         private readonly studentsService: StudentsService,
         @Inject(forwardRef(() => UsersService))
         private readonly userService: UsersService,

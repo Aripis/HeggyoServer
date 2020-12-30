@@ -66,14 +66,17 @@ export class ClassesService {
     ): Promise<UpdateClassPayload> {
         const { id, ...data } = updateClassInput;
         if (await this.classesRepository.findOne(id)) {
-            if (data.teacherUUID) {
-                const { teacherUUID, ...info } = data;
+            const { teacherUUID, ...info } = data;
+            if (teacherUUID) {
                 await this.classesRepository.update(id, {
                     ...info,
                     teacher: await this.teacherService.findOne(teacherUUID),
                 });
             } else {
-                await this.classesRepository.update(id, data);
+                await this.classesRepository.update(id, {
+                    ...info,
+                    teacher: null,
+                });
             }
             return new UpdateClassPayload(updateClassInput.id);
         } else {
@@ -89,18 +92,18 @@ export class ClassesService {
         });
     }
 
-    async findOne(value: string): Promise<Class> {
+    async findOne(uuid: string): Promise<Class> {
         let studentsClass = await this.classesRepository.findOne({
-            where: { id: value },
+            where: { id: uuid },
         });
         if (!studentsClass) {
             studentsClass = await this.classesRepository.findOne({
                 where: {
-                    classToken: value,
+                    classToken: uuid,
                 },
             });
             if (!studentsClass) {
-                throw new NotFoundException(value);
+                throw new NotFoundException(uuid);
             }
         }
         return studentsClass;

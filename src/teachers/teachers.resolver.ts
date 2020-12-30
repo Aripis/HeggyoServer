@@ -25,11 +25,20 @@ export class TeachersResolver {
         return this.teachersService.findAll(currUser);
     }
 
+    @Query(() => [Teacher])
+    @UseGuards(GqlAuthGuard)
+    availableClassTeachers(
+        @CurrentUser() currUser: User,
+        @Args('includeClassId', { nullable: true }) uuid?: string,
+    ): Promise<Teacher[]> {
+        return this.teachersService.findAvailableClassTeachers(currUser, uuid);
+    }
+
     @Mutation(() => UpdateTeacherPayload)
     @UseGuards(GqlAuthGuard)
     updateTeacher(
-        @Args('teacherData') teacherData: UpdateTeacherInput,
+        @Args('updateTeacherInput') updateTeacherInput: UpdateTeacherInput,
     ): Promise<UpdateTeacherPayload> {
-        return this.teachersService.update(teacherData);
+        return this.teachersService.update(updateTeacherInput);
     }
 }

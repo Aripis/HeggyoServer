@@ -19,7 +19,6 @@ import { GetStudentTokenPayload } from './student-payload/get-student-token.payl
 @Injectable()
 export class StudentsService {
     constructor(
-        @Inject(forwardRef(() => ClassesService))
         private readonly classesService: ClassesService,
         @Inject(forwardRef(() => UsersService))
         private readonly userService: UsersService,

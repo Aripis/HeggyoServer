@@ -26,8 +26,8 @@ export class ParentsResolver {
 
     @Mutation(() => UpdateParentPayload)
     updateParent(
-        @Args('parentData') parentData: UpdateParentInput,
+        @Args('updateParentInput') updateParentInput: UpdateParentInput,
     ): Promise<UpdateParentPayload> {
-        return this.parentsService.update(parentData);
+        return this.parentsService.update(updateParentInput);
     }
 }
