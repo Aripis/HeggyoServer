@@ -70,7 +70,7 @@ export class TeachersService {
         const classTeachersUUIDs = (await this.classesService.findAll(currUser))
             .filter(currClass => currClass.teacher)
             .map(currClass => currClass.teacher.id);
-        const includedClass = await this.classesService.findOne(uuid);
+        const includedClass = uuid ? await this.classesService.findOne(uuid) : null;
         const usersUUIDs = (await this.userService.findAll(currUser)).map(
             user => user.id,
         );
