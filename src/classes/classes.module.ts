@@ -9,8 +9,8 @@ import { ClassesService } from './classes.service';
 @Module({
     imports: [
         TypeOrmModule.forFeature([Class]),
-        TeachersModule,
-		forwardRef(() => UsersModule)
+        forwardRef(() => TeachersModule),
+        forwardRef(() => UsersModule),
     ],
     providers: [ClassesResolver, ClassesService],
     exports: [ClassesService],

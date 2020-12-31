@@ -4,9 +4,14 @@ import { UsersModule } from 'src/users/users.module';
 import { Teacher } from './teacher.model';
 import { TeachersResolver } from './teachers.resolver';
 import { TeachersService } from './teachers.service';
+import { ClassesModule } from 'src/classes/classes.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Teacher]), forwardRef(() => UsersModule)],
+    imports: [
+        TypeOrmModule.forFeature([Teacher]),
+        forwardRef(() => ClassesModule),
+        forwardRef(() => UsersModule),
+    ],
     providers: [TeachersResolver, TeachersService],
     exports: [TeachersService],
 })

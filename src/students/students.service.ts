@@ -20,7 +20,6 @@ import { UpdateStudentRecordInput } from './student-input/update-student-record.
 @Injectable()
 export class StudentsService {
     constructor(
-        @Inject(forwardRef(() => ClassesService))
         private readonly classesService: ClassesService,
         @Inject(forwardRef(() => UsersService))
         private readonly userService: UsersService,

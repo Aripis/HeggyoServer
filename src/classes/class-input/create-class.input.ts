@@ -18,5 +18,5 @@ export class CreateClassInput {
     classLetter: string;
 
     @Field({ nullable: true })
-    teacherUUID?: string;
+    teacherUUID: string;
 }

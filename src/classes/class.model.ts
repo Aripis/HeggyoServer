@@ -51,8 +51,8 @@ export class Class {
     @Column('tinyint')
     totalStudentCount: number;
 
-    @Field(() => Teacher)
-    @OneToOne(() => Teacher, { eager: true })
+    @Field(() => Teacher, { nullable: true })
+    @OneToOne(() => Teacher, { eager: true, nullable: true })
     @JoinColumn()
     teacher: Teacher;
 

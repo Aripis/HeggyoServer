@@ -14,13 +14,15 @@ import { User } from '../users/user.model';
 import { UpdateTeacherPayload } from './teacher-payload/update-teacher.payload';
 import { UpdateTeacherInput } from './teacher-input/update-teacher.input';
 import { UsersService } from 'src/users/users.service';
+import { ClassesService } from 'src/classes/classes.service';
 
 @Injectable()
 export class TeachersService {
     constructor(
         @Inject(forwardRef(() => UsersService))
         private readonly userService: UsersService,
-
+        @Inject(forwardRef(() => ClassesService))
+        private readonly classesService: ClassesService,
         @InjectRepository(Teacher)
         private readonly teachersRepository: Repository<Teacher>,
     ) {}
@@ -58,6 +60,26 @@ export class TeachersService {
         const teachers = await this.teachersRepository.find();
         return teachers.filter(teacher =>
             users.map(user => teacher.user.id === user.id),
+        );
+    }
+
+    async findAvailableClassTeachers(
+        currUser: User,
+        uuid?: string,
+    ): Promise<Teacher[]> {
+        const classTeachersUUIDs = (await this.classesService.findAll(currUser))
+            .filter(currClass => currClass.teacher)
+            .map(currClass => currClass.teacher.id);
+        const includedClass = uuid ? await this.classesService.findOne(uuid) : null;
+        const usersUUIDs = (await this.userService.findAll(currUser)).map(
+            user => user.id,
+        );
+        const teachers = await this.teachersRepository.find();
+        return teachers.filter(
+            teacher =>
+                usersUUIDs.includes(teacher.user.id) &&
+                (!classTeachersUUIDs.includes(teacher.id) ||
+                    includedClass?.teacher?.id === teacher.id),
         );
     }
 
