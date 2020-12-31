@@ -15,6 +15,7 @@ import { UpdateStudentInput } from './student-input/update-student.input';
 import { UpdateStudentPayload } from './student-payload/update-student.payload';
 import { UsersService } from 'src/users/users.service';
 import { GetStudentTokenPayload } from './student-payload/get-student-token.payload';
+import { UpdateStudentRecordInput } from './student-input/update-student-record.input';
 
 @Injectable()
 export class StudentsService {
@@ -90,6 +91,26 @@ export class StudentsService {
         }
     }
 
+    async updateRecord(
+        updateData: UpdateStudentRecordInput,
+    ): Promise<UpdateStudentPayload> {
+        const student = await this.studentsRepository.findOne(updateData.uuid);
+        if (!student) {
+            throw new NotFoundException(
+                '[UpdateRecord-Student]: No student Found',
+            );
+        }
+        if (updateData.recordMessage) {
+            student.recordMessage = updateData.recordMessage;
+        }
+        if (updateData.files) {
+            // TODO: implement files
+            // student.recordFiles = updateData.files
+        }
+        this.studentsRepository.save(student);
+        return new UpdateStudentPayload(student.id);
+    }
+
     async findAll(currUser: User): Promise<Student[]> {
         const users = await this.userService.findAll(currUser);
         const students = await this.studentsRepository.find();
@@ -105,9 +126,15 @@ export class StudentsService {
             })
         ).token;
         if (!token) {
-            throw new NotFoundException('No Student Token was Found');
+            throw new NotFoundException(
+                '[Get-Token]: No Student Token was Found',
+            );
         }
         return new GetStudentTokenPayload(token);
+    }
+
+    async findOneByUserUUID(uuid: string): Promise<Student> {
+        return;
     }
 
     async findOne(uuid: string): Promise<Student> {

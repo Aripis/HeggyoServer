@@ -3,6 +3,7 @@ import {
     Column,
     Entity,
     JoinColumn,
+    JoinTable,
     ManyToMany,
     ManyToOne,
     OneToOne,
@@ -12,6 +13,7 @@ import {
 import { User } from '../users/user.model';
 import { Parent } from '../parents/parent.model';
 import { Class } from 'src/classes/class.model';
+import { File } from 'src/file/file.model';
 
 @ObjectType()
 @Entity()
@@ -38,7 +40,7 @@ export class Student {
     prevEducation: string;
 
     @Field()
-    @Column('varchar', { length: 10})
+    @Column('varchar', { length: 10 })
     token: string;
 
     @Field()
@@ -52,4 +54,27 @@ export class Student {
         { nullable: true },
     )
     parents?: Parent[];
+
+    @Field({ nullable: true })
+    @Column({ nullable: true })
+    recordMessage?: string;
+
+    @Field(() => [File], { nullable: true })
+    @ManyToMany(
+        () => File,
+        fil => fil.studentRecords,
+        { eager: true, nullable: true, cascade: true },
+    )
+    @JoinTable({
+        name: 'student_record_files',
+        joinColumn: {
+            name: 'student',
+            referencedColumnName: 'id',
+        },
+        inverseJoinColumn: {
+            name: 'file',
+            referencedColumnName: 'id',
+        },
+    })
+    recordFiles?: File[];
 }

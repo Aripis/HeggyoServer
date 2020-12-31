@@ -1,4 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
+import { UploadScalar } from 'src/common/scalars/upload.scalar';
 import { AssignmentType, MessageType } from '../message.model';
 
 @InputType()
@@ -13,8 +14,8 @@ export class CreateMessageInput {
     data?: string;
 
     // TODO: implement file upload
-    // @Field({ nullable: true})
-    //files
+    @Field(() => [UploadScalar], { nullable: true })
+    files?: UploadScalar[];
 
     @Field(() => AssignmentType, { nullable: true })
     assignmentType?: AssignmentType;
@@ -22,7 +23,7 @@ export class CreateMessageInput {
     @Field(() => MessageType)
     type: MessageType;
 
-    @Field({nullable: true})
+    @Field({ nullable: true })
     subjectUUID?: string;
 
     @Field({ nullable: true })

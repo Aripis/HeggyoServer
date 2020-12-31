@@ -37,7 +37,7 @@ export class Teacher {
     education?: string;
 
     // TODO: should be able to auto-increment every year
-    @Field(() => Int)
+    @Field(() => Int, { nullable: true })
     @Column('tinyint', { nullable: true })
     yearsExperience?: number;
 

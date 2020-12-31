@@ -13,7 +13,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { File } from './file.model';
+import { File } from '../file/file.model';
 
 export enum MessageType {
     ASSIGNMENT = 'assignment',
@@ -114,7 +114,7 @@ export class Message {
     @Column({
         nullable: true,
         type: 'enum',
-        enum: AssignmentType
+        enum: AssignmentType,
     })
     assignmentType?: AssignmentType;
 
