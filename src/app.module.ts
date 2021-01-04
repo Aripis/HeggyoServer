@@ -23,7 +23,8 @@ import { MessageModule } from './messages/message.module';
         }),
         GraphQLModule.forRoot({
             installSubscriptionHandlers: true,
-            autoSchemaFile: 'schema.gql',
+            autoSchemaFile:
+                process.env.NODE_ENV === 'production' ? true : 'schema.gql',
             context: ({ req, res }) => ({ req, res }),
             cors: {
                 origin:
