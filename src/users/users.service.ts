@@ -23,6 +23,7 @@ import { RemoveUserPayload } from './user-payload/remove-user.payload';
 import { CreateUserPayload } from './user-payload/create-user.payload';
 import { GenerateUserTokenPayload } from './user-payload/generate-user-token.payload';
 import { GenerateUserTokenInput } from './user-input/generate-user-token.input';
+import { UpdateUserStatusInput } from './user-input/update-user-status.input';
 
 @Injectable()
 export class UsersService {
@@ -42,14 +43,14 @@ export class UsersService {
         private readonly usersRepository: Repository<User>,
     ) {}
 
-    async create(createUserInput: CreateUserInput): Promise<CreateUserPayload> {
+    async create(input: CreateUserInput): Promise<CreateUserPayload> {
         const user = new User();
         let resultUser: User, instAlias: string, userSpecific: string;
-        if (createUserInput.photo) {
-            const { photo, ...data } = createUserInput;
+        if (input.photo) {
+            const { photo, ...data } = input;
             Object.assign(user, data);
         } else {
-            Object.assign(user, createUserInput);
+            Object.assign(user, input);
         }
 
         if (user && user.registerToken) {
@@ -122,8 +123,8 @@ export class UsersService {
         return new CreateUserPayload(resultUser.id);
     }
 
-    async update(updateUserInput: UpdateUserInput): Promise<UpdateUserPayload> {
-        const { id, ...data } = updateUserInput;
+    async update(input: UpdateUserInput): Promise<UpdateUserPayload> {
+        const { id, ...data } = input;
         if (await this.usersRepository.findOne(id)) {
             if (data.password) {
                 data.password = await bcrypt.hash(data.password, 10);
@@ -133,6 +134,22 @@ export class UsersService {
             return new UpdateUserPayload(id);
         } else {
             throw new Error('[Update-User] User Not Found.');
+        }
+    }
+
+    async updateStatus(
+        input: UpdateUserStatusInput,
+    ): Promise<UpdateUserPayload> {
+        const user = await this.usersRepository.findOne(input.id);
+
+        user.status = input.userStatus;
+        try {
+            await this.usersRepository.save(user);
+            return new UpdateUserPayload(input.id);
+        } catch (error) {
+            throw new Error(
+                `[User-Update] Status couldn't be updated. User: ${input.id}`,
+            );
         }
     }
 
@@ -168,15 +185,15 @@ export class UsersService {
 
     async generateUserToken(
         user: User,
-        tokenpreferences: GenerateUserTokenInput,
+        tokenPreferences: GenerateUserTokenInput,
     ): Promise<GenerateUserTokenPayload> {
         const instAlias = (await this.usersRepository.findOne(user.id))
             .institution.alias;
-        const userRole = tokenpreferences.userRole[0];
+        const userRole = tokenPreferences.userRole[0];
         let token = instAlias + '#' + userRole + '@';
-        if (tokenpreferences.classUUID) {
+        if (tokenPreferences.classUUID) {
             const classToken = (
-                await this.classesService.findOne(tokenpreferences.classUUID)
+                await this.classesService.findOne(tokenPreferences.classUUID)
             ).classToken;
             token += classToken;
         }

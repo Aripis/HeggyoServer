@@ -16,6 +16,7 @@ import { RemoveUserPayload } from './user-payload/remove-user.payload';
 import { CreateUserPayload } from './user-payload/create-user.payload';
 import { GenerateUserTokenPayload } from './user-payload/generate-user-token.payload';
 import { GenerateUserTokenInput } from './user-input/generate-user-token.input';
+import { UpdateUserStatusInput } from './user-input/update-user-status.input';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -131,5 +132,13 @@ export class UsersResolver {
         @Args('updateUserInput') updateUserInput: UpdateUserInput,
     ): Promise<UpdateUserPayload> {
         return this.usersService.update(updateUserInput);
+    }
+
+    @Mutation(() => UpdateUserPayload)
+    @UseGuards(GqlAuthGuard)
+    updateUserStatus(
+        @Args('updateUserStatus') updateUserStatus: UpdateUserStatusInput,
+    ): Promise<UpdateUserPayload> {
+        return this.usersService.updateStatus(updateUserStatus);
     }
 }
