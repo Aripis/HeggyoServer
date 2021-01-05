@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { StudentDossier } from 'src/dossier/student-dossier.model';
 import { Student } from 'src/students/student.model';
 import {
     Column,
@@ -36,4 +37,14 @@ export class File {
         },
     )
     studentRecords: Student[];
+
+    @Field(() => [StudentDossier])
+    @ManyToMany(
+        () => StudentDossier,
+        student => student.studentFiles,
+        {
+            nullable: true,
+        },
+    )
+    dossierFiles: StudentDossier[];
 }

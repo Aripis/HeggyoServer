@@ -6,6 +6,7 @@ import {
     JoinTable,
     ManyToMany,
     ManyToOne,
+    OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -14,6 +15,7 @@ import { User } from '../users/user.model';
 import { Parent } from '../parents/parent.model';
 import { Class } from 'src/classes/class.model';
 import { File } from 'src/file/file.model';
+import { StudentDossier } from 'src/dossier/student-dossier.model';
 
 @ObjectType()
 @Entity()
@@ -77,4 +79,12 @@ export class Student {
         },
     })
     recordFiles?: File[];
+
+    @Field(() => [StudentDossier], { nullable: true })
+    @OneToMany(
+        () => StudentDossier,
+        dossier => dossier.student,
+        { eager: true, nullable: true },
+    )
+    dossier: StudentDossier[];
 }

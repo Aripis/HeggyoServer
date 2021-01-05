@@ -12,6 +12,7 @@ import { ClassesModule } from './classes/classes.module';
 import { SubjectsModule } from './subjects/subjects.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { MessageModule } from './messages/message.module';
+import { StudentDossierModule } from './dossier/student-dossier.module';
 
 @Module({
     imports: [
@@ -41,6 +42,7 @@ import { MessageModule } from './messages/message.module';
         SubjectsModule,
         ScheduleModule,
         MessageModule,
+        StudentDossierModule,
     ],
     controllers: [AppController],
     providers: [AppService],
