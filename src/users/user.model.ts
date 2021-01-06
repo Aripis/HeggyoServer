@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { StudentDossier } from 'src/dossier/student-dossier.model';
+import { StudentDossier } from 'src/dossier/student_dossier.model';
 import { Institution } from 'src/institution/institution.model';
 import { Message } from 'src/messages/message.model';
 import {
@@ -127,7 +127,7 @@ export class User {
     @OneToMany(
         () => StudentDossier,
         dossier => dossier.fromUser,
-        { eager: true, nullable: true },
+        { nullable: true },
     )
     studentDossiers: StudentDossier[];
 }

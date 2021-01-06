@@ -11,6 +11,7 @@ import {
     ManyToMany,
     ManyToOne,
     PrimaryGeneratedColumn,
+    UpdateDateColumn,
 } from 'typeorm';
 
 @ObjectType()
@@ -25,6 +26,10 @@ export class StudentDossier {
     createdAt: Date;
 
     @Field()
+    @UpdateDateColumn()
+    updatedAt: Date;
+
+    @Field()
     @Column()
     dossierMessage: string;
 
@@ -32,6 +37,7 @@ export class StudentDossier {
     @ManyToOne(
         () => User,
         user => user.studentDossiers,
+        { eager: true },
     )
     fromUser: User;
 
@@ -46,7 +52,7 @@ export class StudentDossier {
     @ManyToMany(
         () => File,
         fil => fil.dossierFiles,
-        { eager: true, nullable: true, cascade: true },
+        { nullable: true, cascade: true },
     )
     @JoinTable({
         name: 'student_dossier_files',
@@ -62,6 +68,10 @@ export class StudentDossier {
     studentFiles?: File[];
 
     @Field(() => Subject, { nullable: true })
-    @Column(() => Subject)
+    @ManyToOne(
+        () => Subject,
+        subject => subject.studentDossiers,
+        { nullable: true, eager: true },
+    )
     subject?: Subject;
 }

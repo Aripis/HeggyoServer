@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { StudentDossier } from 'src/dossier/student-dossier.model';
+import { StudentDossier } from 'src/dossier/student_dossier.model';
 import { Student } from 'src/students/student.model';
 import {
     Column,

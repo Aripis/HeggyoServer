@@ -5,7 +5,7 @@ import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
 import { User } from 'src/users/user.model';
 import { CreateStudentDossierInput } from './dossier-input/create-student-dossier.input';
 import { CreateStudentDossierPayload } from './dossier-payload/create-student-dossier.payload';
-import { StudentDossier } from './student-dossier.model';
+import { StudentDossier } from './student_dossier.model';
 import { StudentDossierService } from './student-dossier.service';
 
 @Resolver(() => StudentDossier)
@@ -24,18 +24,11 @@ export class StudentDossierResolver {
         return this.studentDossierService.create(input, currUser);
     }
 
-    // @Query(() => [StudentDossier])
-    // @UseGuards(GqlAuthGuard)
-    // studentDossiersByCriteria(
-    //     @CurrentUser() currUser: User,
-    //     @Args('criteria') criteria: MessagesByCriteriaInput,
-    // ): Promise<StudentDossier[]> {
-    //     return this.studentDossierService.findByCriteria(
-    //         currUser,
-    //         criteria.messageType,
-    //         criteria.messageStatus,
-    //     );
-    // }
+    @Query(() => [StudentDossier])
+    @UseGuards(GqlAuthGuard)
+    studentDossiers(@CurrentUser() currUser: User): Promise<StudentDossier[]> {
+        return this.studentDossierService.findAll(currUser);
+    }
 
     // @Mutation(() => UpdateMessagePayload)
     // updateMessage(

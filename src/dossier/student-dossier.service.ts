@@ -11,13 +11,13 @@ import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { CreateStudentDossierInput } from './dossier-input/create-student-dossier.input';
 import { CreateStudentDossierPayload } from './dossier-payload/create-student-dossier.payload';
-import { StudentDossier } from './student-dossier.model';
+import { StudentDossier } from './student_dossier.model';
 
 @Injectable()
 export class StudentDossierService {
     constructor(
         private readonly userService: UsersService,
-        private readonly studentDossierService: StudentsService,
+        private readonly studentService: StudentsService,
 
         private readonly subjectService: SubjectService,
         @InjectRepository(StudentDossier)
@@ -35,7 +35,7 @@ export class StudentDossierService {
         }
 
         if (input.studentId) {
-            dossier.student = await this.studentDossierService.findOne(
+            dossier.student = await this.studentService.findOne(
                 input.studentId,
             );
         }
@@ -61,5 +61,19 @@ export class StudentDossierService {
             }
             throw new InternalServerErrorException(error);
         }
+    }
+
+    async findAll(currUser: User): Promise<StudentDossier[]> {
+        const dossiers = await this.dossierRepository.find();
+
+        const students = await this.studentService.findAll(currUser);
+
+        return dossiers;
+        // console.log(
+        //     students.map(student => student.id === dossiers[0].student.id),
+        // );
+        // return students.forEach(student =>
+        //     dossiers.filter(dossier => student.id === dossier.student.id),
+        // );
     }
 }

@@ -6,7 +6,7 @@ import { SubjectsModule } from 'src/subjects/subjects.module';
 import { StudentDossierService } from './student-dossier.service';
 import { StudentDossierResolver } from './student-dossier.resolver';
 import { StudentsModule } from 'src/students/students.module';
-import { StudentDossier } from './student-dossier.model';
+import { StudentDossier } from './student_dossier.model';
 
 @Module({
     imports: [
