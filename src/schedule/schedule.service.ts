@@ -79,4 +79,16 @@ export class ScheduleService {
             where: { institution: institution },
         });
     }
+
+    async findAllByClass(
+        classUUID: string,
+        currUser: User,
+    ): Promise<Schedule[]> {
+        const institution = (await this.userService.findOne(currUser.id))
+            .institution;
+        const schedules = await this.scheduleRepository.find({
+            where: { institution: institution },
+        });
+        return schedules.filter(schedule => schedule.class.id === classUUID);
+    }
 }

@@ -9,8 +9,11 @@ import { Repository } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
 import { Message, MessageStatus, MessageType } from './message.model';
 import { CreateMessageInput } from './messages-input/create-message.input';
+import { UpdateMessageInput } from './messages-input/update-message.input';
 import { User } from 'src/users/user.model';
 import { CreateMessagePayload } from './messages-payload/create-message.payload';
+import { RemoveMessagePayload } from './messages-payload/remove-message.payload';
+import { UpdateMessagePayload } from './messages-payload/update-message.payload';
 import { ClassesService } from 'src/classes/classes.service';
 // import { File } from './file.model';
 import { SubjectService } from 'src/subjects/subjects.service';
@@ -93,33 +96,18 @@ export class MessageService {
         }
     }
 
-    // async update(
-    //     updateSubjectInput: UpdateSubjectInput,
-    // ): Promise<UpdateSubjectPayload> {
-    //     const { id, ...data } = updateSubjectInput;
-    //     if (await this.subjectRepository.findOne(id)) {
-    //         let subjectClass: Class;
-    //         const subject = await this.subjectRepository.findOne(id);
-    //         const { classUUID, teachersUUIDs, ...info } = data;
-    //         if (classUUID) {
-    //             subjectClass = await this.classesService.findOne(classUUID);
-    //             subject.class = subjectClass;
-    //         }
-    //         if (teachersUUIDs) {
-    //             const teachers = [];
-    //             for (const uuid of teachersUUIDs) {
-    //                 teachers.push(await this.teachersService.findOne(uuid));
-    //             }
-    //             subject.teachers = teachers;
-    //         }
-
-    //         Object.assign(subject, info);
-    //         await this.subjectRepository.save(subject);
-    //         return new UpdateSubjectPayload(id);
-    //     } else {
-    //         throw new NotFoundException('[Update-Subject] Subject Not Found.');
-    //     }
-    // }
+    // TODO: File update
+    async update(
+        updateMessageInput: UpdateMessageInput,
+    ): Promise<UpdateMessagePayload> {
+        const { id, ...data } = updateMessageInput;
+        if (await this.messageRepository.findOne(id)) {
+            await this.messageRepository.update(id, data);
+            return new UpdateMessagePayload(id);
+        } else {
+            throw new NotFoundException('[Update-Message] Message Not Found.');
+        }
+    }
 
     async findAll(currUser: User): Promise<Message[]> {
         const user = await this.userService.findOne(currUser.id);
@@ -175,7 +163,8 @@ export class MessageService {
         return messages;
     }
 
-    // async remove(uuid: string): Promise<void> {
-    //     await this.subjectRepository.delete(uuid);
-    // }
+    async remove(uuid: string): Promise<RemoveMessagePayload> {
+        await this.messageRepository.delete(uuid);
+        return new RemoveMessagePayload(uuid);
+    }
 }

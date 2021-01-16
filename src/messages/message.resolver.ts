@@ -7,7 +7,10 @@ import { Message } from './message.model';
 import { MessageService } from './message.service';
 import { CreateMessageInput } from './messages-input/create-message.input';
 import { MessagesByCriteriaInput } from './messages-input/messages-by-criteria.input';
+import { UpdateMessageInput } from './messages-input/update-message.input';
 import { CreateMessagePayload } from './messages-payload/create-message.payload';
+import { RemoveMessagePayload } from './messages-payload/remove-message.payload';
+import { UpdateMessagePayload } from './messages-payload/update-message.payload';
 
 @Resolver(() => Message)
 export class MessageResolver {
@@ -46,10 +49,16 @@ export class MessageResolver {
         return this.messageService.create(createMessageInput, currUser);
     }
 
-    // @Mutation(() => UpdateMessagePayload)
-    // updateMessage(
-    //     @Args('updateMessageInput') updateMessageInput: UpdateMessageInput,
-    // ): Promise<UpdateMessagePayload> {
-    //     return this.messageService.update(updateMessageInput);
-    // }
+    @Mutation(() => RemoveMessagePayload)
+    @UseGuards(GqlAuthGuard)
+    removeMessage(@Args('id') uuid: string): Promise<RemoveMessagePayload> {
+        return this.messageService.remove(uuid);
+    }
+
+    @Mutation(() => UpdateMessagePayload)
+    updateMessage(
+        @Args('updateMessageInput') updateMessageInput: UpdateMessageInput,
+    ): Promise<UpdateMessagePayload> {
+        return this.messageService.update(updateMessageInput);
+    }
 }

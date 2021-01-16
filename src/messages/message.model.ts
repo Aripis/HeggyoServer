@@ -125,7 +125,7 @@ export class Message {
     @Field(() => File, { nullable: true })
     @OneToMany(
         () => File,
-        fil => fil.message,
+        file => file.message,
         { nullable: true, eager: true },
     )
     files?: File[];

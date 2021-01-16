@@ -24,6 +24,15 @@ export class ScheduleResolver {
         return this.scheduleService.findAll(currUser);
     }
 
+    @Query(() => [Schedule])
+    @UseGuards(GqlAuthGuard)
+    schedulesByClass(
+        @Args('classId') uuid: string,
+        @CurrentUser() currUser: User,
+    ): Promise<Schedule[]> {
+        return this.scheduleService.findAllByClass(uuid, currUser);
+    }
+
     @Mutation(() => CreateSchedulePayload)
     @UseGuards(GqlAuthGuard)
     createSchedule(
