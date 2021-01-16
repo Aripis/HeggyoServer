@@ -137,9 +137,9 @@ export class StudentsService {
     }
 
     async findOne(uuid: string): Promise<Student> {
-        const student = await this.studentsRepository.findOne({
-            where: { id: uuid },
-        });
+        console.log(uuid);
+        const student = await this.studentsRepository.findOne(uuid);
+        console.log(student);
         if (!student) {
             throw new NotFoundException(uuid);
         }

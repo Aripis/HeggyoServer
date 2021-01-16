@@ -127,7 +127,7 @@ export class User {
     @OneToMany(
         () => StudentDossier,
         dossier => dossier.fromUser,
-        { nullable: true },
+        { nullable: true, cascade: true },
     )
     studentDossiers: StudentDossier[];
 }

@@ -25,7 +25,7 @@ export class Student {
     id: string;
 
     @Field(() => User)
-    @OneToOne(() => User, { eager: true })
+    @OneToOne(() => User, { eager: true, cascade: true })
     @JoinColumn()
     user: User;
 

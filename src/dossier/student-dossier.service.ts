@@ -41,6 +41,7 @@ export class StudentDossierService {
         }
 
         if (input.subjectUUID) {
+            console.log(input.subjectUUID);
             dossier.subject = await this.subjectService.findOne(
                 input.subjectUUID,
             );
@@ -64,16 +65,8 @@ export class StudentDossierService {
     }
 
     async findAll(currUser: User): Promise<StudentDossier[]> {
-        const dossiers = await this.dossierRepository.find();
-
-        const students = await this.studentService.findAll(currUser);
-
-        return dossiers;
-        // console.log(
-        //     students.map(student => student.id === dossiers[0].student.id),
-        // );
-        // return students.forEach(student =>
-        //     dossiers.filter(dossier => student.id === dossier.student.id),
-        // );
+        return (await this.studentService.findAll(currUser))
+            .map(student => student.dossier)
+            .flat();
     }
 }
