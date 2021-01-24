@@ -7,7 +7,11 @@ import { StudentsResolver } from './students.resolver';
 import { UsersModule } from 'src/users/users.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Student]), ClassesModule, forwardRef(() => UsersModule)],
+    imports: [
+        TypeOrmModule.forFeature([Student]),
+        forwardRef(() => UsersModule),
+        ClassesModule,
+    ],
     providers: [StudentsResolver, StudentsService],
     exports: [StudentsService],
 })

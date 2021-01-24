@@ -133,13 +133,16 @@ export class StudentsService {
     }
 
     async findOneByUserUUID(uuid: string): Promise<Student> {
-        return;
+        const students = await this.studentsRepository.find();
+        const student = students.find(stud => stud.user.id == uuid);
+        if (!student) {
+            throw new NotFoundException(uuid);
+        }
+        return student;
     }
 
     async findOne(uuid: string): Promise<Student> {
-        console.log(uuid);
         const student = await this.studentsRepository.findOne(uuid);
-        console.log(student);
         if (!student) {
             throw new NotFoundException(uuid);
         }

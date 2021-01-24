@@ -13,6 +13,7 @@ import { SubjectsModule } from './subjects/subjects.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { MessageModule } from './messages/message.module';
 import { StudentDossierModule } from './dossier/student-dossier.module';
+import { GradeModule } from './grades/grade.module';
 
 @Module({
     imports: [
@@ -43,6 +44,7 @@ import { StudentDossierModule } from './dossier/student-dossier.module';
         ScheduleModule,
         MessageModule,
         StudentDossierModule,
+        GradeModule,
     ],
     controllers: [AppController],
     providers: [AppService],
