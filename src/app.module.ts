@@ -15,6 +15,7 @@ import { MessageModule } from './messages/message.module';
 import { StudentDossierModule } from './dossier/student-dossier.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { GradeModule } from './grades/grade.module';
 
 @Module({
     imports: [
@@ -64,6 +65,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
         ScheduleModule,
         MessageModule,
         StudentDossierModule,
+        GradeModule,
     ],
     controllers: [AppController],
     providers: [AppService],

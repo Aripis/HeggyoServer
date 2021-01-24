@@ -8,6 +8,29 @@ type Parent {
   children: [Student!]!
 }
 
+type StudentGrade {
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  message: String!
+  type: GradeTypes!
+  grade: Float!
+  gradeWithWords: String!
+  fromUser: User!
+  student: Student!
+  subject: Subject
+}
+
+"""Date custom scalar type"""
+scalar Date
+
+enum GradeTypes {
+  YEAR
+  TURM_1
+  TURM_2
+  ONGOING
+}
+
 type Message {
   id: ID!
   createdAt: Date!
@@ -23,9 +46,6 @@ type Message {
   subject: Subject
   assignmentDueDate: Date
 }
-
-"""Date custom scalar type"""
-scalar Date
 
 enum AssignmentType {
   HOMEWORK
@@ -55,6 +75,7 @@ type Subject {
   class: Class!
   messages: Message
   studentDossiers: [StudentDossier!]!
+  grades: [StudentGrade!]!
 }
 
 type Institution {
@@ -161,6 +182,7 @@ type Student {
   recordMessage: String
   recordFiles: [File!]
   dossier: [StudentDossier!]
+  grades: [StudentGrade!]!
 }
 
 type File {
@@ -308,6 +330,10 @@ type CreateStudentDossierPayload {
   studentId: String!
 }
 
+type GradePayload {
+  gradeId: String!
+}
+
 type Query {
   user(id: String!): User!
   users: [User!]!
@@ -338,6 +364,7 @@ type Query {
   messages: [Message!]!
   messagesByCriteria(criteria: MessagesByCriteriaInput!): [Message!]!
   studentDossiers: [StudentDossier!]!
+  studentGrades: [StudentGrade!]!
 }
 
 input LoginInput {
@@ -380,6 +407,7 @@ type Mutation {
   removeMessage(id: String!): RemoveMessagePayload!
   updateMessage(updateMessageInput: UpdateMessageInput!): UpdateMessagePayload!
   createStudentDossier(input: CreateStudentDossierInput!): CreateStudentDossierPayload!
+  addGrade(input: AddGradeInput!): GradePayload!
 }
 
 input CreateUserInput {
@@ -526,4 +554,12 @@ input CreateStudentDossierInput {
   subjectUUID: String!
   files: [Upload!]
   dossierMessage: String!
+}
+
+input AddGradeInput {
+  studentId: String!
+  subjectUUID: String!
+  message: String!
+  grade: Float!
+  gradeWithWords: String!
 }

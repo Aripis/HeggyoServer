@@ -1,6 +1,7 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { Class } from 'src/classes/class.model';
 import { StudentDossier } from 'src/dossier/student_dossier.model';
+import { StudentGrade } from 'src/grades/grade.model';
 import { Institution } from 'src/institution/institution.model';
 import { Message } from 'src/messages/message.model';
 import { Schedule } from 'src/schedule/schedule.model';
@@ -94,4 +95,12 @@ export class Subject {
         dossier => dossier.subject,
     )
     studentDossiers: StudentDossier[];
+
+    @Field(() => [StudentGrade])
+    @OneToMany(
+        () => StudentGrade,
+        grade => grade.subject,
+        { nullable: true },
+    )
+    grades: StudentGrade[];
 }

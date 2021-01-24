@@ -10,12 +10,12 @@ import {
     OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
-
 import { User } from '../users/user.model';
 import { Parent } from '../parents/parent.model';
 import { Class } from 'src/classes/class.model';
 import { File } from 'src/file/file.model';
 import { StudentDossier } from 'src/dossier/student_dossier.model';
+import { StudentGrade } from 'src/grades/grade.model';
 
 @ObjectType()
 @Entity()
@@ -87,4 +87,12 @@ export class Student {
         { eager: true, nullable: true, cascade: true },
     )
     dossier: StudentDossier[];
+
+    @Field(() => [StudentGrade])
+    @OneToMany(
+        () => StudentGrade,
+        grade => grade.student,
+        { nullable: true },
+    )
+    grades: StudentGrade[];
 }

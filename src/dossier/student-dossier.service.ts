@@ -41,7 +41,6 @@ export class StudentDossierService {
         }
 
         if (input.subjectUUID) {
-            console.log(input.subjectUUID);
             dossier.subject = await this.subjectService.findOne(
                 input.subjectUUID,
             );
