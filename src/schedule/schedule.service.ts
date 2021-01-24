@@ -13,6 +13,7 @@ import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { CreateScheduleInput } from './schedule-input/create-schedule.input';
 import { CreateSchedulePayload } from './schedule-payload/create-schedule.payload';
+import { RemoveSchedulePayload } from './schedule-payload/remove-schedule.payload';
 import { Schedule } from './schedule.model';
 
 @Injectable()
@@ -42,6 +43,7 @@ export class ScheduleService {
             for (const uuid of teachersUUIDs) {
                 teachers.push(await this.teacherService.findOne(uuid));
             }
+            schedule.teachers = teachers;
             Object.assign(schedule, info);
         } else {
             Object.assign(schedule, data);
@@ -90,5 +92,16 @@ export class ScheduleService {
             where: { institution: institution },
         });
         return schedules.filter(schedule => schedule.class.id === classUUID);
+    }
+
+    async remove(uuid: string): Promise<RemoveSchedulePayload> {
+        await this.scheduleRepository.delete(uuid);
+        return new RemoveSchedulePayload(uuid);
+    }
+
+    async removeAllByClass(classUUID: string): Promise<boolean> {
+        const scheduleClass = await this.classesService.findOne(classUUID);
+        await this.scheduleRepository.delete({ class: scheduleClass });
+        return true;
     }
 }

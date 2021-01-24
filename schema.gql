@@ -310,6 +310,10 @@ type CreateSchedulePayload {
   scheduleId: String!
 }
 
+type RemoveSchedulePayload {
+  scheduleId: String!
+}
+
 type CreateMessagePayload {
   messageId: String!
 }
@@ -397,6 +401,8 @@ type Mutation {
   createSubject(createSubjectInput: CreateSubjectInput!): CreateSubjectPayload!
   updateSubject(updateSubjectInput: UpdateSubjectInput!): UpdateSubjectPayload!
   createSchedule(createScheduleInput: CreateScheduleInput!): CreateSchedulePayload!
+  removeSchedule(id: String!): RemoveSchedulePayload!
+  removeSchedulesByClass(classId: String!): Boolean!
   createMessage(createMessageInput: CreateMessageInput!): CreateMessagePayload!
   removeMessage(id: String!): RemoveMessagePayload!
   updateMessage(updateMessageInput: UpdateMessageInput!): UpdateMessagePayload!
