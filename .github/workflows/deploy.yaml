@@ -24,6 +24,12 @@ jobs:
                   DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
                   DB_DRIVER: ${{ secrets.DB_DRIVER }}
                   DB_SOCKET: ${{ secrets.DB_SOCKET }}
+                  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+                  JWT_ACCESS_TOKEN_EXPIRATION_TIME: ${{ secrets.JWT_ACCESS_TOKEN_EXPIRATION_TIME }}
+                  JWT_REFRESH_TOKEN_EXPIRATION_TIME: ${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION_TIME }}
+                  COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
+                  EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+                  EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
             - name: Deploy to GAE
               uses: GoogleCloudPlatform/github-actions/appengine-deploy@master
               with:
