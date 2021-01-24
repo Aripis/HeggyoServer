@@ -31,7 +31,7 @@ jobs:
                   EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
                   EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
             - name: Deploy to GAE
-              uses: GoogleCloudPlatform/github-actions/appengine-deploy@master
+              uses: google-github-actions/deploy-appengine@main
               with:
                   credentials: ${{ secrets.GCP_SA_KEY }}
                   project_id: heggyo
