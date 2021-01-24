@@ -17,13 +17,17 @@ import { UpdateMessagePayload } from './messages-payload/update-message.payload'
 import { ClassesService } from 'src/classes/classes.service';
 // import { File } from './file.model';
 import { SubjectService } from 'src/subjects/subjects.service';
+import { MailerService } from '@nestjs-modules/mailer';
+import { StudentsService } from 'src/students/students.service';
 
 @Injectable()
 export class MessageService {
     constructor(
         private readonly userService: UsersService,
+        private readonly studentService: StudentsService,
         private readonly classesService: ClassesService,
         private readonly subjectService: SubjectService,
+        private readonly mailerService: MailerService,
         @InjectRepository(Message)
         private readonly messageRepository: Repository<Message>,
     ) {}
@@ -83,8 +87,35 @@ export class MessageService {
         //     message.filesPath = ['file1Path', 'file2Path'];
         // }
 
+        const classUserEmails = (
+            await this.studentService.findAllForEachClass(
+                currUser,
+                createMessageInput.toClassUUIDs,
+            )
+        ).map(student => student.user.email);
+
+        const userEmails = [
+            ...new Set([
+                ...classUserEmails,
+                ...message.toUser.map(user => user.email),
+            ]),
+        ];
+
         try {
             const msg = await this.messageRepository.save(message);
+            await this.mailerService.sendMail({
+                bcc: userEmails,
+                from: `${message.from.firstName} ${message.from.lastName} [Heggyo] <heggyoapp@gmail.com>`,
+                subject:
+                    message.type === MessageType.MESSAGE
+                        ? 'Ново съобщение'
+                        : 'Ново задание',
+                template: 'message',
+                context: {
+                    subject: message.subject,
+                    data: message.data,
+                },
+            });
             return new CreateMessagePayload(msg.id);
         } catch (error) {
             if (error.code === 'ER_DUP_ENTRY') {

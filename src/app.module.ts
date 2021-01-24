@@ -13,6 +13,8 @@ import { SubjectsModule } from './subjects/subjects.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { MessageModule } from './messages/message.module';
 import { StudentDossierModule } from './dossier/student-dossier.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 @Module({
     imports: [
@@ -34,6 +36,25 @@ import { StudentDossierModule } from './dossier/student-dossier.module';
                         : 'http://localhost:3000',
                 credentials: true,
             },
+        }),
+        MailerModule.forRootAsync({
+            inject: [ConfigService],
+            useFactory: async (configService: ConfigService) => ({
+                transport: {
+                    service: 'gmail',
+                    auth: {
+                        user: configService.get('EMAIL_USERNAME'),
+                        pass: configService.get('EMAIL_PASSWORD'),
+                    },
+                },
+                template: {
+                    dir: process.cwd() + '/views/email/',
+                    adapter: new HandlebarsAdapter(),
+                    options: {
+                        strict: true,
+                    },
+                },
+            }),
         }),
         UsersModule,
         AuthModule,

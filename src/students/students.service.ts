@@ -118,6 +118,21 @@ export class StudentsService {
         );
     }
 
+    async findAllForEachClass(
+        currUser: User,
+        classesUUIDs: string[],
+    ): Promise<Student[]> {
+        const usersUUIDs = (await this.userService.findAll(currUser)).map(
+            user => user?.id,
+        );
+        const students = await this.studentsRepository.find();
+        return students.filter(
+            student =>
+                usersUUIDs.includes(student?.user?.id) &&
+                classesUUIDs.includes(student.class.id),
+        );
+    }
+
     async getToken(currUser: User): Promise<GetStudentTokenPayload> {
         const token = (
             await this.studentsRepository.findOne({

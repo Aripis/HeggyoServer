@@ -4,6 +4,7 @@ import { UsersModule } from 'src/users/users.module';
 import { MessageService } from './message.service';
 import { MessageResolver } from './message.resolver';
 import { ClassesModule } from 'src/classes/classes.module';
+import { StudentsModule } from 'src/students/students.module';
 import { Message } from './message.model';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SubjectsModule } from 'src/subjects/subjects.module';
@@ -13,6 +14,7 @@ import { SubjectsModule } from 'src/subjects/subjects.module';
         TypeOrmModule.forFeature([Message]),
         forwardRef(() => UsersModule),
         forwardRef(() => ClassesModule),
+        forwardRef(() => StudentsModule),
         SubjectsModule,
     ],
     providers: [MessageResolver, MessageService, DateScalar],
