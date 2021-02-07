@@ -25,6 +25,8 @@
     },
     "main": "dist/main.js",
     "dependencies": {
+        "@aginix/nestjs-gcloud-storage": "^1.2.0",
+        "@google-cloud/storage": "^5.7.4",
         "@nestjs-modules/mailer": "^1.5.1",
         "@nestjs/common": "^7.6.5",
         "@nestjs/config": "^0.5.0",
@@ -74,7 +76,7 @@
         "jest": "^25.1.0",
         "prettier": "^1.19.1",
         "supertest": "^4.0.2",
-        "ts-jest": "25.2.1",
+        "ts-jest": "^26.5.0",
         "ts-loader": "^6.2.1",
         "ts-node": "^8.6.2",
         "tsconfig-paths": "^3.9.0",

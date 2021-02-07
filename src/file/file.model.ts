@@ -25,8 +25,9 @@ export class File {
     @ManyToOne(
         () => Message,
         message => message.files,
+        { nullable: true },
     )
-    message: Message;
+    message?: Message;
 
     @Field(() => [Student])
     @ManyToMany(
@@ -36,7 +37,7 @@ export class File {
             nullable: true,
         },
     )
-    studentRecords: Student[];
+    studentRecords?: Student[];
 
     @Field(() => [StudentDossier])
     @ManyToMany(
@@ -46,5 +47,5 @@ export class File {
             nullable: true,
         },
     )
-    dossierFiles: StudentDossier[];
+    dossiers?: StudentDossier[];
 }

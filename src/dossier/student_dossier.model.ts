@@ -51,8 +51,8 @@ export class StudentDossier {
     @Field(() => [File], { nullable: true })
     @ManyToMany(
         () => File,
-        fil => fil.dossierFiles,
-        { nullable: true, cascade: true },
+        fil => fil.dossiers,
+        { nullable: true, cascade: true, eager: true },
     )
     @JoinTable({
         name: 'student_dossier_files',

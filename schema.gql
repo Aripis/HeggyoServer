@@ -190,7 +190,7 @@ type File {
   filePath: String!
   message: Message!
   studentRecords: [Student!]!
-  dossierFiles: [StudentDossier!]!
+  dossiers: [StudentDossier!]!
 }
 
 type StudentDossier {

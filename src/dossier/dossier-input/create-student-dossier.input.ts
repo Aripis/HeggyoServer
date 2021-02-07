@@ -9,7 +9,6 @@ export class CreateStudentDossierInput {
     @Field()
     subjectUUID: string;
 
-    // TODO: implement file upload
     @Field(() => [UploadScalar], { nullable: true })
     files?: UploadScalar[];
 
