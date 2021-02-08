@@ -130,8 +130,9 @@ export class UsersResolver {
     @UseGuards(GqlAuthGuard)
     updateUser(
         @Args('updateUserInput') updateUserInput: UpdateUserInput,
+        @CurrentUser() currUser: User,
     ): Promise<UpdateUserPayload> {
-        return this.usersService.update(updateUserInput);
+        return this.usersService.update(updateUserInput, currUser);
     }
 
     @Mutation(() => UpdateUserPayload)

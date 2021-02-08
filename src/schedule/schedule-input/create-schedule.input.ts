@@ -24,4 +24,7 @@ export class CreateScheduleInput {
 
     @Field(() => [String], { nullable: true })
     teachersUUIDs?: string[];
+
+    @Field()
+    room: string;
 }
