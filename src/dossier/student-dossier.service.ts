@@ -15,7 +15,6 @@ import { CreateStudentDossierInput } from './dossier-input/create-student-dossie
 import { CreateStudentDossierPayload } from './dossier-payload/create-student-dossier.payload';
 import { StudentDossier } from './student_dossier.model';
 import { File } from 'src/file/file.model';
-import { FindOneStudentDossierInput } from './dossier-input/find-one-student-dossier.input';
 import { FindOneStudentDossierPayload } from './dossier-payload/find-one-student-dossier.payload';
 
 @Injectable()
@@ -84,20 +83,17 @@ export class StudentDossierService {
     }
 
     async findOne(
-        input: FindOneStudentDossierInput,
+        studentId: string,
         currUser: User,
     ): Promise<FindOneStudentDossierPayload> {
-        const student = await this.studentService.findOne(input.studentId);
+        const student = await this.studentService.findOne(studentId);
         const studentDossierFiles = student.dossier
             .map(dossier => dossier.studentFiles)
             .flat();
-        const bufferArray = await Promise.all(
-            studentDossierFiles.map(
-                async file =>
-                    await this.fileService.getCloudFile(file.cloudFilename),
-            ),
+        const files = studentDossierFiles.map(file =>
+            this.fileService.getCloudFile(file),
         );
-        return new FindOneStudentDossierPayload(student.dossier, bufferArray);
+        return new FindOneStudentDossierPayload(student.dossier, files);
     }
 
     async findAll(currUser: User): Promise<StudentDossier[]> {

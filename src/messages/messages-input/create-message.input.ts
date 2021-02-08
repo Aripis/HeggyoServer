@@ -13,7 +13,6 @@ export class CreateMessageInput {
     @Field({ nullable: true })
     data?: string;
 
-    // TODO: implement file upload
     @Field(() => [UploadScalar], { nullable: true })
     files?: UploadScalar[];
 

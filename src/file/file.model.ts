@@ -25,6 +25,9 @@ export class File {
     @Column()
     cloudFilename: string;
 
+    @Field({ nullable: true })
+    publicUrl?: string;
+
     @Field(() => Message)
     @ManyToOne(
         () => Message,

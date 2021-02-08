@@ -8,7 +8,6 @@ import { CreateStudentDossierPayload } from './dossier-payload/create-student-do
 import { StudentDossier } from './student_dossier.model';
 import { StudentDossierService } from './student-dossier.service';
 import { FindOneStudentDossierPayload } from './dossier-payload/find-one-student-dossier.payload';
-import { FindOneStudentDossierInput } from './dossier-input/find-one-student-dossier.input';
 
 @Resolver(() => StudentDossier)
 export class StudentDossierResolver {
@@ -35,10 +34,10 @@ export class StudentDossierResolver {
     @Query(() => FindOneStudentDossierPayload)
     @UseGuards(GqlAuthGuard)
     studentDossier(
-        @Args('input') input: FindOneStudentDossierInput,
+        @Args('studentId') studentId: string,
         @CurrentUser() currUser: User,
     ): Promise<FindOneStudentDossierPayload> {
-        return this.studentDossierService.findOne(input, currUser);
+        return this.studentDossierService.findOne(studentId, currUser);
     }
 
     // @Mutation(() => UpdateMessagePayload)

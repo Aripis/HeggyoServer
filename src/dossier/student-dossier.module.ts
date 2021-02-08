@@ -7,7 +7,6 @@ import { StudentDossierResolver } from './student-dossier.resolver';
 import { StudentsModule } from 'src/students/students.module';
 import { StudentDossier } from './student_dossier.model';
 import { FileModule } from 'src/file/file.module';
-import { BufferScalar } from 'src/common/scalars/buffer.scalar';
 
 @Module({
     imports: [
@@ -17,7 +16,7 @@ import { BufferScalar } from 'src/common/scalars/buffer.scalar';
         SubjectsModule,
         FileModule,
     ],
-    providers: [StudentDossierResolver, StudentDossierService, BufferScalar],
+    providers: [StudentDossierResolver, StudentDossierService],
     exports: [StudentDossierService],
 })
 export class StudentDossierModule {}

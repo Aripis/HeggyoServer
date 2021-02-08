@@ -1,6 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { MessageStatus } from '../message.model';
-// import { UploadScalar } from 'src/common/scalars/upload.scalar';
+import { UploadScalar } from 'src/common/scalars/upload.scalar';
 
 @InputType()
 export class UpdateMessageInput {
@@ -13,9 +13,8 @@ export class UpdateMessageInput {
     @Field(() => MessageStatus)
     status: MessageStatus;
 
-    // TODO: implement file upload
-    // @Field(() => [UploadScalar], { nullable: true })
-    // files?: UploadScalar[];
+    @Field(() => [UploadScalar], { nullable: true })
+    files?: UploadScalar[];
 
     @Field({ nullable: true })
     assignmentDueDate?: Date;

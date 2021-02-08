@@ -15,10 +15,11 @@ import { CreateMessagePayload } from './messages-payload/create-message.payload'
 import { RemoveMessagePayload } from './messages-payload/remove-message.payload';
 import { UpdateMessagePayload } from './messages-payload/update-message.payload';
 import { ClassesService } from 'src/classes/classes.service';
-// import { File } from './file.model';
+import { File } from 'src/file/file.model';
 import { SubjectService } from 'src/subjects/subjects.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import { StudentsService } from 'src/students/students.service';
+import { FileService } from 'src/file/file.service';
 
 @Injectable()
 export class MessageService {
@@ -27,6 +28,7 @@ export class MessageService {
         private readonly studentService: StudentsService,
         private readonly classesService: ClassesService,
         private readonly subjectService: SubjectService,
+        private readonly fileService: FileService,
         private readonly mailerService: MailerService,
         @InjectRepository(Message)
         private readonly messageRepository: Repository<Message>,
@@ -40,9 +42,6 @@ export class MessageService {
 
         message.from = await this.userService.findOne(currUser.id);
         message.type = createMessageInput.type;
-
-        // const file =  new File()
-        // file.filesPath = 'PATH'
 
         if (createMessageInput.subjectUUID) {
             message.subject = await this.subjectService.findOne(
@@ -82,10 +81,21 @@ export class MessageService {
             message.assignmentType = createMessageInput.assignmentType;
         }
 
-        // TODO: File save
-        // if (createMessageInput.file) {
-        //     message.filesPath = ['file1Path', 'file2Path'];
-        // }
+        if (createMessageInput.files) {
+            const inputFiles = await Promise.all(createMessageInput.files);
+            for (const inputFile of inputFiles) {
+                const fileMeta = await this.fileService.uploadCloudFileFromStream(
+                    `${currUser.id}/${inputFile.filename}`,
+                    inputFile.createReadStream,
+                );
+                const files = message.files ? [...message.files] : [];
+                const messageFile = new File();
+                messageFile.filename = inputFile.filename;
+                messageFile.cloudFilename = fileMeta.name;
+                files.push(messageFile);
+                message.files = files;
+            }
+        }
 
         const classUserEmails = (
             await this.studentService.findAllForEachClass(
@@ -130,10 +140,29 @@ export class MessageService {
     // TODO: File update
     async update(
         updateMessageInput: UpdateMessageInput,
+        currUser: User,
     ): Promise<UpdateMessagePayload> {
-        const { id, ...data } = updateMessageInput;
+        const message = await this.findOne(updateMessageInput.id);
+        const newFiles = message.files ? [...message.files] : [];
+        if (updateMessageInput.files) {
+            const { id, ...data } = updateMessageInput;
+            const dataFiles = await Promise.all(data.files);
+            for (const dataFile of dataFiles) {
+                const fileMeta = await this.fileService.uploadCloudFileFromStream(
+                    `${currUser.id}/${dataFile.filename}`,
+                    dataFile.createReadStream,
+                );
+                const messageFile = new File();
+                messageFile.filename = dataFile.filename;
+                messageFile.cloudFilename = fileMeta.name;
+                newFiles.push(messageFile);
+            }
+        }
+        message.files = message.files ? newFiles : message.files;
+        Object.assign(message, updateMessageInput);
+        const { id, ...msgData } = message;
         if (await this.messageRepository.findOne(id)) {
-            await this.messageRepository.update(id, data);
+            await this.messageRepository.update(id, msgData);
             return new UpdateMessagePayload(id);
         } else {
             throw new NotFoundException('[Update-Message] Message Not Found.');

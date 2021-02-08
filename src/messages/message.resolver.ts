@@ -58,7 +58,8 @@ export class MessageResolver {
     @Mutation(() => UpdateMessagePayload)
     updateMessage(
         @Args('updateMessageInput') updateMessageInput: UpdateMessageInput,
+        @CurrentUser() currUser: User,
     ): Promise<UpdateMessagePayload> {
-        return this.messageService.update(updateMessageInput);
+        return this.messageService.update(updateMessageInput, currUser);
     }
 }

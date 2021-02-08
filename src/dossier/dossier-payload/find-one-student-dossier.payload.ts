@@ -1,20 +1,20 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { BufferScalar } from 'src/common/scalars/buffer.scalar';
 import { StudentDossier } from '../student_dossier.model';
+import { File } from '../../file/file.model';
 
 @ObjectType()
 export class FindOneStudentDossierPayload {
     constructor(
         private readonly inputDossiers: StudentDossier[],
-        private readonly inputBufferArray: Buffer[],
+        private readonly inputFiles: File[],
     ) {
         this.dossiers = inputDossiers;
-        this.bufferArray = inputBufferArray;
+        this.files = inputFiles;
     }
 
     @Field(() => [StudentDossier])
     dossiers: StudentDossier[];
 
-    @Field(() => [Buffer])
-    bufferArray: Buffer[];
+    @Field(() => [File])
+    files: File[];
 }

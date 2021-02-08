@@ -47,12 +47,9 @@ export class FileService {
         };
     }
 
-    async getCloudFile(
-        cloudFilename: string,
-        bucket = this.defaultBucket,
-    ): Promise<Buffer> {
-        const file = this.gcloudStorage.bucket(bucket).file(cloudFilename);
-        return streamToBuffer(file.createReadStream());
+    getCloudFile(file: File, bucket = this.defaultBucket): File {
+        file.publicUrl = `https://storage.googleapis.com/${bucket}/${file.cloudFilename}`;
+        return file;
     }
 
     async uploadCloudFileFromStream(
@@ -62,16 +59,15 @@ export class FileService {
         bucket = this.defaultBucket,
     ): Promise<MetadataResponse[0]> {
         const buffer = await streamToBuffer(createReadStream());
+        const file = this.gcloudStorage.bucket(bucket).file(filename);
 
-        await this.gcloudStorage
-            .bucket(bucket)
-            .file(filename)
-            .save(buffer, options);
+        await file.save(buffer, options);
+        await file.makePublic();
 
         return this.getCloudFileMeta(filename);
     }
 
-    public async removeFileById(id: string, bucket = this.defaultBucket) {
+    async removeFileById(id: string, bucket = this.defaultBucket) {
         const file = await this.fileRepository.findOne({
             where: {
                 id,

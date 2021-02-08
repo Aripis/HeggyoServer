@@ -3,9 +3,9 @@ import { Field, ObjectType } from '@nestjs/graphql';
 @ObjectType()
 export class CreateStudentDossierPayload {
     constructor(private readonly uuid: string) {
-        this.studentId = uuid;
+        this.dossierId = uuid;
     }
 
     @Field()
-    studentId: string;
+    dossierId: string;
 }

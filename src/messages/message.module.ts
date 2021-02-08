@@ -8,6 +8,7 @@ import { StudentsModule } from 'src/students/students.module';
 import { Message } from './message.model';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SubjectsModule } from 'src/subjects/subjects.module';
+import { FileModule } from 'src/file/file.module';
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import { SubjectsModule } from 'src/subjects/subjects.module';
         forwardRef(() => ClassesModule),
         forwardRef(() => StudentsModule),
         SubjectsModule,
+        FileModule,
     ],
     providers: [MessageResolver, MessageService, DateScalar],
     exports: [MessageService],
