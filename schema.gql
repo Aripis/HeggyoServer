@@ -187,7 +187,8 @@ type Student {
 
 type File {
   id: ID!
-  filePath: String!
+  filename: String!
+  cloudFilename: String!
   message: Message!
   studentRecords: [Student!]!
   dossiers: [StudentDossier!]!
@@ -330,6 +331,14 @@ type CreateStudentDossierPayload {
   studentId: String!
 }
 
+type FindOneStudentDossierPayload {
+  dossiers: [StudentDossier!]!
+  bufferArray: [Buffer!]!
+}
+
+"""Buffer custom scalar type"""
+scalar Buffer
+
 type GradePayload {
   gradeId: String!
 }
@@ -364,6 +373,7 @@ type Query {
   messages: [Message!]!
   messagesByCriteria(criteria: MessagesByCriteriaInput!): [Message!]!
   studentDossiers: [StudentDossier!]!
+  studentDossier(input: FindOneStudentDossierInput!): FindOneStudentDossierPayload!
   studentGrades: [StudentGrade!]!
 }
 
@@ -381,6 +391,10 @@ input MessagesByCriteriaInput {
   messageType: MessageType
   messageStatus: MessageStatus
   assingmentType: AssignmentType
+}
+
+input FindOneStudentDossierInput {
+  studentId: String!
 }
 
 type Mutation {

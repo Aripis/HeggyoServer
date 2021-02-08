@@ -7,6 +7,8 @@ import { CreateStudentDossierInput } from './dossier-input/create-student-dossie
 import { CreateStudentDossierPayload } from './dossier-payload/create-student-dossier.payload';
 import { StudentDossier } from './student_dossier.model';
 import { StudentDossierService } from './student-dossier.service';
+import { FindOneStudentDossierPayload } from './dossier-payload/find-one-student-dossier.payload';
+import { FindOneStudentDossierInput } from './dossier-input/find-one-student-dossier.input';
 
 @Resolver(() => StudentDossier)
 export class StudentDossierResolver {
@@ -28,6 +30,15 @@ export class StudentDossierResolver {
     @UseGuards(GqlAuthGuard)
     studentDossiers(@CurrentUser() currUser: User): Promise<StudentDossier[]> {
         return this.studentDossierService.findAll(currUser);
+    }
+
+    @Query(() => FindOneStudentDossierPayload)
+    @UseGuards(GqlAuthGuard)
+    studentDossier(
+        @Args('input') input: FindOneStudentDossierInput,
+        @CurrentUser() currUser: User,
+    ): Promise<FindOneStudentDossierPayload> {
+        return this.studentDossierService.findOne(input, currUser);
     }
 
     // @Mutation(() => UpdateMessagePayload)

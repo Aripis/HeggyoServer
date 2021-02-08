@@ -1,8 +1,10 @@
-import { Scalar } from "@nestjs/graphql";
-import { GraphQLUpload } from 'graphql-upload'
+import { Scalar } from '@nestjs/graphql';
+import { GraphQLUpload } from 'graphql-upload';
 
 @Scalar('Upload')
 export class UploadScalar {
+    filename: string;
+    createReadStream: Function;
     description = 'File upload scalar type';
 
     parseValue(value) {

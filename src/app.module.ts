@@ -16,7 +16,7 @@ import { StudentDossierModule } from './dossier/student-dossier.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { GradeModule } from './grades/grade.module';
-import { GCloudStorageModule } from '@aginix/nestjs-gcloud-storage';
+import { FileModule } from './file/file.module';
 
 @Module({
     imports: [
@@ -58,14 +58,6 @@ import { GCloudStorageModule } from '@aginix/nestjs-gcloud-storage';
                 },
             }),
         }),
-        GCloudStorageModule.withConfigAsync({
-            inject: [ConfigService],
-            useFactory: (config: ConfigService) => ({
-                defaultBucketname: config.get('GCS_BUCKET_NAME'),
-                storageBaseUri: config.get('GCS_DOMAIN_NAME'),
-            }),
-            imports: [ConfigModule],
-        }),
         UsersModule,
         AuthModule,
         InstitutionsModule,
@@ -75,6 +67,7 @@ import { GCloudStorageModule } from '@aginix/nestjs-gcloud-storage';
         MessageModule,
         StudentDossierModule,
         GradeModule,
+        FileModule,
     ],
     controllers: [AppController],
     providers: [AppService],

@@ -19,7 +19,11 @@ export class File {
 
     @Field()
     @Column()
-    filePath: string;
+    filename: string;
+
+    @Field()
+    @Column()
+    cloudFilename: string;
 
     @Field(() => Message)
     @ManyToOne(

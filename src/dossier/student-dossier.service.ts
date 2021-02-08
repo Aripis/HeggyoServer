@@ -9,22 +9,22 @@ import { StudentsService } from 'src/students/students.service';
 import { SubjectService } from 'src/subjects/subjects.service';
 import { User } from 'src/users/user.model';
 import { UsersService } from 'src/users/users.service';
+import { FileService } from 'src/file/file.service';
 import { Repository } from 'typeorm';
 import { CreateStudentDossierInput } from './dossier-input/create-student-dossier.input';
 import { CreateStudentDossierPayload } from './dossier-payload/create-student-dossier.payload';
 import { StudentDossier } from './student_dossier.model';
-import { createWriteStream } from 'fs';
-import { Storage } from '@google-cloud/storage';
-import { ConfigService } from '@nestjs/config';
 import { File } from 'src/file/file.model';
+import { FindOneStudentDossierInput } from './dossier-input/find-one-student-dossier.input';
+import { FindOneStudentDossierPayload } from './dossier-payload/find-one-student-dossier.payload';
 
 @Injectable()
 export class StudentDossierService {
     constructor(
         private readonly userService: UsersService,
         private readonly studentService: StudentsService,
-        private readonly configService: ConfigService,
         private readonly subjectService: SubjectService,
+        private readonly fileService: FileService,
         @InjectRepository(StudentDossier)
         private readonly dossierRepository: Repository<StudentDossier>,
     ) {}
@@ -50,35 +50,20 @@ export class StudentDossierService {
                 input.subjectUUID,
             );
         }
-        const credentials = JSON.parse(
-            this.configService.get<string>('SERVICE_ACCOUNT_CREDENTIALS'),
-        );
-        credentials.private_key = credentials.private_key.replace(/\\n/g, '\n');
 
-        const storage = new Storage({
-            credentials,
-        });
-
-        const bucket = storage.bucket(
-            this.configService.get<string>('GCS_BUCKET_NAME'),
-        );
-        // TODO: dossier Files
         if (input.files) {
             const inputFiles = await Promise.all(input.files);
             for (const inputFile of inputFiles) {
-                const file = bucket.file(
-                    `${input.studentId}/${(inputFile as any).filename}`,
+                const fileMeta = await this.fileService.uploadCloudFileFromStream(
+                    `${input.studentId}/${inputFile.filename}`,
+                    inputFile.createReadStream,
                 );
-                (inputFile as any)
-                    .createReadStream()
-                    .pipe(file.createWriteStream());
                 const files = dossier.studentFiles
                     ? [...dossier.studentFiles]
                     : [];
                 const dossierFile = new File();
-                dossierFile.filePath = `${input.studentId}/${
-                    (inputFile as any).filename
-                }`;
+                dossierFile.filename = inputFile.filename;
+                dossierFile.cloudFilename = fileMeta.name;
                 files.push(dossierFile);
                 dossier.studentFiles = files;
             }
@@ -96,6 +81,23 @@ export class StudentDossierService {
             }
             throw new InternalServerErrorException(error);
         }
+    }
+
+    async findOne(
+        input: FindOneStudentDossierInput,
+        currUser: User,
+    ): Promise<FindOneStudentDossierPayload> {
+        const student = await this.studentService.findOne(input.studentId);
+        const studentDossierFiles = student.dossier
+            .map(dossier => dossier.studentFiles)
+            .flat();
+        const bufferArray = await Promise.all(
+            studentDossierFiles.map(
+                async file =>
+                    await this.fileService.getCloudFile(file.cloudFilename),
+            ),
+        );
+        return new FindOneStudentDossierPayload(student.dossier, bufferArray);
     }
 
     async findAll(currUser: User): Promise<StudentDossier[]> {
