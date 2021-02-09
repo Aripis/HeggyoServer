@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClassesModule } from 'src/classes/classes.module';
+import { StudentsModule } from 'src/students/students.module';
 import { TeachersModule } from 'src/teachers/teachers.module';
 import { UsersModule } from 'src/users/users.module';
 import { Subject } from './subject.model';
@@ -13,6 +14,7 @@ import { SubjectService } from './subjects.service';
         TeachersModule,
         UsersModule,
         ClassesModule,
+        StudentsModule,
     ],
     providers: [SubjectsResolver, SubjectService],
     exports: [SubjectService],
