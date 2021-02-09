@@ -95,11 +95,14 @@ export class TeachersService {
 
     async findOneByUserUUID(
         uuid: string,
-        relations: string[],
+        relations: string[] = null,
     ): Promise<Teacher> {
         const teachers = await this.teachersRepository.find({
-            where: {
-                relations: relations,
+            join: {
+                alias: 'subject',
+                leftJoinAndSelect: {
+                    subjects: 'subject.subjects',
+                },
             },
         });
         const teacher = teachers.find(teacher => teacher.user.id == uuid);

@@ -80,12 +80,10 @@ export class ParentsService {
 
     async findOneByUserUUID(
         uuid: string,
-        relations?: string[],
+        relations: string[] = null,
     ): Promise<Parent> {
         const parents = await this.parentsRepository.find({
-            where: {
-                relations: relations,
-            },
+            relations: relations,
         });
         const teacher = parents.find(parent => parent.user.id == uuid);
         if (!parent) {

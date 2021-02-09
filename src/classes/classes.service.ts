@@ -93,6 +93,33 @@ export class ClassesService {
             return [
                 (await this.studentService.findOneByUserUUID(user.id)).class,
             ];
+        } else if (user.userRole == UserRoles.TEACHER) {
+            const teacher = await this.teacherService.findOneByUserUUID(
+                user.id,
+            );
+
+            const allClasses = await this.classesRepository.find({
+                join: {
+                    alias: 'subject',
+                    leftJoinAndSelect: {
+                        subjects: 'subject.subjects',
+                    },
+                },
+                where: {
+                    institution: user.institution,
+                },
+            });
+
+            const teacherClasses = allClasses.filter(cls =>
+                cls.subjects?.filter(subject =>
+                    subject.teachers?.filter(tchr => tchr.id === teacher.id),
+                ),
+            );
+
+            return [
+                ...allClasses.filter(cls => cls.teacher.id === teacher.id),
+                ...teacherClasses,
+            ];
         } else {
             const institution = user.institution;
             return this.classesRepository.find({

@@ -111,7 +111,6 @@ export class SubjectService {
         } else if (user.userRole == UserRoles.TEACHER) {
             const teacher = await this.teachersService.findOneByUserUUID(
                 currUser.id,
-                ['subjects'],
             );
             return teacher.subjects;
         } else if (user.userRole == UserRoles.PARENT) {
