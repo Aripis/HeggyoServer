@@ -70,7 +70,9 @@ export class TeachersService {
         const classTeachersUUIDs = (await this.classesService.findAll(currUser))
             .filter(currClass => currClass.teacher)
             .map(currClass => currClass.teacher.id);
-        const includedClass = uuid ? await this.classesService.findOne(uuid) : null;
+        const includedClass = uuid
+            ? await this.classesService.findOne(uuid)
+            : null;
         const usersUUIDs = (await this.userService.findAll(currUser)).map(
             user => user.id,
         );
@@ -85,6 +87,22 @@ export class TeachersService {
 
     async findOne(uuid: string): Promise<Teacher> {
         const teacher = await this.teachersRepository.findOne(uuid);
+        if (!teacher) {
+            throw new NotFoundException(uuid);
+        }
+        return teacher;
+    }
+
+    async findOneByUserUUID(
+        uuid: string,
+        relations: string[],
+    ): Promise<Teacher> {
+        const teachers = await this.teachersRepository.find({
+            where: {
+                relations: relations,
+            },
+        });
+        const teacher = teachers.find(teacher => teacher.user.id == uuid);
         if (!teacher) {
             throw new NotFoundException(uuid);
         }

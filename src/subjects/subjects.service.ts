@@ -14,7 +14,7 @@ import { CreateSubjectPayload } from './subject-payload/create-subject.payload';
 import { TeachersService } from 'src/teachers/teachers.service';
 import { UsersService } from 'src/users/users.service';
 import { ClassesService } from 'src/classes/classes.service';
-import { User } from 'src/users/user.model';
+import { User, UserRoles } from 'src/users/user.model';
 import { Class } from 'src/classes/class.model';
 import { StudentsService } from 'src/students/students.service';
 
@@ -92,27 +92,34 @@ export class SubjectService {
         }
     }
 
-    async findAllByStudent(currUser: User): Promise<Subject[]> {
-        const student = await this.studentsService.findOneByUserUUID(
-            currUser.id,
-        );
-        const institution = (await this.userService.findOne(currUser.id))
-            .institution;
-
-        return this.subjectRepository.find({
-            where: {
-                institution: institution,
-                class: student.class,
-            },
-        });
-    }
-
     async findAll(currUser: User): Promise<Subject[]> {
-        const institution = (await this.userService.findOne(currUser.id))
-            .institution;
-        return this.subjectRepository.find({
-            where: { institution: institution },
-        });
+        const user = await this.userService.findOne(currUser.id);
+        const institution = user.institution;
+        if (user.userRole == UserRoles.STUDENT) {
+            const student = await this.studentsService.findOneByUserUUID(
+                currUser.id,
+            );
+
+            return this.subjectRepository.find({
+                where: {
+                    institution: institution,
+                    class: student.class,
+                },
+            });
+        } else if (user.userRole == UserRoles.TEACHER) {
+            const teacher = await this.teachersService.findOneByUserUUID(
+                currUser.id,
+                ['subjects'],
+            );
+            return teacher.subjects;
+        } else if (user.userRole == UserRoles.PARENT) {
+            // TODO: find all by children
+            return null;
+        } else {
+            return this.subjectRepository.find({
+                where: { institution: institution },
+            });
+        }
     }
 
     async findOne(uuid: string): Promise<Subject> {

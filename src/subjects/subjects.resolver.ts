@@ -26,12 +26,6 @@ export class SubjectsResolver {
         return this.subjectService.findAll(currUser);
     }
 
-    @Query(() => [Subject])
-    @UseGuards(GqlAuthGuard)
-    mySubjects(@CurrentUser() currUser: User): Promise<Subject[]> {
-        return this.subjectService.findAllByStudent(currUser);
-    }
-
     @Mutation(() => CreateSubjectPayload)
     @UseGuards(GqlAuthGuard)
     createSubject(
