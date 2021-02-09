@@ -112,7 +112,13 @@ export class SubjectService {
             const teacher = await this.teachersService.findOneByUserUUID(
                 currUser.id,
             );
-            return teacher.subjects;
+            const subjects = await this.subjectRepository.find({
+                where: {
+                    teacher: teacher,
+                },
+            });
+
+            return subjects;
         } else if (user.userRole == UserRoles.PARENT) {
             const parents = await this.parentsService.findOneByUserUUID(
                 currUser.id,
