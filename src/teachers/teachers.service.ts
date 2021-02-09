@@ -55,11 +55,12 @@ export class TeachersService {
     }
 
     async findAll(currUser: User): Promise<Teacher[]> {
-        // FIXME: Implement with query builder
-        const users = await this.userService.findAll(currUser);
+        const usersUUIDs = (await this.userService.findAll(currUser)).map(
+            user => user?.id,
+        );
         const teachers = await this.teachersRepository.find();
         return teachers.filter(teacher =>
-            users.map(user => teacher.user.id === user.id),
+            usersUUIDs.includes(teacher?.user?.id),
         );
     }
 

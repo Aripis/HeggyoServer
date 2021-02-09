@@ -18,6 +18,7 @@ import { User, UserRoles } from 'src/users/user.model';
 import { Class } from 'src/classes/class.model';
 import { StudentsService } from 'src/students/students.service';
 import { ParentsService } from 'src/parents/parents.service';
+import { Teacher } from 'src/teachers/teacher.model';
 
 @Injectable()
 export class SubjectService {
@@ -117,10 +118,13 @@ export class SubjectService {
                     institution: teacher.user.institution,
                 },
             });
-
-            return subjects.filter(subject =>
-                subject.teachers.map(tchr => tchr.id === teacher.id),
-            );
+            // TODO: FIX IT :?????? asdamjsdpoasfnapisngpa why does it return always everyone.... data
+            return subjects.filter(subject => {
+                console.log(subject.teachers);
+                return subject.teachers
+                    .filter(Boolean)
+                    .map(tchr => tchr.id === teacher.id);
+            });
         } else if (user.userRole == UserRoles.PARENT) {
             const parents = await this.parentsService.findOneByUserUUID(
                 currUser.id,

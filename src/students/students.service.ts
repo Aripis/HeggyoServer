@@ -112,10 +112,12 @@ export class StudentsService {
     }
 
     async findAll(currUser: User): Promise<Student[]> {
-        const users = await this.userService.findAll(currUser);
+        const usersUUIDs = (await this.userService.findAll(currUser)).map(
+            user => user?.id,
+        );
         const students = await this.studentsRepository.find();
         return students.filter(student =>
-            users.map(user => student?.user?.id === user?.id),
+            usersUUIDs.includes(student?.user?.id),
         );
     }
 
