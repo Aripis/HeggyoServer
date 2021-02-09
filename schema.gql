@@ -365,6 +365,7 @@ type Query {
   parents: [Parent!]!
   subject(id: String!): Subject!
   subjects: [Subject!]!
+  mySubjects: [Subject!]!
   schedule(id: String!): Schedule!
   schedules: [Schedule!]!
   schedulesByClass(classId: String!): [Schedule!]!
