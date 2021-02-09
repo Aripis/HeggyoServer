@@ -122,11 +122,11 @@ export class Message {
     @Column({ nullable: true })
     data?: string;
 
-    @Field(() => File, { nullable: true })
+    @Field(() => [File], { nullable: true })
     @OneToMany(
         () => File,
         file => file.message,
-        { nullable: true, eager: true },
+        { nullable: true, eager: true, cascade: true },
     )
     files?: File[];
 

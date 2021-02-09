@@ -40,7 +40,7 @@ type Message {
   toClasses: [Class!]!
   assignmentType: AssignmentType
   data: String
-  files: File
+  files: [File!]
   type: MessageType!
   status: MessageStatus!
   subject: Subject
@@ -372,7 +372,7 @@ type Query {
   messagesByCriteria(criteria: MessagesByCriteriaInput!): [Message!]!
   studentDossiers: [StudentDossier!]!
   studentDossier(studentId: String!): FindOneStudentDossierPayload!
-  studentGrades: [StudentGrade!]!
+  studentGrades(studentUUID: String!): [StudentGrade!]!
 }
 
 input LoginInput {

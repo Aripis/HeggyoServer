@@ -77,9 +77,9 @@ export class Subject {
     @ManyToOne(
         () => Class,
         cls => cls.schedules,
-        { nullable: true, eager: true },
+        { eager: true },
     )
-    class?: Class;
+    class: Class;
 
     @Field(() => Message, { nullable: true })
     @ManyToOne(

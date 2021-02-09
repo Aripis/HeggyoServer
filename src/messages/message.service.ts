@@ -113,6 +113,7 @@ export class MessageService {
 
         try {
             const msg = await this.messageRepository.save(message);
+            console.log(msg);
             await this.mailerService.sendMail({
                 bcc: userEmails,
                 from: `${message.from.firstName} ${message.from.lastName} [Heggyo] <heggyoapp@gmail.com>`,
@@ -137,7 +138,6 @@ export class MessageService {
         }
     }
 
-    // TODO: File update
     async update(
         updateMessageInput: UpdateMessageInput,
         currUser: User,
@@ -145,8 +145,7 @@ export class MessageService {
         const message = await this.findOne(updateMessageInput.id);
         const newFiles = message.files ? [...message.files] : [];
         if (updateMessageInput.files) {
-            const { id, ...data } = updateMessageInput;
-            const dataFiles = await Promise.all(data.files);
+            const dataFiles = await Promise.all(updateMessageInput.files);
             for (const dataFile of dataFiles) {
                 const fileMeta = await this.fileService.uploadCloudFileFromStream(
                     `${currUser.id}/${dataFile.filename}`,
@@ -171,8 +170,15 @@ export class MessageService {
 
     async findAll(currUser: User): Promise<Message[]> {
         const user = await this.userService.findOne(currUser.id);
-        return this.messageRepository.find({
+        const messages = await this.messageRepository.find({
             where: { from: user },
+        });
+
+        return messages.map(message => {
+            message.files = message.files.map(file =>
+                this.fileService.getCloudFile(file),
+            );
+            return message;
         });
     }
 
@@ -183,6 +189,9 @@ export class MessageService {
         if (!message) {
             throw new NotFoundException(uuid);
         }
+        message.files = message.files.map(file =>
+            this.fileService.getCloudFile(file),
+        );
         return message;
     }
 
@@ -220,7 +229,12 @@ export class MessageService {
             });
         }
 
-        return messages;
+        return messages.map(message => {
+            message.files = message.files.map(file =>
+                this.fileService.getCloudFile(file),
+            );
+            return message;
+        });
     }
 
     async remove(uuid: string): Promise<RemoveMessagePayload> {

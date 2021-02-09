@@ -16,6 +16,7 @@ import { UsersService } from 'src/users/users.service';
 import { ClassesService } from 'src/classes/classes.service';
 import { User } from 'src/users/user.model';
 import { Class } from 'src/classes/class.model';
+import { StudentsService } from 'src/students/students.service';
 
 @Injectable()
 export class SubjectService {
@@ -23,6 +24,7 @@ export class SubjectService {
         private readonly teachersService: TeachersService,
         private readonly userService: UsersService,
         private readonly classesService: ClassesService,
+        private readonly studentsService: StudentsService,
         @InjectRepository(Subject)
         private readonly subjectRepository: Repository<Subject>,
     ) {}
@@ -88,6 +90,21 @@ export class SubjectService {
         } else {
             throw new NotFoundException('[Update-Subject] Subject Not Found.');
         }
+    }
+
+    async findAllByStudent(currUser: User): Promise<Subject[]> {
+        const student = await this.studentsService.findOneByUserUUID(
+            currUser.id,
+        );
+        const institution = (await this.userService.findOne(currUser.id))
+            .institution;
+
+        return this.subjectRepository.find({
+            where: {
+                institution: institution,
+                class: student.class,
+            },
+        });
     }
 
     async findAll(currUser: User): Promise<Subject[]> {

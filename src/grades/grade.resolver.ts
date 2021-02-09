@@ -18,18 +18,20 @@ export class GradeResolver {
 
     @Query(() => [StudentGrade])
     @UseGuards(GqlAuthGuard)
-    async studentGrades(@CurrentUser() user: User): Promise<StudentGrade[]> {
-        return this.gradeService.findAllForStudent(
-            await this.studentsService.findOneByUserUUID(user.id),
-        );
+    studentGrades(
+        @Args('studentUUID') studentUUID: string,
+        @CurrentUser() currUser: User,
+    ): Promise<StudentGrade[]> {
+        return this.gradeService.findAllForOneStudent(studentUUID, currUser);
     }
 
     @Mutation(() => GradePayload)
+    @UseGuards(GqlAuthGuard)
     addGrade(
-        @Args('input')
-        input: AddGradeInput,
+        @Args('input') input: AddGradeInput,
+        @CurrentUser() user: User,
     ): Promise<GradePayload> {
-        return this.gradeService.create(input);
+        return this.gradeService.create(input, user);
     }
 
     // @Mutation(() => RemoveInstitutionPayload)

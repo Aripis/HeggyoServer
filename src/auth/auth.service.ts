@@ -10,6 +10,7 @@ import { LoginInput } from './login.input';
 import { ConfigService } from '@nestjs/config';
 import { Token } from './token.model';
 import * as bcrypt from 'bcrypt';
+import { Institution } from 'src/institution/institution.model';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +18,7 @@ export class AuthService {
         private readonly usersService: UsersService,
         private readonly jwtService: JwtService,
         private readonly configService: ConfigService,
+        private readonly userService: UsersService,
     ) {}
 
     async validateUser(email: string, pass: string) {
