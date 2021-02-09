@@ -25,9 +25,6 @@ export class UpdateInstitutionInput {
     @Field(() => InstitutionType, { nullable: true })
     type?: InstitutionType;
 
-    @Field(() => Int, { nullable: true })
-    capacityPerClass?: number;
-
     @Field(() => EducationStage, { nullable: true })
     educationalStage?: EducationStage;
 

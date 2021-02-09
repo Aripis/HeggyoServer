@@ -20,9 +20,6 @@ export class CreateInstitutionInput {
     @Field(() => InstitutionType)
     type: InstitutionType;
 
-    @Field(() => Int, { nullable: true })
-    capacityPerClass?: number;
-
     @Field(() => EducationStage)
     educationalStage: EducationStage;
 

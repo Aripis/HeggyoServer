@@ -85,7 +85,6 @@ type Institution {
   name: String!
   email: String!
   type: InstitutionType!
-  capacityPerClass: Int
   educationalStage: EducationStage!
   alias: String!
   user: [User!]
@@ -356,11 +355,11 @@ type Query {
   teacher(id: String!): Teacher!
   teachers: [Teacher!]!
   availableClassTeachers(includeClassId: String): [Teacher!]!
-  class(id: String!): Class!
-  classes: [Class!]!
   student(id: String!): Student!
   students: [Student!]!
   getStudentToken: GetStudentTokenPayload!
+  class(id: String!): Class!
+  classes: [Class!]!
   parent(id: String!): Parent!
   parents: [Parent!]!
   subject(id: String!): Subject!
@@ -401,11 +400,11 @@ type Mutation {
   removeInstitution: RemoveInstitutionPayload!
   updateInstitution(updateInstitutionInput: UpdateInstitutionInput!): UpdateInstitutionPayload!
   updateTeacher(updateTeacherInput: UpdateTeacherInput!): UpdateTeacherPayload!
+  updateStudent(updateStudentInput: UpdateStudentInput!): UpdateStudentPayload!
+  updateStudentRecord(updateStudentRecordInput: UpdateStudentRecordInput!): UpdateStudentPayload!
   addClass(createClassInput: CreateClassInput!): CreateClassPayload!
   updateClass(updateClassInput: UpdateClassInput!): UpdateClassPayload!
   removeClass(id: String!): RemoveClassPayload!
-  updateStudent(updateStudentInput: UpdateStudentInput!): UpdateStudentPayload!
-  updateStudentRecord(updateStudentRecordInput: UpdateStudentRecordInput!): UpdateStudentPayload!
   updateParent(updateParentInput: UpdateParentInput!): UpdateParentPayload!
   createSubject(createSubjectInput: CreateSubjectInput!): CreateSubjectPayload!
   updateSubject(updateSubjectInput: UpdateSubjectInput!): UpdateSubjectPayload!
@@ -449,7 +448,6 @@ input CreateInstitutionInput {
   name: String!
   email: String!
   type: InstitutionType!
-  capacityPerClass: Int
   educationalStage: EducationStage!
   alias: String!
 }
@@ -459,7 +457,6 @@ input UpdateInstitutionInput {
   name: String
   email: String
   type: InstitutionType
-  capacityPerClass: Int
   educationalStage: EducationStage
   alias: String
 }
@@ -469,6 +466,21 @@ input UpdateTeacherInput {
   education: String
   yearsExperience: Int
   contractType: ContractType
+}
+
+input UpdateStudentInput {
+  id: String!
+  startDate: Date
+  classUUID: String
+  prevEducation: String
+  recordMessage: String
+  files: [Upload!]
+}
+
+input UpdateStudentRecordInput {
+  uuid: String!
+  recordMessage: String
+  files: [Upload!]
 }
 
 input CreateClassInput {
@@ -488,21 +500,6 @@ input UpdateClassInput {
   classNumber: Int
   classToken: String
   classTokenStatus: TokenStatus
-}
-
-input UpdateStudentInput {
-  id: String!
-  startDate: Date
-  classUUID: String
-  prevEducation: String
-  recordMessage: String
-  files: [Upload!]
-}
-
-input UpdateStudentRecordInput {
-  uuid: String!
-  recordMessage: String
-  files: [Upload!]
 }
 
 input UpdateParentInput {

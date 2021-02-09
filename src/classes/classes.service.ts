@@ -19,11 +19,14 @@ import { UpdateClassPayload } from './class-payload/update-class.payload';
 import { UpdateClassInput } from './class-input/update-class.input';
 import { CreateClassPayload } from './class-payload/create-class.payload';
 import { UsersService } from 'src/users/users.service';
-import { User } from 'src/users/user.model';
+import { User, UserRoles } from 'src/users/user.model';
+import { StudentsService } from 'src/students/students.service';
 
 @Injectable()
 export class ClassesService {
     constructor(
+        @Inject(forwardRef(() => StudentsService))
+        private readonly studentService: StudentsService,
         @Inject(forwardRef(() => TeachersService))
         private readonly teacherService: TeachersService,
         @Inject(forwardRef(() => UsersService))
@@ -85,11 +88,17 @@ export class ClassesService {
     }
 
     async findAll(currUser: User): Promise<Class[]> {
-        const institution = (await this.userService.findOne(currUser.id))
-            .institution;
-        return this.classesRepository.find({
-            where: { institution: institution },
-        });
+        const user = await this.userService.findOne(currUser.id);
+        if (user.userRole == UserRoles.STUDENT) {
+            return [
+                (await this.studentService.findOneByUserUUID(user.id)).class,
+            ];
+        } else {
+            const institution = user.institution;
+            return this.classesRepository.find({
+                where: { institution: institution },
+            });
+        }
     }
 
     async findOne(uuid: string): Promise<Class> {

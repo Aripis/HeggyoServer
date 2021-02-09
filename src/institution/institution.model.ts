@@ -71,10 +71,6 @@ export class Institution {
     })
     type: InstitutionType;
 
-    @Field(() => Int, { nullable: true })
-    @Column('tinyint', { nullable: true })
-    capacityPerClass?: number;
-
     @Field(() => EducationStage)
     @Column({
         type: 'enum',

@@ -10,7 +10,7 @@ import { UsersModule } from 'src/users/users.module';
     imports: [
         TypeOrmModule.forFeature([Student]),
         forwardRef(() => UsersModule),
-        ClassesModule,
+        forwardRef(() => ClassesModule),
     ],
     providers: [StudentsResolver, StudentsService],
     exports: [StudentsService],
