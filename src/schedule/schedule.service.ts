@@ -50,11 +50,9 @@ export class ScheduleService {
         }
 
         schedule.subject = await this.subjectService.findOne(subjectUUID);
-
         schedule.class = await this.classesService.findOne(classUUID);
 
         try {
-            // FIXME: something fails here
             const schdl = await this.scheduleRepository.save(schedule);
 
             return new CreateSchedulePayload(schdl.id);

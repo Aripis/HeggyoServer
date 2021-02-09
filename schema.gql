@@ -121,6 +121,7 @@ type Schedule {
   class: Class!
   teachers: [Teacher!]
   institution: Institution!
+  room: String!
 }
 
 enum WeekDays {
@@ -432,13 +433,10 @@ input CreateUserInput {
 scalar Upload
 
 input UpdateUserInput {
-  id: String!
   firstName: String
   middleName: String
   lastName: String
   email: String
-  password: String
-  userRole: UserRoles
   photo: Upload
 }
 
@@ -537,6 +535,7 @@ input CreateScheduleInput {
   subjectUUID: String!
   classUUID: String!
   teachersUUIDs: [String!]
+  room: String!
 }
 
 input CreateMessageInput {

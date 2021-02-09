@@ -15,7 +15,6 @@ import {
 
 export enum WeekDays {
     MONDAY = 'monday',
-
     TUESDAY = 'tuesday',
     WEDNESDAY = 'wednesday',
     THURSDAY = 'thursday',
@@ -90,4 +89,8 @@ export class Schedule {
         { eager: true },
     )
     institution: Institution;
+
+    @Field()
+    @Column()
+    room: string;
 }
