@@ -78,6 +78,22 @@ export class ParentsService {
         return parent;
     }
 
+    async findOneByUserUUID(
+        uuid: string,
+        relations?: string[],
+    ): Promise<Parent> {
+        const parents = await this.parentsRepository.find({
+            where: {
+                relations: relations,
+            },
+        });
+        const teacher = parents.find(parent => parent.user.id == uuid);
+        if (!parent) {
+            throw new NotFoundException(uuid);
+        }
+        return teacher;
+    }
+
     async remove(uuid: string): Promise<void> {
         await this.parentsRepository.delete(uuid);
     }

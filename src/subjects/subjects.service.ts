@@ -17,6 +17,7 @@ import { ClassesService } from 'src/classes/classes.service';
 import { User, UserRoles } from 'src/users/user.model';
 import { Class } from 'src/classes/class.model';
 import { StudentsService } from 'src/students/students.service';
+import { ParentsService } from 'src/parents/parents.service';
 
 @Injectable()
 export class SubjectService {
@@ -25,6 +26,7 @@ export class SubjectService {
         private readonly userService: UsersService,
         private readonly classesService: ClassesService,
         private readonly studentsService: StudentsService,
+        private readonly parentsService: ParentsService,
         @InjectRepository(Subject)
         private readonly subjectRepository: Repository<Subject>,
     ) {}
@@ -113,8 +115,21 @@ export class SubjectService {
             );
             return teacher.subjects;
         } else if (user.userRole == UserRoles.PARENT) {
-            // TODO: find all by children
-            return null;
+            const parents = await this.parentsService.findOneByUserUUID(
+                currUser.id,
+            );
+            const subjects = [];
+            const classes = parents.children.map(child => child.class);
+            for (const cls of classes) {
+                subjects.push(
+                    await this.subjectRepository.find({
+                        where: {
+                            class: cls,
+                        },
+                    }),
+                );
+            }
+            return subjects.flat();
         } else {
             return this.subjectRepository.find({
                 where: { institution: institution },
