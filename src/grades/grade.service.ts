@@ -119,7 +119,7 @@ export class GradeService {
         classId: string,
     ): Promise<StudentGrade[]> {
         const subject = await this.subjectService.findOne(subjectId);
-        const cls = await this.classesService.findOne(classId);
+        // const cls = await this.classesService.findOne(classId);
         const grades = await this.gradeRepository.find({
             where: {
                 subject: subject,
@@ -128,7 +128,7 @@ export class GradeService {
         if (!grades) {
             throw new NotFoundException(subject.id);
         }
-        return grades;
+        return grades.filter(grade => grade.subject.id === subject.id);
     }
 
     async remove(gradeUUID: string): Promise<GradePayload> {

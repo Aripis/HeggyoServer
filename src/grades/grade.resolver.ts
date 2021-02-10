@@ -30,9 +30,8 @@ export class GradeResolver {
     gradesPerClassPerSubject(
         @Args('classId') classId: string,
         @Args('subjectId') subjectId: string,
-        @CurrentUser() currUser: User,
     ): Promise<StudentGrade[]> {
-        return this.gradeService.findAllForOneSubject(classId, subjectId);
+        return this.gradeService.findAllForOneSubject(subjectId, classId);
     }
 
     @Mutation(() => GradePayload)

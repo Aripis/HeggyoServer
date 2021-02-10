@@ -121,18 +121,6 @@ export class StudentsService {
         return students.filter(student =>
             usersUUIDs.includes(student?.user?.id),
         );
-        // .map(student => {
-        //     student.dossier.map(dossier =>);
-        //     return student;
-        // })
-        // .flat();
-        // .map(student => student.dossier.map(dossier => {}));
-        // {
-        //     student.dossier.studentFiles = students?.dossier?.studentFiles.map(
-        //         file => this.fileService.getCloudFile(file),
-        //     );
-        //     return message;
-        // }
     }
 
     async findAllForEachClass(
