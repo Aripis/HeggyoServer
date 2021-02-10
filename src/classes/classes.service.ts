@@ -112,12 +112,12 @@ export class ClassesService {
 
             const teacherClasses = allClasses.filter(cls =>
                 cls.subjects?.filter(subject =>
-                    subject.teachers?.filter(tchr => tchr.id === teacher.id),
+                    subject.teachers?.filter(tchr => tchr?.id === teacher.id),
                 ),
             );
 
             return [
-                ...allClasses.filter(cls => cls.teacher.id === teacher.id),
+                ...allClasses.filter(cls => cls?.teacher?.id === teacher.id),
                 ...teacherClasses,
             ];
         } else {
