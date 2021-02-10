@@ -25,6 +25,16 @@ export class GradeResolver {
         return this.gradeService.findAllForOneStudent(studentUUID, currUser);
     }
 
+    @Query(() => [StudentGrade])
+    @UseGuards(GqlAuthGuard)
+    gradesPerClassPerSubject(
+        @Args('classId') classId: string,
+        @Args('subjectId') subjectId: string,
+        @CurrentUser() currUser: User,
+    ): Promise<StudentGrade[]> {
+        return this.gradeService.findAllForOneSubject(classId, subjectId);
+    }
+
     @Mutation(() => GradePayload)
     @UseGuards(GqlAuthGuard)
     addGrade(

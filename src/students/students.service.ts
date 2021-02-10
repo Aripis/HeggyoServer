@@ -178,6 +178,14 @@ export class StudentsService {
         if (!student) {
             throw new NotFoundException(uuid);
         }
+
+        student.dossier = student.dossier.map(dossier => {
+            dossier.studentFiles = dossier.studentFiles.map(file =>
+                this.fileService.getCloudFile(file),
+            );
+            return dossier;
+        });
+
         return student;
     }
 

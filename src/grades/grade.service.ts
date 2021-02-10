@@ -114,8 +114,12 @@ export class GradeService {
         return grades;
     }
 
-    async findAllForOneSubject(subjectUUID: string): Promise<StudentGrade[]> {
-        const subject = await this.subjectService.findOne(subjectUUID);
+    async findAllForOneSubject(
+        subjectId: string,
+        classId: string,
+    ): Promise<StudentGrade[]> {
+        const subject = await this.subjectService.findOne(subjectId);
+        const cls = await this.classesService.findOne(classId);
         const grades = await this.gradeRepository.find({
             where: {
                 subject: subject,

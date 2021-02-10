@@ -373,6 +373,7 @@ type Query {
   studentDossiers: [StudentDossier!]!
   studentDossier(studentId: String!): FindOneStudentDossierPayload!
   studentGrades(studentUUID: String!): [StudentGrade!]!
+  gradesPerClassPerSubject(subjectId: String!, classId: String!): [StudentGrade!]!
 }
 
 input LoginInput {

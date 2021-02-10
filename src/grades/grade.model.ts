@@ -74,6 +74,7 @@ export class StudentGrade {
     @ManyToOne(
         () => Student,
         student => student.grades,
+        { eager: true },
     )
     student: Student;
 
