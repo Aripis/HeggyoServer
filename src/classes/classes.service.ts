@@ -109,16 +109,25 @@ export class ClassesService {
                     institution: user.institution,
                 },
             });
-
-            const teacherClasses = allClasses.filter(cls =>
-                cls.subjects?.filter(subject =>
-                    subject.teachers?.filter(tchr => tchr?.id === teacher.id),
-                ),
-            );
+            const teacherClasses = allClasses
+                .map(cls => {
+                    if (
+                        teacher.subjects
+                            .map(s => s.id)
+                            .some(r => cls.subjects.map(s => s.id).includes(r))
+                    ) {
+                        return cls;
+                    }
+                })
+                .filter(cls => cls);
 
             return [
-                ...allClasses.filter(cls => cls?.teacher?.id === teacher.id),
-                ...teacherClasses,
+                ...new Set([
+                    ...allClasses.filter(
+                        cls => cls?.teacher?.id === teacher.id,
+                    ),
+                    ...teacherClasses,
+                ]),
             ];
         } else if (user.userRole == UserRoles.ADMIN) {
             const institution = user.institution;

@@ -16,6 +16,7 @@ import { UpdateStudentPayload } from './student-payload/update-student.payload';
 import { UsersService } from 'src/users/users.service';
 import { GetStudentTokenPayload } from './student-payload/get-student-token.payload';
 import { UpdateStudentRecordInput } from './student-input/update-student-record.input';
+import { FileService } from 'src/file/file.service';
 
 @Injectable()
 export class StudentsService {
@@ -24,6 +25,7 @@ export class StudentsService {
         private readonly classesService: ClassesService,
         @Inject(forwardRef(() => UsersService))
         private readonly userService: UsersService,
+        private readonly fileService: FileService,
 
         @InjectRepository(Student)
         private readonly studentsRepository: Repository<Student>,
@@ -119,6 +121,18 @@ export class StudentsService {
         return students.filter(student =>
             usersUUIDs.includes(student?.user?.id),
         );
+        // .map(student => {
+        //     student.dossier.map(dossier =>);
+        //     return student;
+        // })
+        // .flat();
+        // .map(student => student.dossier.map(dossier => {}));
+        // {
+        //     student.dossier.studentFiles = students?.dossier?.studentFiles.map(
+        //         file => this.fileService.getCloudFile(file),
+        //     );
+        //     return message;
+        // }
     }
 
     async findAllForEachClass(

@@ -5,12 +5,14 @@ import { StudentsService } from './students.service';
 import { ClassesModule } from 'src/classes/classes.module';
 import { StudentsResolver } from './students.resolver';
 import { UsersModule } from 'src/users/users.module';
+import { FileModule } from 'src/file/file.module';
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([Student]),
         forwardRef(() => UsersModule),
         forwardRef(() => ClassesModule),
+        FileModule,
     ],
     providers: [StudentsResolver, StudentsService],
     exports: [StudentsService],
