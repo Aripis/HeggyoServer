@@ -1,5 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { Max, Min } from 'class-validator';
+import { GradeTypes } from '../grade.model';
 // import { UploadScalar } from 'src/common/scalars/upload.scalar';
 
 @InputType()
@@ -20,4 +21,7 @@ export class AddGradeInput {
 
     @Field()
     gradeWithWords: string;
+
+    @Field(() => GradeTypes)
+    type: GradeTypes;
 }

@@ -17,6 +17,8 @@ import { UsersService } from 'src/users/users.service';
 import { GetStudentTokenPayload } from './student-payload/get-student-token.payload';
 import { UpdateStudentRecordInput } from './student-input/update-student-record.input';
 import { FileService } from 'src/file/file.service';
+import { Teacher } from 'src/teachers/teacher.model';
+import { TeachersService } from 'src/teachers/teachers.service';
 
 @Injectable()
 export class StudentsService {
@@ -26,6 +28,7 @@ export class StudentsService {
         @Inject(forwardRef(() => UsersService))
         private readonly userService: UsersService,
         private readonly fileService: FileService,
+        private readonly teachersService: TeachersService,
 
         @InjectRepository(Student)
         private readonly studentsRepository: Repository<Student>,
@@ -189,5 +192,19 @@ export class StudentsService {
 
     async remove(uuid: string): Promise<void> {
         await this.studentsRepository.delete(uuid);
+    }
+
+    async veryfyTeacherToStudent(
+        student: Student,
+        teacher: Teacher,
+    ): Promise<boolean> {
+        const cls = await this.classesService.findOne(student.class.id);
+        const tchr = await this.teachersService.findOneByUserUUID(
+            teacher.user.id,
+        );
+
+        return tchr.subjects
+            .map(s => s.id)
+            .some(r => cls.subjects.map(s => s.id).includes(r));
     }
 }

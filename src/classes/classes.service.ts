@@ -143,6 +143,12 @@ export class ClassesService {
         });
         if (!studentsClass) {
             studentsClass = await this.classesRepository.findOne({
+                join: {
+                    alias: 'subject',
+                    leftJoinAndSelect: {
+                        subjects: 'subject.subjects',
+                    },
+                },
                 where: {
                     classToken: uuid,
                 },

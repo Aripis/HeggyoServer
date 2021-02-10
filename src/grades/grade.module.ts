@@ -8,6 +8,7 @@ import { GradeService } from './grade.service';
 import { SubjectsModule } from 'src/subjects/subjects.module';
 import { UsersModule } from 'src/users/users.module';
 import { ClassesModule } from 'src/classes/classes.module';
+import { TeachersModule } from 'src/teachers/teachers.module';
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import { ClassesModule } from 'src/classes/classes.module';
         SubjectsModule,
         UsersModule,
         ClassesModule,
+        TeachersModule,
     ],
     providers: [GradeResolver, GradeService, DateScalar],
     exports: [GradeService],

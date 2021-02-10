@@ -568,4 +568,5 @@ input AddGradeInput {
   message: String!
   grade: Float!
   gradeWithWords: String!
+  type: GradeTypes!
 }

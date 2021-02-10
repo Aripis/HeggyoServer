@@ -18,6 +18,7 @@ import { UsersService } from 'src/users/users.service';
 import { UpdateGradeInput } from './grade-input/update-grade.input';
 import { ClassesService } from 'src/classes/classes.service';
 import { Subject } from 'src/subjects/subject.model';
+import { TeachersService } from 'src/teachers/teachers.service';
 
 @Injectable()
 export class GradeService {
@@ -26,6 +27,7 @@ export class GradeService {
         private readonly userService: UsersService,
         private readonly classesService: ClassesService,
         private readonly studentService: StudentsService,
+        private readonly teacherService: TeachersService,
 
         @InjectRepository(StudentGrade)
         private readonly gradeRepository: Repository<StudentGrade>,
@@ -40,11 +42,27 @@ export class GradeService {
             grade.subject = await this.subjectService.findOne(subjectUUID);
         }
 
+        grade.fromUser = await this.userService.findOne(currUser.id);
+
         if (studentId) {
             grade.student = await this.studentService.findOne(studentId);
-        }
+            const teacher = await this.teacherService.findOneByUserUUID(
+                grade.fromUser.id,
+            );
 
-        grade.fromUser = await this.userService.findOne(currUser.id);
+            if (
+                !this.studentService.veryfyTeacherToStudent(
+                    grade.student,
+                    teacher,
+                ) &&
+                grade.fromUser.userRole !== UserRoles.ADMIN &&
+                grade.fromUser.userRole !== UserRoles.TEACHER
+            ) {
+                throw new UnauthorizedException(
+                    '[Add-Grade] Teacher can not grade this student',
+                );
+            }
+        }
 
         if (grade.fromUser.userRole != UserRoles.TEACHER) {
             throw new UnauthorizedException('[Create-Grade] Invalid user role');

@@ -6,12 +6,14 @@ import { ClassesModule } from 'src/classes/classes.module';
 import { StudentsResolver } from './students.resolver';
 import { UsersModule } from 'src/users/users.module';
 import { FileModule } from 'src/file/file.module';
+import { TeachersModule } from 'src/teachers/teachers.module';
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([Student]),
         forwardRef(() => UsersModule),
         forwardRef(() => ClassesModule),
+        forwardRef(() => TeachersModule),
         FileModule,
     ],
     providers: [StudentsResolver, StudentsService],
