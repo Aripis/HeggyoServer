@@ -120,9 +120,9 @@ export class ClassesService {
                 ...allClasses.filter(cls => cls?.teacher?.id === teacher.id),
                 ...teacherClasses,
             ];
-        } else {
+        } else if (user.userRole == UserRoles.ADMIN) {
             const institution = user.institution;
-            return this.classesRepository.find({
+            return await this.classesRepository.find({
                 where: { institution: institution },
             });
         }

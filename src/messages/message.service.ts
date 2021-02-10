@@ -3,6 +3,7 @@ import {
     ConflictException,
     InternalServerErrorException,
     NotFoundException,
+    All,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -10,7 +11,7 @@ import { UsersService } from 'src/users/users.service';
 import { Message, MessageStatus, MessageType } from './message.model';
 import { CreateMessageInput } from './messages-input/create-message.input';
 import { UpdateMessageInput } from './messages-input/update-message.input';
-import { User } from 'src/users/user.model';
+import { User, UserRoles } from 'src/users/user.model';
 import { CreateMessagePayload } from './messages-payload/create-message.payload';
 import { RemoveMessagePayload } from './messages-payload/remove-message.payload';
 import { UpdateMessagePayload } from './messages-payload/update-message.payload';
@@ -113,7 +114,6 @@ export class MessageService {
 
         try {
             const msg = await this.messageRepository.save(message);
-            console.log(msg);
             await this.mailerService.sendMail({
                 bcc: userEmails,
                 from: `${message.from.firstName} ${message.from.lastName} [Heggyo] <heggyoapp@gmail.com>`,
@@ -170,16 +170,40 @@ export class MessageService {
 
     async findAll(currUser: User): Promise<Message[]> {
         const user = await this.userService.findOne(currUser.id);
-        const messages = await this.messageRepository.find({
-            where: { from: user },
-        });
+        const messages = await this.messageRepository.find();
 
-        return messages.map(message => {
-            message.files = message.files.map(file =>
-                this.fileService.getCloudFile(file),
+        if (user.userRole == UserRoles.STUDENT) {
+            const student = await this.studentService.findOneByUserUUID(
+                user.id,
             );
-            return message;
-        });
+            return messages
+                .filter(
+                    message =>
+                        message.toUser.map(user => user.id).includes(user.id) ||
+                        message.toClasses
+                            .map(cls => cls.id)
+                            .includes(student.class.id),
+                )
+                .map(message => {
+                    message.files = message.files.map(file =>
+                        this.fileService.getCloudFile(file),
+                    );
+                    return message;
+                });
+        }
+
+        return messages
+            .filter(
+                message =>
+                    message.from.id == user.id ||
+                    message.toUser.map(user => user.id).includes(user.id),
+            )
+            .map(message => {
+                message.files = message.files.map(file =>
+                    this.fileService.getCloudFile(file),
+                );
+                return message;
+            });
     }
 
     async findOne(uuid: string): Promise<Message> {
