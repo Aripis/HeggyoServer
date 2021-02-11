@@ -51,7 +51,7 @@ export class GradeService {
             );
 
             if (
-                !this.studentService.veryfyTeacherToStudent(
+                !this.studentService.verifyTeacherToStudent(
                     grade.student,
                     teacher,
                 ) &&

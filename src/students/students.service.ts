@@ -201,7 +201,7 @@ export class StudentsService {
         await this.studentsRepository.delete(uuid);
     }
 
-    async veryfyTeacherToStudent(
+    async verifyTeacherToStudent(
         student: Student,
         teacher: Teacher,
     ): Promise<boolean> {
@@ -212,6 +212,6 @@ export class StudentsService {
 
         return tchr.subjects
             .map(s => s.id)
-            .some(r => cls.subjects.map(s => s.id).includes(r));
+            .some(r => cls.subjects?.map(s => s.id).includes(r));
     }
 }
