@@ -1,5 +1,6 @@
-import { Field, InputType, registerEnumType, Int } from '@nestjs/graphql';
 import { InstitutionType, EducationStage } from '../institution.model';
+import { Field, InputType, registerEnumType } from '@nestjs/graphql';
+import { IsEmail } from 'class-validator';
 
 registerEnumType(InstitutionType, {
     name: 'InstitutionType',
@@ -20,6 +21,7 @@ export class UpdateInstitutionInput {
     name?: string;
 
     @Field({ nullable: true })
+    @IsEmail()
     email?: string;
 
     @Field(() => InstitutionType, { nullable: true })

@@ -1,28 +1,26 @@
 import {
-    Injectable,
-    NotFoundException,
-    BadRequestException,
     UnauthorizedException,
+    BadRequestException,
+    NotFoundException,
+    Injectable,
 } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
 import { JwtService, JwtVerifyOptions } from '@nestjs/jwt';
-import { LoginInput } from './login.input';
+import { UserService } from '../user/user.service';
 import { ConfigService } from '@nestjs/config';
+import { LoginInput } from './login.input';
 import { Token } from './token.model';
 import * as bcrypt from 'bcrypt';
-import { Institution } from 'src/institution/institution.model';
 
 @Injectable()
 export class AuthService {
     constructor(
-        private readonly usersService: UsersService,
         private readonly jwtService: JwtService,
         private readonly configService: ConfigService,
-        private readonly userService: UsersService,
+        private readonly userService: UserService,
     ) {}
 
     async validateUser(email: string, pass: string) {
-        const user = await this.usersService.findOne(email);
+        const user = await this.userService.findOne(email);
         if (user) {
             if (await bcrypt.compare(pass, user.password)) {
                 const refreshToken = this.jwtService.sign(
@@ -64,11 +62,8 @@ export class AuthService {
         }
     }
 
-    async login(loginInput: LoginInput): Promise<Token> {
-        const result = await this.validateUser(
-            loginInput.email,
-            loginInput.password,
-        );
+    async login(input: LoginInput): Promise<Token> {
+        const result = await this.validateUser(input.email, input.password);
         return {
             accessToken: this.jwtService.sign({ sub: result.id }),
             refreshToken: result.refreshToken,

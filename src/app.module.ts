@@ -1,44 +1,25 @@
-import { Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { initDB } from './ormconfig';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
-import { InstitutionsModule } from './institution/institutions.module';
-import { ClassesModule } from './classes/classes.module';
-import { SubjectsModule } from './subjects/subjects.module';
-import { ScheduleModule } from './schedule/schedule.module';
-import { MessageModule } from './messages/message.module';
-import { StudentDossierModule } from './dossier/student-dossier.module';
-import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import { GradeModule } from './grades/grade.module';
+import { StudentDossierModule } from './student-dossier/student-dossier.module';
+import { InstitutionModule } from './institution/institution.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ScheduleModule } from './schedule/schedule.module';
+import { MessageModule } from './message/message.module';
+import { SubjectModule } from './subject/subject.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { ClassModule } from './class/class.module';
+import { GradeModule } from './grade/grade.module';
+import { AppController } from './app.controller';
+import { GraphQLModule } from '@nestjs/graphql';
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 import { FileModule } from './file/file.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppService } from './app.service';
+import { Module } from '@nestjs/common';
+import { initDB } from './ormconfig';
 
 @Module({
     imports: [
-        ConfigModule.forRoot({ isGlobal: true, load: [initDB] }),
-        TypeOrmModule.forRootAsync({
-            inject: [ConfigService],
-            useFactory: async (configService: ConfigService) =>
-                configService.get('database'),
-        }),
-        GraphQLModule.forRoot({
-            installSubscriptionHandlers: true,
-            autoSchemaFile:
-                process.env.NODE_ENV === 'production' ? true : 'schema.gql',
-            context: ({ req, res }) => ({ req, res }),
-            cors: {
-                origin:
-                    process.env.NODE_ENV === 'production'
-                        ? [/^https:\/\/heggyo-client.*\.vercel\.app$/]
-                        : 'http://localhost:3000',
-                credentials: true,
-            },
-        }),
         MailerModule.forRootAsync({
             inject: [ConfigService],
             useFactory: async (configService: ConfigService) => ({
@@ -58,11 +39,30 @@ import { FileModule } from './file/file.module';
                 },
             }),
         }),
-        UsersModule,
+        GraphQLModule.forRoot({
+            installSubscriptionHandlers: true,
+            autoSchemaFile:
+                process.env.NODE_ENV === 'production' ? true : 'schema.gql',
+            context: ({ req, res }) => ({ req, res }),
+            cors: {
+                origin:
+                    process.env.NODE_ENV === 'production'
+                        ? [/^https:\/\/heggyo-client.*\.vercel\.app$/]
+                        : 'http://localhost:3000',
+                credentials: true,
+            },
+        }),
+        TypeOrmModule.forRootAsync({
+            inject: [ConfigService],
+            useFactory: async (configService: ConfigService) =>
+                configService.get('database'),
+        }),
+        ConfigModule.forRoot({ isGlobal: true, load: [initDB] }),
+        UserModule,
         AuthModule,
-        InstitutionsModule,
-        ClassesModule,
-        SubjectsModule,
+        InstitutionModule,
+        ClassModule,
+        SubjectModule,
         ScheduleModule,
         MessageModule,
         StudentDossierModule,

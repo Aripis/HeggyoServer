@@ -1,8 +1,3 @@
-import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { Class } from 'src/classes/class.model';
-import { Institution } from 'src/institution/institution.model';
-import { Subject } from 'src/subjects/subject.model';
-import { Teacher } from 'src/teachers/teacher.model';
 import {
     Column,
     Entity,
@@ -12,6 +7,11 @@ import {
     PrimaryGeneratedColumn,
     Unique,
 } from 'typeorm';
+import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Institution } from 'src/institution/institution.model';
+import { Subject } from 'src/subject/subject.model';
+import { Teacher } from 'src/teacher/teacher.model';
+import { Class } from 'src/class/class.model';
 
 export enum WeekDays {
     MONDAY = 'monday',

@@ -1,13 +1,12 @@
-import { UseGuards } from '@nestjs/common';
+import { AddScheduleInput } from './schedule-input/add-schedule.input';
+import { SchedulePayload } from './schedule-payload/schedule.payload';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { CurrentUser } from 'src/auth/currentuser.decorator';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
-import { User } from 'src/users/user.model';
-import { CreateScheduleInput } from './schedule-input/create-schedule.input';
-import { CreateSchedulePayload } from './schedule-payload/create-schedule.payload';
-import { RemoveSchedulePayload } from './schedule-payload/remove-schedule.payload';
-import { Schedule } from './schedule.model';
+import { CurrentUser } from 'src/auth/currentuser.decorator';
 import { ScheduleService } from './schedule.service';
+import { Schedule } from './schedule.model';
+import { UseGuards } from '@nestjs/common';
+import { User } from 'src/user/user.model';
 
 @Resolver(() => Schedule)
 export class ScheduleResolver {
@@ -15,43 +14,45 @@ export class ScheduleResolver {
 
     @Query(() => Schedule)
     @UseGuards(GqlAuthGuard)
-    schedule(@Args('id') uuid: string): Promise<Schedule> {
-        return this.scheduleService.findOne(uuid);
+    getSchedule(@Args('id') id: string): Promise<Schedule> {
+        return this.scheduleService.findOne(id);
     }
 
     @Query(() => [Schedule])
     @UseGuards(GqlAuthGuard)
-    schedules(@CurrentUser() currUser: User): Promise<Schedule[]> {
+    getAllSchedules(@CurrentUser() currUser: User): Promise<Schedule[]> {
         return this.scheduleService.findAll(currUser);
     }
 
     @Query(() => [Schedule])
     @UseGuards(GqlAuthGuard)
-    schedulesByClass(
-        @Args('classId') uuid: string,
+    getAllSchedulesByClass(
+        @Args('classId') id: string,
         @CurrentUser() currUser: User,
     ): Promise<Schedule[]> {
-        return this.scheduleService.findAllByClass(uuid, currUser);
+        return this.scheduleService.findAllByClass(id, currUser);
     }
 
-    @Mutation(() => CreateSchedulePayload)
+    @Mutation(() => SchedulePayload)
     @UseGuards(GqlAuthGuard)
-    createSchedule(
-        @Args('createScheduleInput') createScheduleInput: CreateScheduleInput,
+    addSchedule(
+        @Args('input') input: AddScheduleInput,
         @CurrentUser() currUser: User,
-    ): Promise<CreateSchedulePayload> {
-        return this.scheduleService.create(createScheduleInput, currUser);
+    ): Promise<SchedulePayload> {
+        return this.scheduleService.add(input, currUser);
     }
 
-    @Mutation(() => RemoveSchedulePayload)
+    @Mutation(() => SchedulePayload)
     @UseGuards(GqlAuthGuard)
-    removeSchedule(@Args('id') uuid: string): Promise<RemoveSchedulePayload> {
-        return this.scheduleService.remove(uuid);
+    removeSchedule(@Args('id') id: string): Promise<SchedulePayload> {
+        return this.scheduleService.remove(id);
     }
 
-    @Mutation(() => Boolean)
+    @Mutation(() => SchedulePayload)
     @UseGuards(GqlAuthGuard)
-    removeSchedulesByClass(@Args('classId') uuid: string): Promise<boolean> {
-        return this.scheduleService.removeAllByClass(uuid);
+    removeSchedulesByClass(
+        @Args('classId') id: string,
+    ): Promise<SchedulePayload> {
+        return this.scheduleService.removeAllByClass(id);
     }
 }

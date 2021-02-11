@@ -1,14 +1,16 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { StudentDossier } from 'src/dossier/student_dossier.model';
-import { Student } from 'src/students/student.model';
 import {
     Column,
+    CreateDateColumn,
     Entity,
     ManyToMany,
     ManyToOne,
     PrimaryGeneratedColumn,
+    UpdateDateColumn,
 } from 'typeorm';
-import { Message } from '../messages/message.model';
+import { StudentDossier } from 'src/student-dossier/student-dossier.model';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Student } from 'src/student/student.model';
+import { Message } from 'src/message/message.model';
 
 @ObjectType()
 @Entity()
@@ -16,6 +18,14 @@ export class File {
     @Field(() => ID)
     @PrimaryGeneratedColumn('uuid')
     id: string;
+
+    @Field()
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @Field()
+    @UpdateDateColumn()
+    updatedAt: Date;
 
     @Field()
     @Column()
@@ -49,10 +59,10 @@ export class File {
     @Field(() => [StudentDossier])
     @ManyToMany(
         () => StudentDossier,
-        student => student.studentFiles,
+        studentDossier => studentDossier.files,
         {
             nullable: true,
         },
     )
-    dossiers?: StudentDossier[];
+    studentDossiers?: StudentDossier[];
 }

@@ -1,17 +1,17 @@
-/* eslint-disable @typescript-eslint/camelcase */
-import { Injectable } from '@nestjs/common';
-import { CreateWriteStreamOptions, Storage } from '@google-cloud/storage';
-import { File } from './file.model';
 import { MetadataResponse } from '@google-cloud/common/build/src/service-object';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { ConfigService } from '@nestjs/config';
+import { CreateWriteStreamOptions, Storage } from '@google-cloud/storage';
 import { streamToBuffer } from '@jorgeferrero/stream-to-buffer';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ConfigService } from '@nestjs/config';
+import { Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { File } from './file.model';
 
 @Injectable()
 export class FileService {
     constructor(
         private readonly configService: ConfigService,
+
         @InjectRepository(File)
         private readonly fileRepository: Repository<File>,
     ) {}
@@ -22,6 +22,7 @@ export class FileService {
 
     private credentials = {
         ...this.rawCredentials,
+        // eslint-disable-next-line @typescript-eslint/camelcase
         private_key: this.rawCredentials.private_key.replace(/\\n/g, '\n'),
     };
 
@@ -39,6 +40,7 @@ export class FileService {
     ): Promise<MetadataResponse[0]> {
         const file = this.gcloudStorage.bucket(bucket).file(path);
         const [{ id, name, contentType, mediaLink }] = await file.getMetadata();
+
         return {
             id,
             name,
@@ -49,6 +51,7 @@ export class FileService {
 
     getCloudFile(file: File, bucket = this.defaultBucket): File {
         file.publicUrl = `https://storage.googleapis.com/${bucket}/${file.cloudFilename}`;
+
         return file;
     }
 

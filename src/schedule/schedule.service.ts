@@ -4,102 +4,109 @@ import {
     InternalServerErrorException,
     NotFoundException,
 } from '@nestjs/common';
+import { AddScheduleInput } from './schedule-input/add-schedule.input';
+import { SchedulePayload } from './schedule-payload/schedule.payload';
+import { SubjectService } from 'src/subject/subject.service';
+import { TeacherService } from 'src/teacher/teacher.service';
+import { ClassService } from 'src/class/class.service';
+import { UserService } from 'src/user/user.service';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ClassesService } from 'src/classes/classes.service';
-import { SubjectService } from 'src/subjects/subjects.service';
-import { TeachersService } from 'src/teachers/teachers.service';
-import { User } from 'src/users/user.model';
-import { UsersService } from 'src/users/users.service';
-import { Repository } from 'typeorm';
-import { CreateScheduleInput } from './schedule-input/create-schedule.input';
-import { CreateSchedulePayload } from './schedule-payload/create-schedule.payload';
-import { RemoveSchedulePayload } from './schedule-payload/remove-schedule.payload';
+import { User } from 'src/user/user.model';
 import { Schedule } from './schedule.model';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ScheduleService {
     constructor(
         private readonly subjectService: SubjectService,
-        private readonly classesService: ClassesService,
-        private readonly teacherService: TeachersService,
-        private readonly userService: UsersService,
+        private readonly classService: ClassService,
+        private readonly teacherService: TeacherService,
+        private readonly userService: UserService,
 
         @InjectRepository(Schedule)
         private readonly scheduleRepository: Repository<Schedule>,
     ) {}
 
-    async create(
-        createScheduleInput: CreateScheduleInput,
+    async add(
+        input: AddScheduleInput,
         currUser: User,
-    ): Promise<CreateSchedulePayload> {
-        const schedule = new Schedule();
-        const { subjectUUID, classUUID, ...data } = createScheduleInput;
-        schedule.institution = (
+    ): Promise<SchedulePayload> {
+        const newSchedule = new Schedule();
+        const { subjectId, classId, ...data } = input;
+
+        newSchedule.institution = (
             await this.userService.findOne(currUser.id)
         ).institution;
-        if (data.teachersUUIDs) {
-            const { teachersUUIDs, ...info } = data;
+
+        if (data.teachersIds) {
+            const { teachersIds, ...info } = data;
             const teachers = [];
-            for (const uuid of teachersUUIDs) {
-                teachers.push(await this.teacherService.findOne(uuid));
+
+            for (const id of teachersIds) {
+                teachers.push(await this.teacherService.findOne(id));
             }
-            schedule.teachers = teachers;
-            Object.assign(schedule, info);
+
+            newSchedule.teachers = teachers;
+            Object.assign(newSchedule, info);
         } else {
-            Object.assign(schedule, data);
+            Object.assign(newSchedule, data);
         }
 
-        schedule.subject = await this.subjectService.findOne(subjectUUID);
-        schedule.class = await this.classesService.findOne(classUUID);
+        newSchedule.subject = await this.subjectService.findOne(subjectId);
+        newSchedule.class = await this.classService.findOne(classId);
 
         try {
-            const schdl = await this.scheduleRepository.save(schedule);
-
-            return new CreateSchedulePayload(schdl.id);
+            return new SchedulePayload(
+                (await this.scheduleRepository.save(newSchedule)).id,
+            );
         } catch (error) {
             if (error.code === 'ER_DUP_ENTRY') {
-                throw new ConflictException('This Class already exists');
+                throw new ConflictException(
+                    '[Add-Schedule] This Schedule already exists',
+                );
             }
             throw new InternalServerErrorException(error);
         }
     }
 
-    async findOne(uuid: string): Promise<Schedule> {
-        const schedule = await this.scheduleRepository.findOne(uuid);
+    async findOne(id: string): Promise<Schedule> {
+        const schedule = await this.scheduleRepository.findOne(id);
+
         if (!schedule) {
-            throw new NotFoundException(uuid);
+            throw new NotFoundException(id);
         }
+
         return schedule;
     }
 
     async findAll(currUser: User): Promise<Schedule[]> {
         const institution = (await this.userService.findOne(currUser.id))
             .institution;
+
         return this.scheduleRepository.find({
             where: { institution: institution },
         });
     }
 
-    async findAllByClass(
-        classUUID: string,
-        currUser: User,
-    ): Promise<Schedule[]> {
+    async findAllByClass(classId: string, currUser: User): Promise<Schedule[]> {
         const institution = (await this.userService.findOne(currUser.id))
             .institution;
         const schedules = await this.scheduleRepository.find({
             where: { institution: institution },
         });
-        return schedules.filter(schedule => schedule.class.id === classUUID);
+
+        return schedules.filter(schedule => schedule.class.id === classId);
     }
 
-    async remove(uuid: string): Promise<RemoveSchedulePayload> {
-        await this.scheduleRepository.delete(uuid);
-        return new RemoveSchedulePayload(uuid);
+    async remove(id: string): Promise<SchedulePayload> {
+        await this.scheduleRepository.delete(id);
+        return new SchedulePayload(id);
     }
 
-    async removeAllByClass(classUUID: string): Promise<boolean> {
-        const scheduleClass = await this.classesService.findOne(classUUID);
+    async removeAllByClass(classId: string): Promise<SchedulePayload> {
+        const scheduleClass = await this.classService.findOne(classId);
+
         await this.scheduleRepository.delete({ class: scheduleClass });
-        return true;
+        return new SchedulePayload(classId);
     }
 }

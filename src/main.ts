@@ -21,7 +21,6 @@ const bootstrap = async () => {
             process.env.NODE_ENV === 'production'
                 ? [/^https:\/\/heggyo-client.*\.vercel\.app$/]
                 : 'http://localhost:3000',
-        exposedHeaders: ['Authorization'],
         credentials: true,
     });
 

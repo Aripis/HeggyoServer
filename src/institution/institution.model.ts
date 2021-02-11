@@ -1,35 +1,33 @@
-import { Field, registerEnumType, ID, ObjectType, Int } from '@nestjs/graphql';
-import { Length } from 'class-validator';
-import { Schedule } from 'src/schedule/schedule.model';
-import { Subject } from 'src/subjects/subject.model';
-import { User } from 'src/users/user.model';
 import {
     Column,
     CreateDateColumn,
     Entity,
-    ManyToMany,
     OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
+import { Field, registerEnumType, ID, ObjectType } from '@nestjs/graphql';
+import { Schedule } from 'src/schedule/schedule.model';
+import { Subject } from 'src/subject/subject.model';
+import { User } from 'src/user/user.model';
+import { IsEmail } from 'class-validator';
 
 export enum InstitutionType {
-    TECHNOLOGICAL,
-    MATHEMATICAL,
-    NATURAL_MATHEMATICAL,
-    HUMANITARIAN,
-    ART,
-    LINGUISTICAL,
-    SU,
-    OU,
+    NATURAL_MATHEMATICAL = 'natural_mathematical',
+    TECHNOLOGICAL = 'technological',
+    LINGUISTICAL = 'linguistical',
+    MATHEMATICAL = 'mathematical',
+    HUMANITARIAN = 'humanitarian',
+    ART = 'art',
+    SU = 'su',
+    OU = 'ou',
 }
 
 export enum EducationStage {
-    ELEMENTARY,
-    PRIMARY,
-    UNITED,
-    HIGH,
-    SECONDARY,
+    ELEMENTARY = 'elementary',
+    PRIMARY = 'primary',
+    UNITED = 'united',
+    HIGH = 'high',
 }
 
 registerEnumType(InstitutionType, {
@@ -43,17 +41,17 @@ registerEnumType(EducationStage, {
 @ObjectType()
 @Entity()
 export class Institution {
-    @Field()
-    @CreateDateColumn()
-    public createdAt: Date;
-
-    @Field()
-    @UpdateDateColumn()
-    public updatedAt: Date;
-
     @Field(() => ID)
     @PrimaryGeneratedColumn('uuid')
     id: string;
+
+    @Field()
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @Field()
+    @UpdateDateColumn()
+    updatedAt: Date;
 
     @Field()
     @Column({ unique: true })
@@ -61,13 +59,13 @@ export class Institution {
 
     @Field()
     @Column({ unique: true })
+    @IsEmail()
     email: string;
 
     @Field(() => InstitutionType)
     @Column({
         type: 'enum',
         enum: InstitutionType,
-        nullable: false,
     })
     type: InstitutionType;
 
@@ -75,13 +73,11 @@ export class Institution {
     @Column({
         type: 'enum',
         enum: EducationStage,
-        nullable: false,
     })
     educationalStage: EducationStage;
 
     @Field()
     @Column({ unique: true })
-    @Length(5)
     alias: string;
 
     @Field(() => [User], { nullable: true })
@@ -90,7 +86,7 @@ export class Institution {
         user => user.institution,
         { nullable: true },
     )
-    user?: User[];
+    users?: User[];
 
     @Field(() => [Subject], { nullable: true })
     @OneToMany(

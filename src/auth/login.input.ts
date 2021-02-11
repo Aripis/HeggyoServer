@@ -1,11 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Field, InputType } from '@nestjs/graphql';
+import { IsEmail } from 'class-validator';
 
 @InputType()
 export class LoginInput {
-    @Field({ nullable: false })
+    @Field()
+    @IsEmail()
     email: string;
 
-    @Field({ nullable: false })
+    @Field()
     password: string;
 }
