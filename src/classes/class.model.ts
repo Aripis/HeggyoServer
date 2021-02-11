@@ -86,7 +86,7 @@ export class Class {
     )
     schedules: Schedule[];
 
-    @Field(() => [Subject])
+    @Field(() => [Subject], { nullable: true })
     @OneToMany(
         () => Subject,
         subject => subject.class,

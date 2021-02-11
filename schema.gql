@@ -161,7 +161,7 @@ type Class {
   classToken: String!
   classTokenStatus: TokenStatus!
   schedules: [Schedule!]!
-  subjects: [Subject!]!
+  subjects: [Subject!]
   messages: [Message!]!
 }
 

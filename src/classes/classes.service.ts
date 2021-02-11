@@ -131,9 +131,10 @@ export class ClassesService {
             ];
         } else if (user.userRole == UserRoles.ADMIN) {
             const institution = user.institution;
-            return this.classesRepository.find({
+            const clss = await this.classesRepository.find({
                 where: { institution: institution },
             });
+            return clss;
         }
     }
 
