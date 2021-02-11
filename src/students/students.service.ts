@@ -10,7 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ClassesService } from 'src/classes/classes.service';
 import { Student } from './student.model';
-import { User } from '../users/user.model';
+import { User, UserRoles } from '../users/user.model';
 import { UpdateStudentInput } from './student-input/update-student.input';
 import { UpdateStudentPayload } from './student-payload/update-student.payload';
 import { UsersService } from 'src/users/users.service';
@@ -117,10 +117,17 @@ export class StudentsService {
     }
 
     async findAll(currUser: User): Promise<Student[]> {
+        const user = await this.userService.findOne(currUser.id);
+        const students = await this.studentsRepository.find();
+
+        if (user.userRole === UserRoles.ADMIN) {
+            return students.filter(
+                student => student.user.institution.id === user.institution.id,
+            );
+        }
         const usersUUIDs = (await this.userService.findAll(currUser)).map(
             user => user?.id,
         );
-        const students = await this.studentsRepository.find();
         return students.filter(student =>
             usersUUIDs.includes(student?.user?.id),
         );
