@@ -42,7 +42,7 @@ export class File {
     @ManyToOne(
         () => Message,
         message => message.files,
-        { nullable: true },
+        { nullable: true, onDelete: 'CASCADE' },
     )
     message?: Message;
 

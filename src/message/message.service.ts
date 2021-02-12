@@ -156,11 +156,10 @@ export class MessageService {
         message.files = message.files ? newFiles : message.files;
 
         Object.assign(message, input);
-        const { id, ...data } = message;
 
         try {
-            await this.messageRepository.update(id, data);
-            return new MessagePayload(id);
+            await this.messageRepository.save(message);
+            return new MessagePayload(message.id);
         } catch (error) {
             throw new InternalServerErrorException(error);
         }
@@ -259,7 +258,9 @@ export class MessageService {
                 messages = messages.filter(
                     msg =>
                         msg.toUsers?.map(usr => usr.id).includes(user.id) ||
-                        msg.toClasses?.map(cls => cls.id).includes(student.id),
+                        msg.toClasses
+                            ?.map(cls => cls.id)
+                            .includes(student.class.id),
                 );
             }
         } else {
