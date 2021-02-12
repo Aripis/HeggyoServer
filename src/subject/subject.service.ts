@@ -111,7 +111,7 @@ export class SubjectService {
                     class: student.class,
                 },
             });
-        } else if (user.role == UserRole.TEACHER) {
+        } else if (user.role === UserRole.TEACHER) {
             const teacher = await this.teacherService.findOneByUserId(
                 currUser.id,
             );
@@ -129,7 +129,7 @@ export class SubjectService {
                 const teacherIds = subject.teachers.map(teacher => teacher.id);
                 return teacherIds.includes(teacher.id);
             });
-        } else if (user.role == UserRole.PARENT) {
+        } else if (user.role === UserRole.PARENT) {
             const parents = await this.parentService.findOneByUserId(
                 currUser.id,
             );

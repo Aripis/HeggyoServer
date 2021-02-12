@@ -170,7 +170,7 @@ export class MessageService {
         const user = await this.userService.findOne(currUser.id);
         const allMessages = await this.messageRepository.find();
 
-        if (user.role == UserRole.STUDENT) {
+        if (user.role === UserRole.STUDENT) {
             const student = await this.studentService.findOneByUserId(user.id);
 
             return allMessages
@@ -227,34 +227,65 @@ export class MessageService {
         currUser: User,
         input?: MessagesByCriteriaInput,
     ): Promise<Message[]> {
+        const user = await this.userService.findOne(currUser.id);
+        let messages: Message[];
+
         if (!input.messageType && !input.messageStatus) {
             return this.findAll(currUser);
         }
 
-        let messages: Message[];
+        if (user.role === UserRole.STUDENT) {
+            const student = await this.studentService.findOneByUserId(user.id);
+            if (input.messageType && input.messageStatus) {
+                messages = await this.messageRepository.find({
+                    where: {
+                        messageType: input.messageType,
+                        status: input.messageStatus,
+                    },
+                });
+            } else if (!input.messageType) {
+                messages = await this.messageRepository.find({
+                    where: {
+                        status: input.messageStatus,
+                    },
+                });
+            } else if (!input.messageStatus) {
+                messages = await this.messageRepository.find({
+                    where: {
+                        messageType: input.messageType,
+                    },
+                });
 
-        if (input.messageType && input.messageStatus) {
-            messages = await this.messageRepository.find({
-                where: {
-                    fromUser: await this.userService.findOne(currUser.id),
-                    messageType: input.messageType,
-                    status: input.messageStatus,
-                },
-            });
-        } else if (!input.messageType) {
-            messages = await this.messageRepository.find({
-                where: {
-                    fromUser: await this.userService.findOne(currUser.id),
-                    status: input.messageStatus,
-                },
-            });
-        } else if (!input.messageStatus) {
-            messages = await this.messageRepository.find({
-                where: {
-                    fromUser: await this.userService.findOne(currUser.id),
-                    messageType: input.messageType,
-                },
-            });
+                messages = messages.filter(
+                    msg =>
+                        msg.toUsers.map(usr => usr.id).includes(user.id) ||
+                        msg.toClasses.map(cls => cls.id).includes(student.id),
+                );
+            }
+        } else if (user.role === UserRole.TEACHER) {
+            if (input.messageType && input.messageStatus) {
+                messages = await this.messageRepository.find({
+                    where: {
+                        fromUser: await this.userService.findOne(currUser.id),
+                        messageType: input.messageType,
+                        status: input.messageStatus,
+                    },
+                });
+            } else if (!input.messageType) {
+                messages = await this.messageRepository.find({
+                    where: {
+                        fromUser: await this.userService.findOne(currUser.id),
+                        status: input.messageStatus,
+                    },
+                });
+            } else if (!input.messageStatus) {
+                messages = await this.messageRepository.find({
+                    where: {
+                        fromUser: await this.userService.findOne(currUser.id),
+                        messageType: input.messageType,
+                    },
+                });
+            }
         }
 
         return messages.map(message => {

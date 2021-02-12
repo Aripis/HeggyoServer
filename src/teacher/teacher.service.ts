@@ -104,7 +104,7 @@ export class TeacherService {
                 },
             },
         });
-        const teacher = teachers.find(teacher => teacher.user.id == id);
+        const teacher = teachers.find(teacher => teacher.user.id === id);
 
         if (!teacher) {
             throw new NotFoundException(id);

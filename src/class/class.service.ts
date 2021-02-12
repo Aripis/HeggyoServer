@@ -88,9 +88,9 @@ export class ClassService {
     async findAll(currUser: User): Promise<Class[]> {
         const user = await this.userService.findOne(currUser.id);
 
-        if (user.role == UserRole.STUDENT) {
+        if (user.role === UserRole.STUDENT) {
             return [(await this.studentService.findOneByUserId(user.id)).class];
-        } else if (user.role == UserRole.TEACHER) {
+        } else if (user.role === UserRole.TEACHER) {
             const teacher = await this.teacherService.findOneByUserId(user.id);
             const allClasses = await this.classRepository.find({
                 join: {
@@ -103,17 +103,20 @@ export class ClassService {
                     institution: user.institution,
                 },
             });
-            const teacherClasses = allClasses.filter(cls =>
-                teacher.subjects
-                    .map((subject: Subject) => subject.id)
-                    .some((id: string) =>
-                        cls.subjects
-                            .map((subject: Subject) => subject.id)
-                            .includes(id),
-                    ),
-            );
-            // .filter(cls => cls);
-            // TODO: test this filter. was placed to remove empty arrays
+
+            const tchSubjIds = teacher.subjects.map(sbj => sbj.id);
+            const teacherClasses = allClasses.map(cls => {
+                if (
+                    cls.subjects.filter(subject =>
+                        tchSubjIds.includes(subject.id),
+                    )
+                ) {
+                    cls.subjects = cls.subjects.filter(subject =>
+                        tchSubjIds.includes(subject.id),
+                    );
+                    return cls;
+                }
+            });
 
             return [
                 ...new Set([
@@ -123,7 +126,7 @@ export class ClassService {
                     ...teacherClasses,
                 ]),
             ];
-        } else if (user.role == UserRole.ADMIN) {
+        } else if (user.role === UserRole.ADMIN) {
             return this.classRepository.find({
                 where: { institution: user.institution },
             });
