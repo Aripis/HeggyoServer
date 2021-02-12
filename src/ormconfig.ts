@@ -11,7 +11,7 @@ export const initDB = () => ({
         database: process.env.DB_NAME,
         entities: [__dirname + '/**/*.model{.ts,.js}'],
         synchronize: process.env.NODE_ENV !== 'production',
-        migrationsRun: process.env.NODE_ENV === 'production',
+        migrationsRun: false, //process.env.NODE_ENV === 'production',
         migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
         cli: {
             migrationsDir: 'src/migrations',
