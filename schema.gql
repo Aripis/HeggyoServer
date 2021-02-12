@@ -1,0 +1,544 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type File {
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  filename: String!
+  cloudFilename: String!
+  publicUrl: String
+  message: Message!
+  studentRecords: [Student!]!
+  studentDossiers: [StudentDossier!]!
+}
+
+"""Date custom scalar type"""
+scalar Date
+
+type Message {
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  fromUser: User!
+  toUsers: [User!]!
+  toClasses: [Class!]!
+  assignmentType: AssignmentType
+  data: String
+  files: [File!]
+  messageType: MessageType!
+  status: MessageStatus!
+  subject: Subject
+  assignmentDueDate: Date
+}
+
+enum AssignmentType {
+  HOMEWORK
+  CLASSWORK
+  EXAM
+}
+
+enum MessageType {
+  ASSIGNMENT
+  MESSAGE
+}
+
+enum MessageStatus {
+  CREATED
+  PUBLISHED
+}
+
+type User {
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  firstName: String!
+  middleName: String!
+  lastName: String!
+  email: String!
+  password: String!
+  role: UserRole!
+  registerToken: String
+  status: UserStatus!
+  institution: Institution!
+  sentMessages: [Message!]!
+  receivedMessages: [Message!]!
+  studentDossiers: [StudentDossier!]
+  studentGrades: [StudentGrade!]
+}
+
+enum UserRole {
+  ADMIN
+  PARENT
+  STUDENT
+  TEACHER
+  VIEWER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  BLOCKED
+  UNVERIFIED
+}
+
+type Teacher {
+  id: ID!
+  user: User!
+  education: String
+  yearsExperience: Int
+  contractType: ContractType
+  token: String!
+  subjects: [Subject!]
+  schedules: [Schedule!]
+}
+
+enum ContractType {
+  PART_TIME
+  FULL_TIME
+}
+
+type Schedule {
+  id: ID!
+  startTime: Date!
+  endTime: Date!
+  day: WeekDays!
+  subject: Subject!
+  class: Class!
+  teachers: [Teacher!]
+  institution: Institution!
+  room: String!
+}
+
+enum WeekDays {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+type Institution {
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  name: String!
+  email: String!
+  type: InstitutionType!
+  educationalStage: EducationStage!
+  alias: String!
+  users: [User!]
+  subjects: [Subject!]
+  schedules: [Schedule!]!
+}
+
+enum InstitutionType {
+  NATURAL_MATHEMATICAL
+  TECHNOLOGICAL
+  LINGUISTICAL
+  MATHEMATICAL
+  HUMANITARIAN
+  ART
+  SU
+  OU
+}
+
+enum EducationStage {
+  ELEMENTARY
+  PRIMARY
+  UNITED
+  HIGH
+}
+
+type Class {
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  institution: Institution!
+  startYear: Int!
+  endYear: Int!
+  totalStudentCount: Int!
+  teacher: Teacher
+  letter: String!
+  number: Int!
+  token: String!
+  tokenStatus: TokenStatus!
+  schedules: [Schedule!]!
+  subjects: [Subject!]
+  messages: [Message!]!
+}
+
+enum TokenStatus {
+  ACTIVE
+  INACTIVE
+}
+
+type Subject {
+  id: ID!
+  startYear: Int!
+  endYear: Int!
+  name: String!
+  description: String!
+  institution: Institution!
+  teachers: [Teacher!]
+  schedules: [Schedule!]!
+  class: Class!
+  messages: Message
+  studentDossiers: [StudentDossier!]!
+  grades: [StudentGrade!]!
+}
+
+type StudentGrade {
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  message: String!
+  type: GradeType!
+  grade: Float!
+  gradeWithWords: GradeWord!
+  fromUser: User!
+  student: Student!
+  subject: Subject!
+}
+
+enum GradeType {
+  YEAR
+  TURM_1
+  TURM_2
+  ONGOING
+}
+
+enum GradeWord {
+  BAD
+  AVERAGE
+  GOOD
+  VERY_GOOD
+  EXCELLENT
+}
+
+type Parent {
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  user: User!
+  students: [Student!]!
+}
+
+type Student {
+  id: ID!
+  user: User!
+  startDate: Date
+  class: Class!
+  prevEducation: String!
+  token: String!
+  parents: [Parent!]
+  recordMessage: String
+  recordFiles: [File!]
+  dossier: [StudentDossier!]
+  grades: [StudentGrade!]!
+}
+
+type StudentDossier {
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  message: String!
+  fromUser: User!
+  student: Student!
+  files: [File!]
+  subject: Subject
+}
+
+type FindOneStudentDossierPayload {
+  studentDossiers: [StudentDossier!]!
+  files: [File!]!
+}
+
+type StudentDossierPayload {
+  studentDossierId: String!
+}
+
+type GetStudentTokenPayload {
+  token: String!
+}
+
+type StudentPayload {
+  studentId: String!
+}
+
+type TeacherPayload {
+  teacherId: String!
+}
+
+type ClassPayload {
+  classId: String!
+}
+
+type GenerateUserTokenPayload {
+  token: String!
+}
+
+type InstitutionPayload {
+  institutionId: String!
+}
+
+type UserPayload {
+  userId: String!
+}
+
+type ParentPayload {
+  parentId: String!
+}
+
+type SubjectPayload {
+  subjectId: String!
+}
+
+type Token {
+  accessToken: String!
+  refreshToken: String
+}
+
+type SchedulePayload {
+  scheduleId: String!
+}
+
+type MessagePayload {
+  messageId: String!
+}
+
+type GradePayload {
+  gradeId: String!
+}
+
+type Query {
+  getStudentDossier(studentId: String!): FindOneStudentDossierPayload!
+  getAllStudentDossiers: [StudentDossier!]!
+  getTeacher(id: String!): Teacher!
+  getAllTeachers: [Teacher!]!
+  getAllAvailableClassTeachers(classId: String): [Teacher!]!
+  getStudent(id: String!): Student!
+  getAllStudents: [Student!]!
+  getStudentToken: GetStudentTokenPayload!
+  getInstitution: Institution!
+  getParent(id: String!): Parent!
+  getAllParents: [Parent!]!
+  getUser(id: String!): User!
+  getAllUsers: [User!]!
+  getProfile: User!
+  checkRefreshToken: Boolean!
+  login(input: LoginInput!): User!
+  logout: Boolean!
+  token: Token!
+  generateUserToken(input: GenerateUserTokenInput!): GenerateUserTokenPayload!
+  getClass(id: String!): Class!
+  getAllClasses: [Class!]!
+  getSubject(id: String!): Subject!
+  getAllSubjects: [Subject!]!
+  getSchedule(id: String!): Schedule!
+  getAllSchedules: [Schedule!]!
+  getAllSchedulesByClass(classId: String!): [Schedule!]!
+  getMessage(id: String!): Message!
+  getAllMessages: [Message!]!
+  getAllMessagesByCriteria(input: MessagesByCriteriaInput!): [Message!]!
+  getAllStudentGrades(studentId: String!): [StudentGrade!]!
+  getAllGradesPerClassPerSubject(subjectId: String!, classId: String!): [StudentGrade!]!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input GenerateUserTokenInput {
+  classId: String
+  role: UserRole
+}
+
+input MessagesByCriteriaInput {
+  messageType: MessageType
+  messageStatus: MessageStatus
+  assingmentType: AssignmentType
+}
+
+type Mutation {
+  addStudentDossier(input: AddStudentDossierInput!): StudentDossierPayload!
+  updateTeacher(input: UpdateTeacherInput!): TeacherPayload!
+  updateStudent(input: UpdateStudentInput!): StudentPayload!
+  updateStudentRecord(input: UpdateStudentRecordInput!): StudentPayload!
+  addInstitution(input: AddInstitutionInput!): InstitutionPayload!
+  updateInstitution(input: UpdateInstitutionInput!): InstitutionPayload!
+  removeInstitution: InstitutionPayload!
+  updateParent(input: UpdateParentInput!): ParentPayload!
+  register(input: AddUserInput!): UserPayload!
+  updateUser(input: UpdateUserInput!): UserPayload!
+  updateUserStatus(input: UpdateUserStatusInput!): UserPayload!
+  removeUser(id: String!): UserPayload!
+  addClass(input: AddClassInput!): ClassPayload!
+  updateClass(input: UpdateClassInput!): ClassPayload!
+  removeClass(id: String!): ClassPayload!
+  addSubject(input: AddSubjectInput!): SubjectPayload!
+  updateSubject(input: UpdateSubjectInput!): SubjectPayload!
+  addSchedule(input: AddScheduleInput!): SchedulePayload!
+  removeSchedule(id: String!): SchedulePayload!
+  removeSchedulesByClass(classId: String!): SchedulePayload!
+  addMessage(input: AddMessageInput!): MessagePayload!
+  updateMessage(input: UpdateMessageInput!): MessagePayload!
+  removeMessage(id: String!): MessagePayload!
+  addGrade(input: AddGradeInput!): GradePayload!
+}
+
+input AddStudentDossierInput {
+  studentId: String!
+  subjectId: String!
+  files: [Upload!]
+  message: String!
+}
+
+"""File upload scalar type"""
+scalar Upload
+
+input UpdateTeacherInput {
+  id: String!
+  education: String
+  yearsExperience: Int
+  contractType: ContractType
+}
+
+input UpdateStudentInput {
+  id: String!
+  startDate: Date
+  classId: String
+  prevEducation: String
+  recordMessage: String
+  files: [Upload!]
+}
+
+input UpdateStudentRecordInput {
+  id: String!
+  recordMessage: String
+  files: [Upload!]
+}
+
+input AddInstitutionInput {
+  name: String!
+  email: String!
+  type: InstitutionType!
+  educationalStage: EducationStage!
+  alias: String!
+}
+
+input UpdateInstitutionInput {
+  id: String!
+  name: String
+  email: String
+  type: InstitutionType
+  educationalStage: EducationStage
+  alias: String
+}
+
+input UpdateParentInput {
+  id: String!
+}
+
+input AddUserInput {
+  firstName: String!
+  middleName: String!
+  lastName: String!
+  email: String!
+  password: String!
+  registerToken: String
+  photo: Upload
+}
+
+input UpdateUserInput {
+  firstName: String
+  middleName: String
+  lastName: String
+  email: String
+  photo: Upload
+}
+
+input UpdateUserStatusInput {
+  id: String!
+  userStatus: UserStatus!
+}
+
+input AddClassInput {
+  startYear: Int!
+  endYear: Int!
+  totalStudentCount: Int!
+  number: Int!
+  letter: String!
+  teacherId: String
+}
+
+input UpdateClassInput {
+  id: String!
+  totalStudentCount: Int
+  teacherId: String
+  letter: String
+  number: Int
+  token: String
+  tokenStatus: TokenStatus
+}
+
+input AddSubjectInput {
+  startYear: Int!
+  endYear: Int!
+  name: String!
+  description: String!
+  teachersIds: [String!]
+  classId: String
+}
+
+input UpdateSubjectInput {
+  id: String!
+  startYear: Int
+  endYear: Int
+  name: String
+  description: String
+  teachersIds: [String!]
+  classId: String
+}
+
+input AddScheduleInput {
+  startTime: Date!
+  endTime: Date!
+  day: WeekDays!
+  subjectId: String!
+  classId: String!
+  teachersIds: [String!]
+  room: String!
+}
+
+input AddMessageInput {
+  toUserIds: [String!]
+  toClassIds: [String!]
+  data: String
+  files: [Upload!]
+  assignmentType: AssignmentType
+  messageType: MessageType!
+  subjectId: String
+  assignmentDueDate: Date
+}
+
+input UpdateMessageInput {
+  id: String!
+  data: String
+  status: MessageStatus!
+  files: [Upload!]
+  assignmentDueDate: Date
+}
+
+input AddGradeInput {
+  studentId: String!
+  subjectId: String!
+  message: String!
+  grade: Float!
+  gradeWithWords: GradeWord!
+  type: GradeType!
+}

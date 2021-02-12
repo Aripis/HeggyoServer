@@ -12,6 +12,21 @@
 # below:
 .git
 .gitignore
+.github/
 
 # Node.js dependencies:
 node_modules/
+
+# Source
+src/
+
+# IDE - VSCode
+.vscode/
+
+# Enviroment variables
+.env*
+
+# Others
+.eslintrc.js
+.prettierrc
+nest-cli.json
