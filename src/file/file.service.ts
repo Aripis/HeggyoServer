@@ -17,7 +17,7 @@ export class FileService {
     ) {}
 
     private rawCredentials = JSON.parse(
-        this.configService.get<string>('SERVICE_ACCOUNT_CREDENTIALS'),
+        this.configService.get<string>('GCP_SA_KEY'),
     );
 
     private credentials = {
