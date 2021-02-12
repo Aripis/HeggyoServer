@@ -42,7 +42,7 @@ export class Student {
     prevEducation: string;
 
     @Field()
-    @Column('varchar', { length: 10 })
+    @Column('varchar', { length: 10, default: '' })
     token: string;
 
     @Field(() => [Parent], { nullable: true })

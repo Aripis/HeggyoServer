@@ -29,7 +29,6 @@ export class TeacherService {
 
     add(user: User): Promise<Teacher> {
         const newTeacher = new Teacher();
-
         if (user) {
             newTeacher.user = user;
         }
