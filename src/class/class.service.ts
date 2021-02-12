@@ -142,6 +142,20 @@ export class ClassService {
         return cls;
     }
 
+    async findOneByToken(token: string): Promise<Class> {
+        const cls = await this.classRepository.findOne({
+            where: {
+                token: token,
+            },
+        });
+
+        if (!cls) {
+            throw new NotFoundException(token);
+        }
+
+        return cls;
+    }
+
     async remove(id: string): Promise<ClassPayload> {
         await this.classRepository.delete(id);
         return new ClassPayload(id);

@@ -32,7 +32,7 @@ export class StudentService {
         private readonly teacherService: TeacherService,
 
         @InjectRepository(Student)
-        private readonly studentsRepository: Repository<Student>,
+        private readonly studentRepository: Repository<Student>,
     ) {}
 
     async add(user: User, classToken?: string): Promise<Student> {
@@ -55,7 +55,11 @@ export class StudentService {
 
         if (classToken) {
             student.token = classToken;
-            student.class = await this.classService.findOne(classToken);
+            student.class = await this.classService.findOneByToken(classToken);
+
+            if (!student.class) {
+                throw new NotFoundException('[Add-Student] Class not found');
+            }
 
             const classNumber = student.class.number;
             const classLetter = student.class.letter;
@@ -68,7 +72,7 @@ export class StudentService {
                 firstThree;
         }
         try {
-            return this.studentsRepository.save(student);
+            return this.studentRepository.save(student);
         } catch (error) {
             if (error.code === 'ER_DUP_ENTRY') {
                 throw new ConflictException(
@@ -84,12 +88,12 @@ export class StudentService {
         try {
             if (data.classId) {
                 const { classId, ...info } = data;
-                await this.studentsRepository.update(id, {
+                await this.studentRepository.update(id, {
                     ...info,
                     class: await this.classService.findOne(classId),
                 });
             } else {
-                await this.studentsRepository.update(id, data);
+                await this.studentRepository.update(id, data);
             }
 
             return new StudentPayload(id);
@@ -100,7 +104,7 @@ export class StudentService {
     async updateRecord(
         input: UpdateStudentRecordInput,
     ): Promise<StudentPayload> {
-        const student = await this.studentsRepository.findOne(input.id);
+        const student = await this.studentRepository.findOne(input.id);
 
         if (!student) {
             throw new NotFoundException(
@@ -116,13 +120,13 @@ export class StudentService {
             // TODO: implement files
         }
 
-        this.studentsRepository.save(student);
+        this.studentRepository.save(student);
         return new StudentPayload(student.id);
     }
 
     async findAll(currUser: User): Promise<Student[]> {
         const user = await this.userService.findOne(currUser.id);
-        const students = await this.studentsRepository.find();
+        const students = await this.studentRepository.find();
 
         if (user.role === UserRole.ADMIN) {
             return students.filter(
@@ -143,7 +147,7 @@ export class StudentService {
         const usersIds = (await this.userService.findAll(currUser)).map(
             (user: User) => user?.id,
         );
-        const students = await this.studentsRepository.find();
+        const students = await this.studentRepository.find();
 
         return students.filter(
             student =>
@@ -154,7 +158,7 @@ export class StudentService {
 
     async getToken(currUser: User): Promise<GetStudentTokenPayload> {
         const token = (
-            await this.studentsRepository.findOne({
+            await this.studentRepository.findOne({
                 where: { user: await this.userService.findOne(currUser.id) },
             })
         ).token;
@@ -169,7 +173,7 @@ export class StudentService {
     }
 
     async findOneByUserId(id: string): Promise<Student> {
-        const student = (await this.studentsRepository.find()).find(
+        const student = (await this.studentRepository.find()).find(
             student => student.user.id === id,
         );
 
@@ -181,7 +185,7 @@ export class StudentService {
     }
 
     async findOne(id: string): Promise<Student> {
-        const student = await this.studentsRepository.findOne(id);
+        const student = await this.studentRepository.findOne(id);
 
         if (!student) {
             throw new NotFoundException(id);
@@ -198,7 +202,7 @@ export class StudentService {
     }
 
     async findOneByAlias(registerToken: string): Promise<Student> {
-        const student = await this.studentsRepository.findOne({
+        const student = await this.studentRepository.findOne({
             where: { registerToken: registerToken },
         });
 
@@ -210,7 +214,7 @@ export class StudentService {
     }
 
     async remove(id: string): Promise<StudentPayload> {
-        await this.studentsRepository.delete(id);
+        await this.studentRepository.delete(id);
         return new StudentPayload(id);
     }
 

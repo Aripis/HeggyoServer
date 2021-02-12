@@ -22,7 +22,7 @@ export class StudentResolver {
 
     @Query(() => [Student])
     @UseGuards(GqlAuthGuard)
-    getAllStudents(@CurrentUser() currUser: User): Promise<Student[]> {
+    async getAllStudents(@CurrentUser() currUser: User): Promise<Student[]> {
         return this.studentService.findAll(currUser);
     }
 
