@@ -236,23 +236,23 @@ export class MessageService {
         if (input.messageType && input.messageStatus) {
             messages = await this.messageRepository.find({
                 where: {
-                    from: await this.userService.findOne(currUser.id),
-                    type: input.messageType,
+                    fromUser: await this.userService.findOne(currUser.id),
+                    messageType: input.messageType,
                     status: input.messageStatus,
                 },
             });
         } else if (!input.messageType) {
             messages = await this.messageRepository.find({
                 where: {
-                    from: await this.userService.findOne(currUser.id),
+                    fromUser: await this.userService.findOne(currUser.id),
                     status: input.messageStatus,
                 },
             });
         } else if (!input.messageStatus) {
             messages = await this.messageRepository.find({
                 where: {
-                    from: await this.userService.findOne(currUser.id),
-                    type: input.messageType,
+                    fromUser: await this.userService.findOne(currUser.id),
+                    messageType: input.messageType,
                 },
             });
         }
