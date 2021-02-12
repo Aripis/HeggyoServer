@@ -258,11 +258,11 @@ export class MessageService {
 
                 messages = messages.filter(
                     msg =>
-                        msg.toUsers.map(usr => usr.id).includes(user.id) ||
-                        msg.toClasses.map(cls => cls.id).includes(student.id),
+                        msg.toUsers?.map(usr => usr.id).includes(user.id) ||
+                        msg.toClasses?.map(cls => cls.id).includes(student.id),
                 );
             }
-        } else if (user.role === UserRole.TEACHER) {
+        } else {
             if (input.messageType && input.messageStatus) {
                 messages = await this.messageRepository.find({
                     where: {
@@ -288,8 +288,8 @@ export class MessageService {
             }
         }
 
-        return messages.map(message => {
-            message.files = message.files.map(file =>
+        return messages?.map(message => {
+            message.files = message.files?.map(file =>
                 this.fileService.getCloudFile(file),
             );
             return message;
