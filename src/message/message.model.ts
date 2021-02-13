@@ -126,7 +126,7 @@ export class Message {
     @OneToMany(
         () => File,
         file => file.message,
-        { nullable: true, eager: true },
+        { nullable: true, eager: true, cascade: true },
     )
     files?: File[];
 
