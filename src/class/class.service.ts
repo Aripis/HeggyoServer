@@ -89,7 +89,17 @@ export class ClassService {
         const user = await this.userService.findOne(currUser.id);
 
         if (user.role === UserRole.STUDENT) {
-            return [(await this.studentService.findOneByUserId(user.id)).class];
+            const ccls = (await this.studentService.findOneByUserId(user.id))
+                .class;
+            return await this.classRepository.find({
+                join: {
+                    alias: 'subject',
+                    leftJoinAndSelect: {
+                        subjects: 'subject.subjects',
+                    },
+                },
+                where: { id: ccls.id },
+            });
         } else if (user.role === UserRole.TEACHER) {
             const teacher = await this.teacherService.findOneByUserId(user.id);
             const allClasses = await this.classRepository.find({
