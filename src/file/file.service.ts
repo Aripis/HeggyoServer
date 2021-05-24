@@ -16,14 +16,15 @@ export class FileService {
         private readonly fileRepository: Repository<File>,
     ) {}
 
-    private rawCredentials = JSON.parse(
-        this.configService.get<string>('GCP_SA_KEY'),
-    );
+    private rawCredentials =
+        this.configService.get<string>('GCP_SA_KEY').length > 0
+            ? JSON.parse(this.configService.get<string>('GCP_SA_KEY'))
+            : null;
 
     private credentials = {
         ...this.rawCredentials,
         // eslint-disable-next-line @typescript-eslint/camelcase
-        private_key: this.rawCredentials.private_key.replace(/\\n/g, '\n'),
+        private_key: this.rawCredentials?.private_key.replace(/\\n/g, '\n'),
     };
 
     private readonly gcloudStorage = new Storage({

@@ -26,11 +26,34 @@ export class ScheduleResolver {
 
     @Query(() => [Schedule])
     @UseGuards(GqlAuthGuard)
+    getAllSchedulesByTeacher(
+        @Args('teacherId') id: string,
+        @CurrentUser() currUser: User,
+    ): Promise<Schedule[]> {
+        return this.scheduleService.findAllByTeacher(id, currUser);
+    }
+
+    @Query(() => [Schedule])
+    @UseGuards(GqlAuthGuard)
     getAllSchedulesByClass(
         @Args('classId') id: string,
         @CurrentUser() currUser: User,
     ): Promise<Schedule[]> {
         return this.scheduleService.findAllByClass(id, currUser);
+    }
+
+    @Query(() => [Schedule])
+    @UseGuards(GqlAuthGuard)
+    getAllSchedulesByCriteria(
+        @CurrentUser() currUser: User,
+        @Args('classId', { nullable: true }) classId?: string,
+        @Args('teacherId', { nullable: true }) teacherId?: string,
+    ): Promise<Schedule[]> {
+        return this.scheduleService.findAllByCriteria(
+            currUser,
+            classId,
+            teacherId,
+        );
     }
 
     @Mutation(() => SchedulePayload)

@@ -88,6 +88,23 @@ export class ScheduleService {
         });
     }
 
+    async findAllByTeacher(
+        teacherId: string,
+        currUser: User,
+    ): Promise<Schedule[]> {
+        const institution = (await this.userService.findOne(currUser.id))
+            .institution;
+        const schedules = await this.scheduleRepository.find({
+            where: { institution: institution },
+        });
+
+        return schedules.filter(schedule =>
+            schedule.teachers
+                .map(teacher => teacher.user.id)
+                .includes(teacherId),
+        );
+    }
+
     async findAllByClass(classId: string, currUser: User): Promise<Schedule[]> {
         const institution = (await this.userService.findOne(currUser.id))
             .institution;
@@ -96,6 +113,28 @@ export class ScheduleService {
         });
 
         return schedules.filter(schedule => schedule.class.id === classId);
+    }
+
+    async findAllByCriteria(
+        currUser: User,
+        classId?: string,
+        teacherId?: string,
+    ): Promise<Schedule[]> {
+        const institution = (await this.userService.findOne(currUser.id))
+            .institution;
+        const schedules = await this.scheduleRepository.find({
+            where: { institution: institution },
+        });
+
+        if (classId) {
+            return schedules.filter(schedule => schedule.class.id === classId);
+        } else {
+            return schedules.filter(schedule =>
+                schedule.teachers
+                    .map(teacher => teacher.user.id)
+                    .includes(teacherId),
+            );
+        }
     }
 
     async remove(id: string): Promise<SchedulePayload> {
