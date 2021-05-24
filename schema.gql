@@ -315,17 +315,6 @@ type GradePayload {
 }
 
 type Query {
-  getStudentDossier(studentId: String!): FindOneStudentDossierPayload!
-  getAllStudentDossiers: [StudentDossier!]!
-  getTeacher(id: String!): Teacher!
-  getAllTeachers: [Teacher!]!
-  getAllAvailableClassTeachers(classId: String): [Teacher!]!
-  getStudent(id: String!): Student!
-  getAllStudents: [Student!]!
-  getStudentToken: GetStudentTokenPayload!
-  getInstitution: Institution!
-  getParent(id: String!): Parent!
-  getAllParents: [Parent!]!
   getUser(id: String!): User!
   getAllUsers: [User!]!
   getProfile: User!
@@ -334,8 +323,17 @@ type Query {
   logout: Boolean!
   token: Token!
   generateUserToken(input: GenerateUserTokenInput!): GenerateUserTokenPayload!
+  getInstitution: Institution!
+  getStudent(id: String!): Student!
+  getAllStudents: [Student!]!
+  getStudentToken: GetStudentTokenPayload!
+  getTeacher(id: String!): Teacher!
+  getAllTeachers: [Teacher!]!
+  getAllAvailableClassTeachers(classId: String): [Teacher!]!
   getClass(id: String!): Class!
   getAllClasses: [Class!]!
+  getParent(id: String!): Parent!
+  getAllParents: [Parent!]!
   getSubject(id: String!): Subject!
   getAllSubjects: [Subject!]!
   getSchedule(id: String!): Schedule!
@@ -346,6 +344,8 @@ type Query {
   getMessage(id: String!): Message!
   getAllMessages: [Message!]!
   getAllMessagesByCriteria(input: MessagesByCriteriaInput!): [Message!]!
+  getStudentDossier(studentId: String!): FindOneStudentDossierPayload!
+  getAllStudentDossiers: [StudentDossier!]!
   getAllStudentGrades(studentId: String!): [StudentGrade!]!
   getAllGradesPerClassPerSubject(subjectId: String!, classId: String!): [StudentGrade!]!
 }
@@ -367,21 +367,20 @@ input MessagesByCriteriaInput {
 }
 
 type Mutation {
-  addStudentDossier(input: AddStudentDossierInput!): StudentDossierPayload!
-  updateTeacher(input: UpdateTeacherInput!): TeacherPayload!
-  updateStudent(input: UpdateStudentInput!): StudentPayload!
-  updateStudentRecord(input: UpdateStudentRecordInput!): StudentPayload!
-  addInstitution(input: AddInstitutionInput!): InstitutionPayload!
-  updateInstitution(input: UpdateInstitutionInput!): InstitutionPayload!
-  removeInstitution: InstitutionPayload!
-  updateParent(input: UpdateParentInput!): ParentPayload!
   register(input: AddUserInput!): UserPayload!
   updateUser(input: UpdateUserInput!): UserPayload!
   updateUserStatus(input: UpdateUserStatusInput!): UserPayload!
   removeUser(id: String!): UserPayload!
+  addInstitution(input: AddInstitutionInput!): InstitutionPayload!
+  updateInstitution(input: UpdateInstitutionInput!): InstitutionPayload!
+  removeInstitution: InstitutionPayload!
+  updateStudent(input: UpdateStudentInput!): StudentPayload!
+  updateStudentRecord(input: UpdateStudentRecordInput!): StudentPayload!
+  updateTeacher(input: UpdateTeacherInput!): TeacherPayload!
   addClass(input: AddClassInput!): ClassPayload!
   updateClass(input: UpdateClassInput!): ClassPayload!
   removeClass(id: String!): ClassPayload!
+  updateParent(input: UpdateParentInput!): ParentPayload!
   addSubject(input: AddSubjectInput!): SubjectPayload!
   updateSubject(input: UpdateSubjectInput!): SubjectPayload!
   addSchedule(input: AddScheduleInput!): SchedulePayload!
@@ -390,39 +389,34 @@ type Mutation {
   addMessage(input: AddMessageInput!): MessagePayload!
   updateMessage(input: UpdateMessageInput!): MessagePayload!
   removeMessage(id: String!): MessagePayload!
+  addStudentDossier(input: AddStudentDossierInput!): StudentDossierPayload!
   addGrade(input: AddGradeInput!): GradePayload!
 }
 
-input AddStudentDossierInput {
-  studentId: String!
-  subjectId: String!
-  files: [Upload!]
-  message: String!
+input AddUserInput {
+  firstName: String!
+  middleName: String!
+  lastName: String!
+  email: String!
+  password: String!
+  registerToken: String
+  photo: Upload
 }
 
 """File upload scalar type"""
 scalar Upload
 
-input UpdateTeacherInput {
-  id: String!
-  education: String
-  yearsExperience: Int
-  contractType: ContractType
+input UpdateUserInput {
+  firstName: String
+  middleName: String
+  lastName: String
+  email: String
+  photo: Upload
 }
 
-input UpdateStudentInput {
+input UpdateUserStatusInput {
   id: String!
-  startDate: Date
-  classId: String
-  prevEducation: String
-  recordMessage: String
-  files: [Upload!]
-}
-
-input UpdateStudentRecordInput {
-  id: String!
-  recordMessage: String
-  files: [Upload!]
+  userStatus: UserStatus!
 }
 
 input AddInstitutionInput {
@@ -442,31 +436,26 @@ input UpdateInstitutionInput {
   alias: String
 }
 
-input UpdateParentInput {
+input UpdateStudentInput {
   id: String!
+  startDate: Date
+  classId: String
+  prevEducation: String
+  recordMessage: String
+  files: [Upload!]
 }
 
-input AddUserInput {
-  firstName: String!
-  middleName: String!
-  lastName: String!
-  email: String!
-  password: String!
-  registerToken: String
-  photo: Upload
-}
-
-input UpdateUserInput {
-  firstName: String
-  middleName: String
-  lastName: String
-  email: String
-  photo: Upload
-}
-
-input UpdateUserStatusInput {
+input UpdateStudentRecordInput {
   id: String!
-  userStatus: UserStatus!
+  recordMessage: String
+  files: [Upload!]
+}
+
+input UpdateTeacherInput {
+  id: String!
+  education: String
+  yearsExperience: Int
+  contractType: ContractType
 }
 
 input AddClassInput {
@@ -486,6 +475,10 @@ input UpdateClassInput {
   number: Int
   token: String
   tokenStatus: TokenStatus
+}
+
+input UpdateParentInput {
+  id: String!
 }
 
 input AddSubjectInput {
@@ -534,6 +527,13 @@ input UpdateMessageInput {
   status: MessageStatus!
   files: [Upload!]
   assignmentDueDate: Date
+}
+
+input AddStudentDossierInput {
+  studentId: String!
+  subjectId: String!
+  files: [Upload!]
+  message: String!
 }
 
 input AddGradeInput {
