@@ -98,7 +98,7 @@ export class ParentService {
         relations: string[] = null,
     ): Promise<Parent> {
         const parents = await this.parentRepository.find({
-            relations: relations,
+            relations: relations || [],
         });
         const parent = parents.find(parent => parent.user.id === id);
 
