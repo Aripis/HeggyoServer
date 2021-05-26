@@ -19,8 +19,13 @@ const bootstrap = async () => {
     app.enableCors({
         origin:
             process.env.NODE_ENV === 'production'
-                ? [/^https:\/\/heggyo-client.*\.vercel\.app$/]
+                ? [
+                      /^https:\/\/heggyo-client.*\.vercel\.app$/,
+                      'https://www.heggyo.com',
+                      'https://heggyo.com',
+                  ]
                 : 'http://localhost:3000',
+
         credentials: true,
     });
 
