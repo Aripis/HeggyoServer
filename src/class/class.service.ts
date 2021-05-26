@@ -12,7 +12,6 @@ import { TeacherService } from 'src/teacher/teacher.service';
 import { StudentService } from 'src/student/student.service';
 import { ClassPayload } from './class-payload/class.payload';
 import { User, UserRole } from 'src/user/user.model';
-import { Subject } from 'src/subject/subject.model';
 import { UserService } from 'src/user/user.service';
 import { Teacher } from 'src/teacher/teacher.model';
 import { InjectRepository } from '@nestjs/typeorm';

@@ -83,12 +83,22 @@ export class ParentService {
         return parent;
     }
 
+    async findOneByUser(currUser: User): Promise<Parent> {
+        const parents = await this.parentRepository.find();
+
+        if (!parents) {
+            throw new NotFoundException(currUser.id);
+        }
+
+        return parents.filter(p => p.user.id === currUser.id)[0];
+    }
+
     async findOneByUserId(
         id: string,
         relations: string[] = null,
     ): Promise<Parent> {
         const parents = await this.parentRepository.find({
-            relations: relations,
+            relations: relations || [],
         });
         const parent = parents.find(parent => parent.user.id === id);
 

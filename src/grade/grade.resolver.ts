@@ -22,6 +22,12 @@ export class GradeResolver {
 
     @Query(() => [StudentGrade])
     @UseGuards(GqlAuthGuard)
+    getAllGrades(@CurrentUser() currUser: User): Promise<StudentGrade[]> {
+        return this.gradeService.findAllByInstruction(currUser);
+    }
+
+    @Query(() => [StudentGrade])
+    @UseGuards(GqlAuthGuard)
     getAllGradesPerClassPerSubject(
         @Args('classId') classId: string,
         @Args('subjectId') subjectId: string,

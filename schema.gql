@@ -333,18 +333,22 @@ type Query {
   getClass(id: String!): Class!
   getAllClasses: [Class!]!
   getParent(id: String!): Parent!
+  getParentFromCurrUser: Parent!
   getAllParents: [Parent!]!
   getSubject(id: String!): Subject!
   getAllSubjects: [Subject!]!
   getSchedule(id: String!): Schedule!
   getAllSchedules: [Schedule!]!
+  getAllSchedulesByTeacher(teacherId: String!): [Schedule!]!
   getAllSchedulesByClass(classId: String!): [Schedule!]!
+  getAllSchedulesByCriteria(teacherId: String, classId: String): [Schedule!]!
   getMessage(id: String!): Message!
   getAllMessages: [Message!]!
   getAllMessagesByCriteria(input: MessagesByCriteriaInput!): [Message!]!
   getStudentDossier(studentId: String!): FindOneStudentDossierPayload!
   getAllStudentDossiers: [StudentDossier!]!
   getAllStudentGrades(studentId: String!): [StudentGrade!]!
+  getAllGrades: [StudentGrade!]!
   getAllGradesPerClassPerSubject(subjectId: String!, classId: String!): [StudentGrade!]!
 }
 

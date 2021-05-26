@@ -14,8 +14,6 @@ import { GradePayload } from './grade-payload/grade.payload';
 import { ClassService } from 'src/class/class.service';
 import { User, UserRole } from 'src/user/user.model';
 import { UserService } from 'src/user/user.service';
-import { Student } from 'src/student/student.model';
-import { Subject } from 'src/subject/subject.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StudentGrade } from './grade.model';
 import { Repository } from 'typeorm';
@@ -125,6 +123,15 @@ export class GradeService {
                 '[Grades-By-Class] Permission Denied',
             );
         }
+    }
+
+    async findAllByInstruction(currUser: User): Promise<StudentGrade[]> {
+        const institution = await (await this.userService.findOne(currUser.id))
+            .institution;
+
+        return (await this.gradeRepository.find()).filter(
+            grade => grade.fromUser.institution.id === institution.id,
+        );
     }
 
     async findAllForOneStudent(studentId: string): Promise<StudentGrade[]> {
