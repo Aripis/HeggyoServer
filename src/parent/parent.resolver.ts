@@ -18,6 +18,12 @@ export class ParentResolver {
         return this.parentService.findOne(id);
     }
 
+    @Query(() => Parent)
+    @UseGuards(GqlAuthGuard)
+    getParentFromCurrUser(@CurrentUser() currUser: User): Promise<Parent> {
+        return this.parentService.findOneByUser(currUser);
+    }
+
     @Query(() => [Parent])
     @UseGuards(GqlAuthGuard)
     getAllParents(@CurrentUser() currUser: User): Promise<Parent[]> {

@@ -333,6 +333,7 @@ type Query {
   getClass(id: String!): Class!
   getAllClasses: [Class!]!
   getParent(id: String!): Parent!
+  getParentFromCurrUser: Parent!
   getAllParents: [Parent!]!
   getSubject(id: String!): Subject!
   getAllSubjects: [Subject!]!
@@ -347,6 +348,7 @@ type Query {
   getStudentDossier(studentId: String!): FindOneStudentDossierPayload!
   getAllStudentDossiers: [StudentDossier!]!
   getAllStudentGrades(studentId: String!): [StudentGrade!]!
+  getAllGrades: [StudentGrade!]!
   getAllGradesPerClassPerSubject(subjectId: String!, classId: String!): [StudentGrade!]!
 }
 
